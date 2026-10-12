@@ -1,0 +1,414 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   PATH LOGICITY — design tokens
+   Accent hues are the CLIENT BRAND palette, scraped from pathlogicity.com
+   (the logo pinwheel): green #449e35 · gold #e7ac00 · blue #0066b1 ·
+   indigo #201f85 · orange #ff6600. See reference/client-site/BRAND-EXTRACT.md.
+   Role system (yellow = action, green = sustainability) is unchanged — only
+   the hex values were remapped onto the client colours.
+   ========================================================================== */
+
+@theme {
+  /* Depth — our navy "technical drawing" base. Indigo family now carries the
+     client blue/indigo (map land, rail lines, data on dark). */
+  --color-ink: #04081a;
+  --color-navy-950: #070e26;
+  --color-navy-900: #0b1535;
+  --color-navy-800: #13204a;
+  --color-navy-700: #1a2a5c;
+  --color-indigo-700: #201f85; /* client "Logicity" wordmark indigo */
+  --color-indigo-500: #2a44a8;
+  --color-indigo-400: #5a8ad2; /* lines/data on dark, leaning to client blue */
+  --color-indigo-300: #93bbe6;
+
+  /* Client blue (pinwheel) — connectivity / data */
+  --color-blue-500: #0066b1;
+  --color-blue-400: #3f8bd0;
+  --color-blue-300: #7fb2e0;
+
+  /* Client orange (pinwheel) — supporting accent for multi-node cycles */
+  --color-orange-500: #ff6600;
+  --color-orange-400: #ff8a3d;
+
+  /* Accents — strict roles (recoloured to client brand) */
+  --color-yellow-400: #e7ac00; /* ACTION ONLY — client gold */
+  --color-yellow-200: #f3d35e;
+  --color-green-500: #449e35; /* sustainability + completed — client green */
+  --color-green-300: #78c45a;
+  --color-green-700: #2f6b22;
+
+  /* Light */
+  --color-paper: #f3efe6;
+  --color-paper-2: #e7e1d4;
+  --color-steel-700: #4a5470;
+  --color-steel-500: #8891a7;
+  --color-steel-300: #c4c9d6;
+
+  --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-route: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --animate-pulse-soft: pulse-soft 2.4s var(--ease-route) infinite;
+}
+
+:root {
+  --margin: clamp(16px, 4vw, 72px);
+  --gutter: clamp(16px, 1.6vw, 28px);
+  --nav-h: 88px;
+  --line-dark: rgb(255 255 255 / 0.1);
+  --line-dark-strong: rgb(255 255 255 / 0.18);
+  --line-light: rgb(7 14 38 / 0.12);
+  --line-light-strong: rgb(7 14 38 / 0.22);
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+@layer base {
+  html {
+    background: var(--color-navy-950);
+    color: var(--color-paper);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: var(--color-yellow-400);
+    color: var(--color-navy-950);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-yellow-400);
+    outline-offset: 2px;
+  }
+  .on-light :focus-visible {
+    outline-color: var(--color-navy-950);
+  }
+  button {
+    cursor: pointer;
+  }
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Layout
+   -------------------------------------------------------------------------- */
+@utility shell {
+  width: 100%;
+  max-width: 1600px;
+  margin-inline: auto;
+  padding-inline: var(--margin);
+}
+@utility grid-12 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  @media (width >= 40rem) {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+  @media (width >= 64rem) {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+@utility section-pad {
+  padding-block: clamp(96px, 14vh, 192px);
+}
+
+/* --------------------------------------------------------------------------
+   Typography
+   -------------------------------------------------------------------------- */
+@utility t-hero {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.9rem, 13vw, 4.5rem);
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  @media (width >= 40rem) {
+    font-size: clamp(3rem, min(9.6vw, 14.5vh), 11.5rem);
+    line-height: 0.86;
+  }
+}
+@utility t-xxl {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(7rem, 30vw, 26rem);
+  line-height: 0.8;
+  letter-spacing: -0.065em;
+  font-variant-numeric: tabular-nums;
+  @media (width >= 64rem) {
+    font-size: clamp(7rem, 24vw, 26rem);
+  }
+}
+@utility t-xl {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.6rem, 7vw, 8rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+@utility t-l {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.1rem, 4.6vw, 5rem);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+@utility t-m {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 2.6vw, 2.75rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+@utility t-s {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.125rem, 1.4vw, 1.375rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+@utility t-body-l {
+  font-size: clamp(1.0625rem, 1.35vw, 1.3125rem);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+@utility t-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.3;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+@utility t-micro {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.3;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+@utility tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   Textures
+   -------------------------------------------------------------------------- */
+@utility dot-field {
+  background-image: radial-gradient(circle at center, rgb(255 255 255 / 0.07) 1px, transparent 1.4px);
+  background-size: 32px 32px;
+}
+@utility dot-field-light {
+  background-image: radial-gradient(circle at center, rgb(7 14 38 / 0.09) 1px, transparent 1.4px);
+  background-size: 32px 32px;
+}
+
+/* --------------------------------------------------------------------------
+   Motion primitives (CSS-driven; GSAP handles scroll scenes)
+   -------------------------------------------------------------------------- */
+@keyframes rise {
+  from {
+    transform: translate3d(0, 108%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes pulse-soft {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  70%,
+  100% {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+@keyframes drift {
+  from {
+    transform: translate3d(-1.5%, -1%, 0) scale(1.04);
+  }
+  to {
+    transform: translate3d(1.5%, 1%, 0) scale(1.1);
+  }
+}
+@keyframes sweep {
+  0% {
+    transform: translateX(-60%) skewX(-18deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  55%,
+  100% {
+    transform: translateX(160%) skewX(-18deg);
+    opacity: 0;
+  }
+}
+@keyframes scroll-cue {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(56px);
+    opacity: 0;
+  }
+}
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes wipe-in {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes orbit {
+  from {
+    transform: perspective(1600px) rotateX(58deg) rotateZ(-14deg);
+  }
+  to {
+    transform: perspective(1600px) rotateX(58deg) rotateZ(14deg);
+  }
+}
+
+.intro-rise {
+  display: block;
+  animation: rise 1s var(--ease-out-expo) both;
+  animation-delay: var(--d, 0ms);
+}
+.intro-fade {
+  animation: fade-up 0.9s var(--ease-out-expo) both;
+  animation-delay: var(--d, 0ms);
+}
+
+/* Icons redraw on hover — purposeful "animated iconography" */
+.icon-draw [pathLength] {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.group:hover .icon-draw [pathLength],
+.group:focus-visible .icon-draw [pathLength],
+.group[data-active="true"] .icon-draw [pathLength],
+.icon-draw.is-drawing [pathLength] {
+  animation: draw 0.9s var(--ease-out-expo) both;
+}
+
+/* Pause any CSS animation inside a paused media frame */
+[data-paused="true"] * {
+  animation-play-state: paused !important;
+}
+
+/* Arrow nudge */
+.arrow-nudge {
+  transition: transform 0.28s var(--ease-out-expo);
+}
+.group:hover .arrow-nudge,
+.group:focus-visible .arrow-nudge {
+  transform: translateX(6px);
+}
+
+/* Annotation toggle (?annotations=off) — hides asset-slot labels for clean client screenshots */
+html[data-annotations="off"] .slot-annotation {
+  display: none !important;
+}
+
+/* Reduced motion — everything renders in its final state */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Business-value diagrams */
+.bv-collapse rect:not(:last-child) {
+  transform-box: fill-box;
+  transition: transform 0.7s var(--ease-out-expo);
+}
+.group:hover .bv-collapse rect:not(:last-child),
+.is-on .bv-collapse rect:not(:last-child) {
+  transform: translate(var(--tx), var(--ty));
+}
+.bv-grow rect {
+  fill: transparent;
+  stroke: rgb(243 239 230 / 0.35);
+  transition: fill 0.4s, stroke 0.4s;
+}
+.bv-grow rect[data-first="true"] {
+  fill: var(--color-yellow-400);
+  stroke: var(--color-yellow-400);
+}
+.group:hover .bv-grow rect,
+.is-on .bv-grow rect {
+  fill: rgb(243 239 230 / 0.85);
+  stroke: rgb(243 239 230 / 0.85);
+}
+.group:hover .bv-grow rect[data-first="true"],
+.is-on .bv-grow rect[data-first="true"] {
+  fill: var(--color-yellow-400);
+  stroke: var(--color-yellow-400);
+}

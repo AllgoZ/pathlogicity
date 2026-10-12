@@ -1,0 +1,155 @@
+/**
+ * Content models — these mirror the future CMS schema (docs/UI-PLAN.md §10).
+ * Every optional *fact* is nullable: the UI renders a ContentSlot or hides the
+ * element when it is null, so an unverified value can never appear by accident.
+ */
+
+export type IconName =
+  | "road"
+  | "rail"
+  | "air"
+  | "port"
+  | "warehouse"
+  | "container"
+  | "commercial"
+  | "yard"
+  | "green"
+  | "crosshair"
+  | "network"
+  | "legacy"
+  | "scale"
+  | "solar"
+  | "rain"
+  | "waste"
+  | "ev"
+  | "efficiency"
+  | "truck"
+  | "food"
+  | "fuel"
+  | "wrench"
+  | "atm"
+  | "phone"
+  | "whatsapp"
+  | "download"
+  | "arrow-right"
+  | "arrow-up"
+  | "play"
+  | "pause"
+  | "plus"
+  | "expand"
+  | "linkedin"
+  | "youtube"
+  | "instagram"
+  | "x"
+  | "check";
+
+export type Mode = "road" | "rail" | "air" | "port";
+
+export interface NavChild {
+  label: string;
+  href: string;
+  note?: string;
+}
+export interface NavItem {
+  label: string;
+  href: string;
+  children?: NavChild[];
+}
+
+export interface MediaAsset {
+  /** e.g. "PROJECT VIDEO", "SITE AERIAL" — shown on the placeholder slot */
+  slot: string;
+  /** Asset spec shown on the placeholder so the client knows what to supply */
+  spec: string;
+  src?: string | null;
+  poster?: string | null;
+  alt: string;
+}
+
+export interface MetricData {
+  prefix?: string; // "~"
+  value: number;
+  decimals?: number;
+  suffix?: string; // "+"
+  unit?: string; // "MN SQ. FT."
+  label: string;
+}
+
+export interface ScaleNode {
+  id: string;
+  icon: IconName;
+  label: string;
+  text: string;
+  href: string;
+}
+
+export interface Zone {
+  id: string;
+  index: string;
+  name: string;
+  short: string;
+  facts: string[];
+  /** Copy still to be supplied by the client */
+  pending?: string;
+  media: MediaAsset;
+}
+
+export type MilestoneStatus = "completed" | "in-progress" | "upcoming";
+export interface Milestone {
+  id: string;
+  status: MilestoneStatus;
+  phase: string | null;
+  title: string | null;
+  date: string | null;
+  media: MediaAsset;
+}
+
+export interface Destination {
+  id: string;
+  name: string;
+  subtitle?: string;
+  mode: Mode;
+  kind: "corridor" | "destination" | "onsite";
+  level: "site" | "region" | "india";
+  distanceKm: number | null;
+  durationText: string | null;
+  note: string | null;
+}
+
+export interface Initiative {
+  id: string;
+  icon: IconName;
+  name: string;
+  text: string | null;
+  metric: MetricData | null;
+}
+
+export interface Benefit {
+  id: "tat" | "cost" | "connectivity" | "efficiency" | "scalability";
+  title: string;
+  text: string;
+}
+
+export type NewsType = "news" | "media" | "update" | "event";
+export interface NewsItem {
+  id: string;
+  type: NewsType;
+  source: string | null;
+  date: string | null;
+  headline: string | null;
+  href: string | null;
+  image: MediaAsset;
+  /** true = CMS demo placeholder, never a real article */
+  placeholder: boolean;
+}
+
+export interface SiteSettings {
+  leasingName: string | null;
+  phone: string | null;
+  whatsapp: string | null;
+  email: string | null;
+  brochureUrl: string | null;
+  /** Only rendered when verified — never fabricated */
+  coordinates: { lat: number; lng: number } | null;
+  socials: { label: string; icon: IconName; href: string | null }[];
+}

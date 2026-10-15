@@ -1,9 +1,9 @@
 /** Visible 12-column survey grid + dot field — the "technical drawing" texture. */
-export function SurveyGrid({ tone = "dark", dots = true, className = "" }: { tone?: "dark" | "light"; dots?: boolean; className?: string }) {
-  const line = tone === "light" ? "border-navy-950/[0.07]" : "border-white/[0.05]";
+export function SurveyGrid({ tone = "light", dots = true, className = "" }: { tone?: "dark" | "light"; dots?: boolean; className?: string }) {
+  const line = tone === "light" ? "border-ink/[0.05]" : "border-white/[0.06]";
   return (
     <div aria-hidden className={`pointer-events-none absolute inset-0 ${className}`}>
-      {dots ? <div className={`absolute inset-0 ${tone === "light" ? "dot-field-light" : "dot-field"} opacity-60`} /> : null}
+      {dots ? <div className={`absolute inset-0 ${tone === "light" ? "dot-field-light" : "dot-field"} opacity-50`} /> : null}
       <div className="shell grid-12 h-full">
         {Array.from({ length: 12 }).map((_, i) => (
           <div

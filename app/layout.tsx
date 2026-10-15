@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono, Manrope } from "next/font/google";
+import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import { getEnquiry, getNavigation, getSettings } from "@/lib/content";
 import { Nav } from "@/components/navigation/Nav";
@@ -9,9 +9,8 @@ import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import { EnquireBlock } from "@/components/contact/EnquireBlock";
 import { Footer } from "@/components/footer/Footer";
 
-const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope", display: "swap" });
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
-const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains", weight: ["400", "500"], display: "swap" });
+/** Open Sans — the client's brand/site font (pathlogicity.com). Variable 300–800. */
+const openSans = Open_Sans({ subsets: ["latin"], variable: "--font-open-sans", display: "swap" });
 
 export const metadata: Metadata = {
   title: {
@@ -22,8 +21,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#070e26",
-  colorScheme: "dark",
+  themeColor: "#ffffff",
+  colorScheme: "light",
 };
 
 /** ?annotations=off hides asset-slot labels for clean client screenshots */
@@ -32,7 +31,7 @@ const annotationsScript = `try{if(new URLSearchParams(location.search).get('anno
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const settings = getSettings();
   return (
-    <html lang="en-IN" className={`${manrope.variable} ${inter.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="en-IN" className={openSans.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: annotationsScript }} />
       </head>

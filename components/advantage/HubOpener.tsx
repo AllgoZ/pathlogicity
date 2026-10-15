@@ -24,7 +24,8 @@ const ROUTES = (() => {
     const ang = Math.atan2(CY - my, CX - mx);
     const ex = CX - Math.cos(ang) * 46;
     const ey = CY - Math.sin(ang) * 46;
-    const tone = i % 9 === 0 ? "y" : i % 3 === 0 ? "i" : "p";
+    // client pinwheel: gold · green · blue, with indigo hairlines between
+    const tone = i % 9 === 0 ? "y" : i % 4 === 1 ? "g" : i % 3 === 0 ? "b" : "p";
     return { d: `M ${x} ${y} Q ${mx.toFixed(1)} ${my.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}`, tone };
   });
 })();
@@ -53,7 +54,7 @@ export function HubOpener() {
   });
 
   return (
-    <section ref={ref} id="advantage" data-stage="understand" aria-labelledby="advantage-title" className="relative flex min-h-[86svh] items-center overflow-hidden bg-ink lg:min-h-[110vh]">
+    <section ref={ref} id="advantage" data-stage="understand" aria-labelledby="advantage-title" className="relative flex min-h-[78svh] items-center overflow-hidden bg-canvas lg:min-h-[100vh]">
       <svg aria-hidden className="absolute inset-0 h-full w-full" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" fill="none">
         {ROUTES.map((r, i) => (
           <path
@@ -62,30 +63,30 @@ export function HubOpener() {
             d={r.d}
             pathLength={1}
             strokeDasharray="1 1"
-            stroke={r.tone === "y" ? "var(--color-yellow-400)" : r.tone === "i" ? "rgb(147 187 230 / 0.55)" : "rgb(243 239 230 / 0.28)"}
-            strokeWidth={r.tone === "y" ? 1.6 : 1.1}
+            stroke={r.tone === "y" ? "var(--color-yellow-400)" : r.tone === "g" ? "rgb(68 158 53 / 0.7)" : r.tone === "b" ? "rgb(0 102 177 / 0.6)" : "rgb(32 31 133 / 0.22)"}
+            strokeWidth={r.tone === "p" ? 1.1 : 1.8}
             className={i >= 12 ? "max-lg:hidden" : ""}
           />
         ))}
         <g data-hub-node>
-          <circle cx={CX} cy={CY} r="34" stroke="var(--color-yellow-400)" strokeOpacity="0.5" />
-          <circle cx={CX} cy={CY} r="20" stroke="var(--color-yellow-400)" />
-          <circle cx={CX} cy={CY} r="5" fill="var(--color-yellow-400)" />
-          <path d={`M ${CX} ${CY - 48} V ${CY - 26} M ${CX} ${CY + 26} V ${CY + 48} M ${CX - 48} ${CY} H ${CX - 26} M ${CX + 26} ${CY} H ${CX + 48}`} stroke="var(--color-yellow-400)" />
+          <circle cx={CX} cy={CY} r="34" fill="var(--color-canvas)" stroke="var(--color-indigo-700)" strokeOpacity="0.35" />
+          <circle cx={CX} cy={CY} r="20" stroke="var(--color-indigo-700)" strokeWidth="1.5" />
+          <circle cx={CX} cy={CY} r="6" fill="var(--color-yellow-400)" />
+          <path d={`M ${CX} ${CY - 48} V ${CY - 26} M ${CX} ${CY + 26} V ${CY + 48} M ${CX - 48} ${CY} H ${CX - 26} M ${CX + 26} ${CY} H ${CX + 48}`} stroke="var(--color-indigo-700)" strokeWidth="1.5" />
         </g>
       </svg>
-      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_0%,transparent_30%,rgb(4_8_26/0.75)_80%)]" />
+      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_0%,transparent_32%,rgb(245_247_250/0.88)_82%)]" />
 
       <div className="shell absolute inset-x-0 top-14 lg:top-20">
-        <p className="t-label">
-          <span className="text-yellow-400">06 /</span> The Logicity Advantage
+        <p className="t-label text-ink">
+          <span className="text-blue-500">06 /</span> The Logicity Advantage
         </p>
       </div>
       <div className="shell relative w-full text-center">
-        <h2 id="advantage-title" className="t-xl">
+        <h2 id="advantage-title" className="t-xl text-ink">
           <span data-hub-type className="block">One hub.</span>
           <span aria-hidden className="block h-[clamp(90px,16vh,170px)]" />
-          <span data-hub-type className="block">Every route.</span>
+          <span data-hub-type className="block text-indigo-700">Every route.</span>
         </h2>
       </div>
     </section>

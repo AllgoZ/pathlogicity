@@ -21,11 +21,11 @@ export function EvolutionLine({ steps }: { steps: string[] }) {
   return (
     <ol ref={ref} aria-label="From PATH legacy to PATH Logicity" className="relative grid grid-cols-1 gap-10 lg:grid-cols-4 lg:gap-0">
       {/* line: vertical on mobile, horizontal on desktop */}
-      <span aria-hidden className="absolute bottom-2 left-[7px] top-2 w-px bg-navy-950/15 lg:bottom-auto lg:left-0 lg:right-0 lg:top-[7px] lg:h-px lg:w-auto" />
+      <span aria-hidden className="absolute bottom-2 left-[7px] top-2 w-px bg-ink/15 lg:bottom-auto lg:left-0 lg:right-0 lg:top-[7px] lg:h-px lg:w-auto" />
       <span
         data-evo-line
         aria-hidden
-        className="absolute bottom-2 left-[7px] top-2 w-px origin-top bg-navy-950 lg:bottom-auto lg:left-0 lg:right-[12%] lg:top-[7px] lg:h-px lg:w-auto lg:origin-left"
+        className="absolute bottom-2 left-[7px] top-2 w-px origin-top bg-blue-500 lg:bottom-auto lg:left-0 lg:right-[12%] lg:top-[7px] lg:h-px lg:w-auto lg:origin-left"
       />
       {steps.map((s, i) => {
         const last = i === steps.length - 1;
@@ -37,14 +37,14 @@ export function EvolutionLine({ steps }: { steps: string[] }) {
                 <svg viewBox="0 0 16 16" className="h-full w-full">
                   <circle cx="8" cy="8" r="6.5" fill="none" stroke="var(--color-yellow-400)" strokeWidth="2.5" strokeDasharray="13.6 27.2" />
                   <circle cx="8" cy="8" r="6.5" fill="none" stroke="var(--color-green-500)" strokeWidth="2.5" strokeDasharray="13.6 27.2" strokeDashoffset="-13.6" />
-                  <circle cx="8" cy="8" r="6.5" fill="none" stroke="var(--color-indigo-500)" strokeWidth="2.5" strokeDasharray="13.6 27.2" strokeDashoffset="-27.2" />
+                  <circle cx="8" cy="8" r="6.5" fill="none" stroke="var(--color-blue-500)" strokeWidth="2.5" strokeDasharray="13.6 27.2" strokeDashoffset="-27.2" />
                 </svg>
               </span>
             ) : (
-              <span aria-hidden className="absolute left-0 top-0 block h-[15px] w-[15px] rounded-full border border-navy-950 bg-paper" />
+              <span aria-hidden className="absolute left-0 top-0 block h-[15px] w-[15px] rounded-full border-2 border-blue-500 bg-paper" />
             )}
-            <p className="t-micro text-steel-700 lg:mt-8">{String(i + 1).padStart(2, "0")}</p>
-            <p className={`mt-2 font-display font-extrabold uppercase leading-[0.95] tracking-[-0.03em] ${last ? "text-[clamp(1.75rem,2.6vw,2.6rem)]" : "text-[clamp(1.25rem,1.8vw,1.75rem)]"}`}>{s}</p>
+            <p className="t-micro text-steel-500 lg:mt-8">{String(i + 1).padStart(2, "0")}</p>
+            <p className={`mt-2 font-display font-extrabold leading-[1.1] tracking-[-0.02em] ${last ? "text-[clamp(1.5rem,2.1vw,2.125rem)] text-indigo-700" : "text-[clamp(1.125rem,1.5vw,1.5rem)] text-ink"}`}>{s}</p>
           </li>
         );
       })}

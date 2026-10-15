@@ -1,7 +1,7 @@
 # Path Logicity — Architecture
 
 > Technical architecture of the Path Logicity marketing site.
-> Last updated: 2026-10-12 · Source of design truth: [`docs/UI-PLAN.md`](../docs/UI-PLAN.md)
+> Last updated: 2026-10-15 · Source of design truth: [`docs/UI-PLAN.md`](../docs/UI-PLAN.md) · Client round 2: [`docs/CLIENT-CHANGES-PLAN.md`](../docs/CLIENT-CHANGES-PLAN.md)
 
 ---
 
@@ -14,8 +14,9 @@ templates for inner pages (built after homepage sign-off).
 
 **The core idea.** A single thin **route line** threads the whole page, from the hero to
 the enquiry button. Each section draws, bends, branches, or ends that line — the page
-behaves like the hub it describes. The visual language is a "technical survey drawing":
-dark navy depth, hairline grids, mono labels, and animated line-work.
+behaves like the hub it describes. The visual language is a "technical survey drawing" on a
+**light** base (white / light-grey surfaces, brand-indigo footer — client round 2), with hairline
+grids, small caps labels and animated line-work in the client pinwheel colours.
 
 **Fact-safety.** Only client-supplied facts appear as claims. Every unverified fact
 (coordinates, distances, dates, ESG metrics, news) is `null` in the content layer and
@@ -34,7 +35,7 @@ renders as a labelled placeholder slot — never fabricated.
 | Scroll scenes | **GSAP + ScrollTrigger** | Route draws, pinned scenes, counters, camera tweens |
 | Smooth scroll | **Lenis** | Disabled under reduced motion |
 | Micro-interactions | Plain CSS transitions/keyframes | No second animation library |
-| Fonts | `next/font/google` | Manrope (display), Inter (text), JetBrains Mono (technical) |
+| Fonts | `next/font/google` | **Open Sans** (the client's site font) for display, text and labels |
 
 Scripts: `dev` · `build` · `start` · `typecheck` (`tsc --noEmit`). Dev preview config in
 [`.claude/launch.json`](../.claude/launch.json) (port 3000).
@@ -60,7 +61,7 @@ site/
 │  ├─ project-status/ ProjectStatus (sticky media + milestone timeline + scrubber)
 │  ├─ path-group/   PathGroup, EvolutionLine (editorial paper chapter)
 │  ├─ advantage/    HubOpener (converging routes), SpecDrawing (axonometric callouts), GatiShaktiBand
-│  ├─ connectivity-map/ ConnectivityMap, mapGeometry.ts (SVG schematic + route planner + camera levels)
+│  ├─ connectivity-map/ ConnectivityMap, mapGeometry.ts (client location map + route overlay + planner + zoom)
 │  ├─ sustainability/ Sustainability (IGBC ring), BusinessValue (spec row of diagram-icons)
 │  ├─ site-tour/    SiteTourPreview (perspective plan orbit)
 │  ├─ news/         NewsPreview (ARIA tabs, featured + rows, graceful sparsity)
@@ -68,7 +69,7 @@ site/
 │  ├─ footer/       Footer (link columns + oversized wordmark)
 │  ├─ providers/    SmoothScroll (Lenis)
 │  └─ ui/           Route, Metric, AssetSlot, ContentSlot, Button/ArrowLink, SectionHeader,
-│                   Counter, Icon, Reveal, SurveyGrid
+│                   Counter, Icon, Reveal, SurveyGrid, PartnerLogos
 │
 ├─ content/
 │  └─ home.ts                   Typed seed content — the ONLY place facts live
@@ -138,14 +139,18 @@ Components ──props──> lib/content/index.ts ──reads──> content/ho
 ## 6. Design system
 
 ### 6.1 Tokens ([`app/globals.css`](../app/globals.css), `@theme`)
-- **Depth:** `ink`, `navy-950/900/800/700`, `indigo-700…300` (map land, rail, data on dark).
+- **Surfaces (light theme):** sections sit on `canvas` #f5f7fa / `canvas-2` #ecf0f5 (cool mist);
+  `paper` #fff is for cards, panels and tiles only; `paper-2` / `paper-3` are tinted fills inside cards. **Text:** `ink`
+  (headings), `steel-700` (body), `steel-500` (muted). `navy-*` / `indigo-*` only for the footer
+  and overlays on photography.
 - **Client brand accents** (scraped from the live site — see
   [`reference/client-site/BRAND-EXTRACT.md`](../reference/client-site/BRAND-EXTRACT.md)):
-  - `yellow-400` = **gold `#e7ac00`** — **action only** (CTAs, focus ring, route head)
+  - `yellow-400` = **gold `#e7ac00`** — **action fills only** (CTAs, selected chips, route head); never text on white
   - `green-500` = **`#449e35`** — sustainability + completed state
-  - `blue-500` = **`#0066b1`**, `indigo-700` = **`#201f85`** — connectivity / data
+  - `blue-500` = **`#0066b1`** — small accent text (indices, kickers, links), focus ring
+  - `indigo-700` = **`#201f85`** — footer, emphasis words, hover wipes
   - `orange-500` = **`#ff6600`** — supporting pinwheel accent
-- **Light:** `paper`, `paper-2`, `steel-700…300`. **Lines:** `--line-dark/-light` (hairlines).
+- Large numerals cycle the pinwheel (`PINWHEEL_TEXT` in `ui/Metric`), as on the client site.
 - **Motion:** `--ease-out-expo`, `--ease-route`, `--animate-pulse-soft`.
 - **Strict colour roles** are a design rule, not just convention: gold = action, green =
   sustainability/completed. The client recolour kept the roles and only remapped the hex.
@@ -153,7 +158,7 @@ Components ──props──> lib/content/index.ts ──reads──> content/ho
 ### 6.2 Layout & type utilities (CSS `@utility`)
 - `shell` (max 1600px + responsive margin), `grid-12` (4 → 8 → 12 cols), `section-pad`.
 - Type scale: `t-hero`, `t-xxl`, `t-xl`, `t-l`, `t-m`, `t-s`, `t-body-l`, `t-label`, `t-micro`,
-  `tnum` — all fluid `clamp()` with hand-tuned tracking/leading.
+  `tnum` — fluid `clamp()`, sentence case, display capped (hero ≤ 5.25rem), labels ≥ 12px.
 - Textures: `dot-field` / `dot-field-light` (survey grid), `SurveyGrid` component for section grids.
 
 ### 6.3 The signature device — `Route` ([`components/ui/Route.tsx`](../components/ui/Route.tsx))
@@ -194,14 +199,14 @@ One SVG primitive renders the moving "vehicle" line everywhere:
 |---|---|---|---|---|
 | 01 | Hero | `hero/Hero` | `hero` + `settings` | Pinned scroll scene; video/poster slot; location HUD + site reticle |
 | 02 | Scale Index | `stats/ScaleIndex` | `scale` | 400 counter → route branches to 4 nodes |
-| 03 | Master Plan | `master-plan/MasterPlan` | `zones` | Interactive SVG zones + index + detail panel / bottom sheet |
-| 04 | Project Status | `project-status/ProjectStatus` | `milestones`, `statusLastUpdated` | Sticky media + milestone timeline + scrubber |
+| 03 | Master Plan | `master-plan/MasterPlan` | `zones` | Interactive SVG zones + index + detail panel; toggle to the official master plan drawing |
+| 04 | Project Status | `project-status/ProjectStatus` | `milestones`, `statusLastUpdated` | Sticky Constra viewer (image or MP4) + milestone timeline + scrubber |
 | 05 | PATH Group | `path-group/PathGroup` | `pathGroup` | Paper chapter; metric band; evolution line |
 | 06a | Advantage opener | `advantage/HubOpener` | — | ~24 routes converge on the hub (scrubbed) |
 | 06b | At a glance | `advantage/SpecDrawing` | `glance` | Axonometric plan + leader-line callouts |
-| 07a | Connectivity | `connectivity-map/ConnectivityMap` | `destinations` | Route planner + 3 camera levels + mode legend |
-| 07b | PM Gati Shakti | `advantage/GatiShaktiBand` | `gatiShakti` | Typographic equation resolving to the hub |
-| 08a | Sustainability | `sustainability/Sustainability` | `sustainability` | IGBC ring (route closes into a circle) |
+| 07a | Connectivity | `connectivity-map/ConnectivityMap` | `destinations` | Client location map + route overlays, pins, callouts; Region/Site zoom |
+| 07b | PM Gati Shakti | `advantage/GatiShaktiBand` | `gatiShakti`, `partners` | Typographic equation + national facts + partner logos |
+| 08a | Sustainability | `sustainability/Sustainability` | `sustainability` | Ring around the official IGBC mark |
 | 08b | Business Value | `sustainability/BusinessValue` | `benefits` | 5-col spec row of animated diagram-icons |
 | 09 | Site Tour | `site-tour/SiteTourPreview` | `siteTour` | Perspective plan on a slow orbit |
 | 10 | News | `news/NewsPreview` | `news` | ARIA tabs; featured + rows; graceful sparsity |
@@ -236,10 +241,27 @@ file for a transparent/white version; whether to surface the real master-plan im
 
 ---
 
+## 9b. Client round 2 (2026-10-15)
+
+Feedback: fonts, too dark, Constra collaterals, IGBC logo, other logos, location map. Plan and
+decisions in [`docs/CLIENT-CHANGES-PLAN.md`](../docs/CLIENT-CHANGES-PLAN.md).
+
+- **Light theme + Open Sans** (tokens/type above); footer in client indigo with their official lockup.
+- **§07 map:** `ConnectivityMap` draws on `/client/345.webp` (the client's own location map).
+  `mapGeometry.ts` holds route points in that image's pixel space (1320×1232), smoothed with
+  Catmull-Rom; camera = SVG `viewBox` tween (Region / Site).
+- **Logos:** `content/home.ts` → `partners` (NHLML, RVNL, KIADB from pathlogicity.com; IGBC from
+  igbc.in) rendered by `ui/PartnerLogos` in §07.1 and the footer. IGBC mark also centres the §08 ring.
+- **Constra:** `MediaAsset.src` may be an MP4/WebM (plays inline in §04) and `credit` labels the
+  frame. Real Constra files are still awaited — drop them in `public/constra/`.
+- **Contact:** phone, email, registered office and LinkedIn/Instagram from the client site.
+
+---
+
 ## 10. Accessibility
 
 - Semantic landmarks, one `h1` (hero), sequential headings, skip link, visible focus
-  (2px gold on dark / navy on light, never removed).
+  (2px blue on light / gold in the indigo footer, never removed).
 - Every interactive map/diagram has a **real control list** as the primary interface (zone
   index, route planner); the SVG is a focusable enhancement with `aria-pressed`/`aria-selected`.
 - ARIA tabs for News; disclosure buttons for dropdowns; bottom sheets trap focus and close on Esc.

@@ -1,6 +1,7 @@
 /**
  * Seed content — every fact below comes from the client concept note
- * (reference/Concept Note for Path Logicity.pdf). Anything not supplied is
+ * (reference/Concept Note for Path Logicity.pdf) or the client's live site
+ * (pathlogicity.com, re-crawled 2026-10-15). Anything not supplied is
  * null / placeholder and renders as a labelled slot. Do not add facts here
  * without a client source.
  */
@@ -13,25 +14,36 @@ import type {
   Milestone,
   NavItem,
   NewsItem,
+  Partner,
   ScaleNode,
   SiteSettings,
   Zone,
 } from "@/lib/content/types";
 
+/** Contact + socials as published on pathlogicity.com (Contact section / footer). */
 export const settings: SiteSettings = {
   leasingName: null,
-  phone: null,
+  phone: "+91 98998 80388",
   whatsapp: null,
-  email: null,
+  email: "mmlp.blr@pathltd.com",
   brochureUrl: null,
   coordinates: null,
+  address: ["76, Mall Road, Mhow", "Indore (M.P.) – 453441, India"],
   socials: [
-    { label: "LinkedIn", icon: "linkedin", href: null },
+    { label: "LinkedIn", icon: "linkedin", href: "https://www.linkedin.com/company/path-logicity/" },
+    { label: "Instagram", icon: "instagram", href: "https://www.instagram.com/pathlogicity/" },
     { label: "YouTube", icon: "youtube", href: null },
-    { label: "Instagram", icon: "instagram", href: null },
     { label: "X", icon: "x", href: null },
   ],
 };
+
+/** Authority / partner logos, as shown on pathlogicity.com, plus the IGBC mark (igbc.in). */
+export const partners: Partner[] = [
+  { id: "nhlml", name: "National Highways Logistics Management Limited (NHLML)", role: "NHAI · Ministry of Road Transport & Highways", logo: "/client/partners/nhlml.webp", width: 611, height: 640 },
+  { id: "rvnl", name: "Rail Vikas Nigam Limited (RVNL)", role: "Ministry of Railways", logo: "/client/partners/rvnl.webp", width: 333, height: 73 },
+  { id: "kiadb", name: "Karnataka Industrial Areas Development Board (KIADB)", role: "Government of Karnataka", logo: "/client/partners/kiadb.webp", width: 206, height: 73 },
+  { id: "igbc", name: "Indian Green Building Council (IGBC)", role: "Green building rating", logo: "/client/partners/igbc.png", width: 420, height: 666 },
+];
 
 export const navigation: NavItem[] = [
   { label: "Home", href: "/" },
@@ -39,7 +51,7 @@ export const navigation: NavItem[] = [
     label: "Path Group",
     href: "/path-group",
     children: [
-      { label: "Highlight", href: "/path-group#highlight", note: "30+ years · 18 states · 70+ locations" },
+      { label: "Highlight", href: "/path-group#highlight", note: "27 years · 17+ states · 70+ locations" },
       { label: "About Path", href: "/path-group#about", note: "From infrastructure to logistics ecosystems" },
     ],
   },
@@ -155,23 +167,54 @@ export const zones: Zone[] = [
   },
 ];
 
-const progressMedia = (n: string, src: string, alt: string): MediaAsset => ({
-  slot: "Construction Progress",
-  spec: `Milestone ${n} · Constra timelapse / drone · 16:9`,
+const progressMedia = (n: string, src: string | null, alt: string, credit: string | null): MediaAsset => ({
+  slot: "Constra site capture",
+  spec: `Milestone ${n} · Constra timelapse (MP4) or progress photo · 16:9`,
   src,
   alt,
+  credit,
 });
 
 /**
- * Milestone titles and dates are still supplied by the client/CMS (placeholders).
- * Media are representative construction-progress images (stock, Unsplash) until the
- * client supplies real site/Constra footage — never presented as the actual site.
+ * Milestones from pathlogicity.com. Media: the client's own imagery where it
+ * matches the milestone. CONSTRA collaterals (timelapse / progress photos) are
+ * awaited from the client — drop them in public/constra/ and point `src` at
+ * them (MP4/WebM plays inline). The in-progress milestone uses representative
+ * stock until then and is labelled as such — never presented as the actual site.
  */
 export const milestones: Milestone[] = [
-  { id: "m1", status: "completed", phase: null, title: null, date: null, media: progressMedia("01", "/construction/progress-01-groundwork.webp", "Site groundwork and foundations under construction") },
-  { id: "m2", status: "completed", phase: null, title: null, date: null, media: progressMedia("02", "/construction/progress-02-structure.webp", "Structural works rising on a construction site") },
-  { id: "m3", status: "in-progress", phase: null, title: null, date: null, media: progressMedia("03", "/construction/progress-03-building.webp", "Buildings under construction") },
-  { id: "m4", status: "upcoming", phase: null, title: null, date: null, media: progressMedia("04", "/construction/progress-04-scale.webp", "Large-scale construction development with tower cranes") },
+  {
+    id: "m1",
+    status: "completed",
+    phase: "Approvals",
+    title: "In-principle master plan approval obtained from the concerned authorities",
+    date: null,
+    media: progressMedia("01", "/client/image-1731136566206.webp", "The approved Path Logicity master plan", "Official master plan"),
+  },
+  {
+    id: "m2",
+    status: "completed",
+    phase: "Launch",
+    title: "Path Logicity presented at the India Warehousing Show, Yashobhoomi, Delhi",
+    date: "11–13 Jul 2024",
+    media: progressMedia("02", "/client/image-1721036670474.webp", "The Path Logicity team at the India Warehousing Show 2024", "India Warehousing Show 2024"),
+  },
+  {
+    id: "m3",
+    status: "in-progress",
+    phase: "Phase 1 · 138 acres",
+    title: "Phase 1 site development",
+    date: null,
+    media: progressMedia("03", "/construction/progress-03-building.webp", "Representative construction progress", "Representative imagery · Constra site capture to follow"),
+  },
+  {
+    id: "m4",
+    status: "upcoming",
+    phase: "Phase 1",
+    title: "First phase operational",
+    date: "Q4 2026",
+    media: progressMedia("04", "/client/image-1729245154858.webp", "Render of Path Logicity with the rail terminal and warehousing", "Project render"),
+  },
 ];
 export const statusLastUpdated: string | null = null;
 
@@ -207,12 +250,12 @@ export const glance: (MetricData & { id: string; zone: string })[] = [
 ];
 
 export const destinations: Destination[] = [
-  { id: "nh648", name: "NH 648", subtitle: "National Highway", mode: "road", kind: "corridor", level: "region", distanceKm: null, durationText: null, note: null },
-  { id: "nh48", name: "NH 48", subtitle: "National Highway", mode: "road", kind: "corridor", level: "region", distanceKm: null, durationText: null, note: null },
-  { id: "strr", name: "STRR", subtitle: "Satellite Town Ring Road", mode: "road", kind: "corridor", level: "region", distanceKm: null, durationText: null, note: null },
+  { id: "nh648", name: "NH 648", subtitle: "Adjacent · towards Devanahalli", mode: "road", kind: "corridor", level: "region", distanceKm: null, durationText: null, note: null },
+  { id: "nh48", name: "NH 48", subtitle: "Multi-lane · via Nelamangala to Bengaluru", mode: "road", kind: "corridor", level: "region", distanceKm: null, durationText: null, note: null },
+  { id: "strr", name: "STRR", subtitle: "4-lane Satellite Town Ring Road · south-west", mode: "road", kind: "corridor", level: "region", distanceKm: null, durationText: null, note: null },
   { id: "sidings", name: "6 Railway Sidings", subtitle: "On-site rail terminal", mode: "rail", kind: "onsite", level: "site", distanceKm: null, durationText: null, note: "~40 acres dedicated to a state-of-the-art rail terminal" },
   { id: "dodbele", name: "Dodbele Railway Station", subtitle: "Nearest railway station", mode: "rail", kind: "destination", level: "region", distanceKm: 3.5, durationText: null, note: null },
-  { id: "kia", name: "Kempegowda International Airport", subtitle: "Airport", mode: "air", kind: "destination", level: "region", distanceKm: 55, durationText: null, note: null },
+  { id: "kia", name: "Kempegowda International Airport", subtitle: "Bengaluru", mode: "air", kind: "destination", level: "region", distanceKm: 55, durationText: null, note: null },
   { id: "mangalore", name: "Mangalore Port", subtitle: "Port", mode: "port", kind: "destination", level: "india", distanceKm: 339, durationText: null, note: null },
   { id: "chennai", name: "Chennai Port", subtitle: "Port", mode: "port", kind: "destination", level: "india", distanceKm: 376, durationText: null, note: null },
 ];
@@ -232,7 +275,12 @@ export const gatiShakti = {
     "Supporting the PM Gati Shakti vision of seamless logistics movement",
     "Enabling faster movement of goods across key economic corridors",
   ],
-  mmlp: "Strategically located at Dobbaspet, Bengaluru, the largest MMLP zone.",
+  mmlp: "Bengaluru is the largest amongst the MMLPs being built currently.",
+  /** pathlogicity.com — "The Future of Indian Logistics is here" */
+  facts: [
+    { prefix: "", value: 35, unit: "MMLPs", label: "to be built under PM Gati Shakti, on the PPP model" },
+    { prefix: "₹", value: 46000, unit: "Crores", label: "budgeted investment for MMLPs across the country" },
+  ] satisfies MetricData[],
 };
 
 export const sustainability = {

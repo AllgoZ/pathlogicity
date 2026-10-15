@@ -7,7 +7,7 @@ import { useMotion } from "@/lib/motion/hooks";
 import { boxIn, useLinks } from "@/lib/motion/useLinks";
 import { ArrowLink } from "@/components/ui/Button";
 import { ContentSlot } from "@/components/ui/ContentSlot";
-import { Metric } from "@/components/ui/Metric";
+import { Metric, PINWHEEL_TEXT } from "@/components/ui/Metric";
 import { Reveal } from "@/components/ui/Reveal";
 import { PlanSvg } from "@/components/master-plan/PlanSvg";
 
@@ -80,28 +80,28 @@ export function SpecDrawing({ glance }: { glance: Homepage["glance"] }) {
               dots.current[id] = el;
             }}
             aria-hidden
-            className={`absolute top-9 hidden h-2 w-2 rounded-full transition-colors duration-300 lg:block ${side === "r" ? "left-0" : "right-0"} ${on ? "bg-yellow-400" : "bg-paper/60"}`}
+            className={`absolute top-9 hidden h-2 w-2 rounded-full transition-colors duration-300 lg:block ${side === "r" ? "left-0" : "right-0"} ${on ? "bg-yellow-400" : "bg-blue-500/60"}`}
           />
-          <Metric data={g} size="m" className={`transition-opacity duration-300 ${active && !on ? "opacity-40" : ""}`} />
+          <Metric data={g} size="m" valueClassName={on ? "text-indigo-700" : "text-ink"} className={`transition-opacity duration-300 ${active && !on ? "opacity-40" : ""}`} />
         </button>
       </li>
     );
   };
 
   return (
-    <div ref={section} id="at-a-glance" className="relative bg-navy-950 section-pad">
+    <div ref={section} id="at-a-glance" className="relative bg-canvas-2 section-pad">
       <div className="shell grid-12 gap-y-8">
         <div className="col-span-4 sm:col-span-8 lg:col-span-6">
-          <p className="t-label">
-            <span className="text-yellow-400">06.1 /</span> Project at a glance
+          <p className="t-label text-ink">
+            <span className="text-blue-500">06.1 /</span> Project at a glance
           </p>
-          <h3 className="t-l mt-6">
+          <h3 className="t-l mt-5 text-ink">
             Scale,
             <br />
             specified.
           </h3>
         </div>
-        <p className="t-body-l col-span-4 self-end text-steel-300 sm:col-span-8 lg:col-span-4 lg:col-start-9">
+        <p className="t-body-l col-span-4 self-end text-steel-700 sm:col-span-8 lg:col-span-4 lg:col-start-9">
           Every number below is part of one integrated plan — hover a figure to locate it.
         </p>
       </div>
@@ -118,8 +118,8 @@ export function SpecDrawing({ glance }: { glance: Homepage["glance"] }) {
                   d={d}
                   pathLength={1}
                   strokeDasharray="1 1"
-                  stroke={active === id ? "var(--color-yellow-400)" : "rgb(243 239 230 / 0.35)"}
-                  strokeWidth={1}
+                  stroke={active === id ? "var(--color-blue-500)" : "rgb(26 28 70 / 0.3)"}
+                  strokeWidth={active === id ? 1.5 : 1}
                   className="transition-[stroke] duration-300"
                 />
               );
@@ -127,7 +127,7 @@ export function SpecDrawing({ glance }: { glance: Homepage["glance"] }) {
           </svg>
         ) : null}
 
-        <ul className="order-2 col-span-2 sm:col-span-4 lg:order-1 lg:col-span-3 lg:border-r lg:border-white/10">{LEFT.map((id) => callout(id, "l"))}</ul>
+        <ul className="order-2 col-span-2 sm:col-span-4 lg:order-1 lg:col-span-3 lg:border-r lg:border-ink/10">{LEFT.map((id) => callout(id, "l"))}</ul>
 
         <div className="order-1 col-span-4 sm:col-span-8 lg:order-2 lg:col-span-6">
           <svg viewBox="0 0 1270 760" className="block h-auto w-full" fill="none" role="img" aria-label="Oblique view of the illustrative master plan">
@@ -142,9 +142,9 @@ export function SpecDrawing({ glance }: { glance: Homepage["glance"] }) {
                     cx={a.x}
                     cy={a.y}
                     r="5"
-                    fill={active === id ? "var(--color-yellow-400)" : "rgb(243 239 230 / 0.85)"}
+                    fill={active === id ? "var(--color-yellow-400)" : "var(--color-indigo-700)"}
                   />
-                  <circle cx={a.x} cy={a.y} r="12" stroke={active === id ? "var(--color-yellow-400)" : "rgb(243 239 230 / 0.25)"} />
+                  <circle cx={a.x} cy={a.y} r="12" stroke={active === id ? "var(--color-yellow-400)" : "rgb(32 31 133 / 0.3)"} strokeWidth={active === id ? 2 : 1} />
                 </g>
               ))}
             </g>
@@ -152,17 +152,17 @@ export function SpecDrawing({ glance }: { glance: Homepage["glance"] }) {
           <p className="t-micro mt-2 text-center text-steel-500">Illustrative oblique · not to scale</p>
         </div>
 
-        <ul className="order-3 col-span-2 sm:col-span-4 lg:col-span-3 lg:border-l lg:border-white/10">{RIGHT.map((id) => callout(id, "r"))}</ul>
+        <ul className="order-3 col-span-2 sm:col-span-4 lg:col-span-3 lg:border-l lg:border-ink/10">{RIGHT.map((id) => callout(id, "r"))}</ul>
       </div>
 
       {/* Phase 1 band */}
       <Reveal className="shell mt-16 lg:mt-24">
-        <div className="grid-12 items-end gap-y-6 border-t border-white/15 pt-10">
+        <div className="grid-12 items-end gap-y-6 border-t border-ink/15 pt-10">
           <div className="col-span-4 sm:col-span-4 lg:col-span-5">
-            <p className="t-micro text-yellow-400">Phase 1</p>
-            <Metric data={{ ...phase1, unit: "Acres" }} size="xl" showLabel={false} className="mt-4" />
+            <p className="t-micro text-blue-500">Phase 1</p>
+            <Metric data={{ ...phase1, unit: "Acres" }} size="xl" showLabel={false} valueClassName={PINWHEEL_TEXT[0]} className="mt-4" />
           </div>
-          <p className="t-s col-span-4 max-w-[26ch] text-paper/90 sm:col-span-4 lg:col-span-4">{phase1.label}.</p>
+          <p className="t-s col-span-4 max-w-[26ch] text-ink sm:col-span-4 lg:col-span-4">{phase1.label}.</p>
           <div className="col-span-4 flex flex-col items-start gap-4 sm:col-span-8 lg:col-span-3 lg:items-end">
             <ContentSlot>Phase 1 boundary — to be supplied</ContentSlot>
             <ArrowLink href="/logicity-advantage">Explore the advantage</ArrowLink>

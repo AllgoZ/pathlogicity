@@ -50,3 +50,16 @@ locks up `logo-mark.png` + the tone-matched text image.
 ## Icons (`public/client/icons/`)
 `2,011,3,4,5,6,7,8,10,12..30.webp` — stat & service icons · `building.webp` · `timeline.webp` · `residential-2.webp` · `multiple-location.webp`
 (Reference only — our design uses its own line-icon set per UI-PLAN §3.5.)
+
+## Partner / certification logos (`public/client/partners/`) — added 2026-10-15
+| File | What it is | Source |
+|---|---|---|
+| `nhlml.webp` | National Highways Logistics Management Ltd (NHLML) — resized to 611×640 | pathlogicity.com `image-1720254379406.webp` |
+| `rvnl.webp` | Rail Vikas Nigam Ltd — grey background keyed to transparent | pathlogicity.com `image-1720254287143.webp` |
+| `kiadb.webp` | KIADB — grey background keyed to transparent | pathlogicity.com `image-1720254255217.webp` |
+| `igbc.png` | Official IGBC mark — resized to 420×666 | igbc.in (`frontend-assets/images/logo/logo.png`) |
+
+## Footer lockup
+| `logo-lockup-indigo.webp` | Client's footer lockup, white on indigo `#201f86` | pathlogicity.com `Screenshot from 2024-07-02 15-48-18.webp` (256×91) |
+
+`345.webp` is the **location map** used as the base layer of §07 Connectivity.

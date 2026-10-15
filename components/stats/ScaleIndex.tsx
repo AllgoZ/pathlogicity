@@ -66,7 +66,7 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
   }, [paths.length]);
 
   return (
-    <section ref={section} id="scale" data-stage="discover" aria-labelledby="scale-title" className="relative overflow-hidden bg-navy-950 pb-[clamp(96px,14vh,192px)]">
+    <section ref={section} id="scale" data-stage="discover" aria-labelledby="scale-title" className="relative overflow-hidden bg-canvas pb-[clamp(88px,12vh,160px)]">
       {/* Route arriving from the hero, x = 6% */}
       <div className="relative mb-6 h-[clamp(96px,16vh,200px)]">
         <Route d="M 6 0 L 6 100" auto="scrub" scrubStart="top bottom" scrubEnd="bottom 45%" base={false} />
@@ -78,7 +78,7 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
           <svg aria-hidden width={w} height={h} className="pointer-events-none absolute left-0 top-0 hidden lg:block" fill="none">
             {paths.map((d, i) => (
               <g key={i}>
-                <path d={d} stroke="rgb(255 255 255 / 0.1)" strokeWidth={1} />
+                <path d={d} stroke="rgb(26 28 70 / 0.1)" strokeWidth={1} />
                 <path
                   data-branch
                   d={d}
@@ -86,7 +86,7 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
                   strokeDasharray="1 1"
                   strokeWidth={1.5}
                   className="transition-[stroke,opacity] duration-300"
-                  stroke={active === data.nodes[i].id ? "var(--color-yellow-400)" : "rgb(196 201 214 / 0.55)"}
+                  stroke={active === data.nodes[i].id ? "var(--color-yellow-400)" : "rgb(0 102 177 / 0.45)"}
                   opacity={active && active !== data.nodes[i].id ? 0.25 : 1}
                 />
               </g>
@@ -96,29 +96,29 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
 
         <div className="col-span-4 sm:col-span-8 lg:col-span-6">
           <p className="t-label flex items-center gap-3">
-            <span className="text-yellow-400">02 /</span> Scale
+            <span className="text-blue-500">02 /</span> Scale
           </p>
           <div ref={num} className="mt-8 flex w-fit items-start">
-            <div className="t-xxl relative text-paper">
+            <div className="t-xxl relative text-indigo-700">
               <Counter value={data.metric.value} duration={1.8} />
             </div>
-            <p className="t-label ml-3 mt-[0.4em] text-yellow-400 [writing-mode:vertical-rl] lg:ml-4">{data.metric.unit}</p>
+            <p className="t-label ml-3 mt-[0.4em] text-green-700 [writing-mode:vertical-rl] lg:ml-4">{data.metric.unit}</p>
           </div>
-          <p className="t-label mt-6 text-steel-300">{data.metric.label}</p>
+          <p className="t-label mt-6 text-steel-700">{data.metric.label}</p>
 
           <div className="mt-10 flex items-start gap-5">
             <span aria-hidden className="mt-3 block h-[clamp(64px,8vw,120px)] w-px bg-gradient-to-b from-yellow-400 to-transparent" />
             <RevealLines
               id="scale-title"
               lines={data.result}
-              className="t-l font-light text-steel-300 [&_[data-line]]:font-light"
+              className="t-l font-light text-steel-700 [&_[data-line]]:font-light"
             />
           </div>
         </div>
 
-        <ul data-nodes className="relative col-span-4 self-center border-l border-white/10 sm:col-span-8 lg:col-span-5 lg:col-start-8 lg:border-l-0">
+        <ul data-nodes className="relative col-span-4 self-center border-l border-ink/10 sm:col-span-8 lg:col-span-5 lg:col-start-8 lg:border-l-0">
           {data.nodes.map((n, i) => (
-            <li key={n.id} data-node className="border-b border-white/10 first:border-t lg:first:border-t-0 lg:last:border-b-0">
+            <li key={n.id} data-node className="border-b border-ink/10 first:border-t lg:first:border-t-0 lg:last:border-b-0">
               <Link
                 href={n.href}
                 data-active={active === n.id}
@@ -126,7 +126,7 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
                 onMouseLeave={() => setActive(null)}
                 onFocus={() => setActive(n.id)}
                 onBlur={() => setActive(null)}
-                className="group relative flex items-start gap-5 py-7 pl-6 lg:gap-6 lg:py-9 lg:pl-0"
+                className="group relative flex items-start gap-5 py-6 pl-6 lg:gap-6 lg:py-8 lg:pl-0"
               >
                 <span
                   ref={(el) => {
@@ -134,26 +134,26 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
                   }}
                   aria-hidden
                   className={`absolute -left-[6.5px] top-[44px] h-3 w-3 rounded-full border transition-colors duration-300 lg:static lg:mt-[22px] lg:shrink-0 ${
-                    active === n.id ? "border-yellow-400 bg-yellow-400" : "border-white/40 bg-navy-950"
+                    active === n.id ? "border-yellow-400 bg-yellow-400" : "border-ink/30 bg-paper"
                   }`}
                 />
                 <span
                   aria-hidden
                   className={`flex h-14 w-14 shrink-0 items-center justify-center border transition-colors duration-300 ${
-                    active === n.id ? "border-yellow-400/70 text-yellow-400" : "border-white/15 text-paper/80"
+                    active === n.id ? "border-blue-500 bg-blue-50 text-blue-500" : "border-ink/15 text-indigo-700"
                   }`}
                 >
                   <Icon name={n.icon} size={26} draw />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="t-micro block text-steel-500">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="t-label mt-1 block text-paper">{n.label}</span>
-                  <span className="t-s mt-2 block text-paper/90">{n.text}</span>
+                  <span className="t-label mt-1 block text-blue-500">{n.label}</span>
+                  <span className="t-s mt-1.5 block text-ink">{n.text}</span>
                 </span>
                 <Icon
                   name="arrow-right"
                   size={18}
-                  className={`mt-6 shrink-0 transition-all duration-300 ${active === n.id ? "translate-x-0 text-yellow-400 opacity-100" : "-translate-x-2 opacity-0"}`}
+                  className={`mt-6 shrink-0 transition-all duration-300 ${active === n.id ? "translate-x-0 text-blue-500 opacity-100" : "-translate-x-2 opacity-0"}`}
                 />
               </Link>
             </li>

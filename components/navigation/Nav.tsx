@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { telHref } from "@/lib/content";
 import type { NavItem, SiteSettings } from "@/lib/content/types";
 import { Icon } from "@/components/ui/Icon";
 import { Logo } from "./Logo";
@@ -62,7 +63,7 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
     <>
       <a
         href="#main"
-        className="fixed left-4 top-4 z-[100] -translate-y-24 bg-yellow-400 px-4 py-3 text-sm font-semibold text-navy-950 focus:translate-y-0"
+        className="fixed left-4 top-4 z-[100] -translate-y-24 bg-yellow-400 px-4 py-3 text-sm font-semibold text-ink focus:translate-y-0"
       >
         Skip to content
       </a>
@@ -70,7 +71,7 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-[transform,background-color,height,border-color] duration-300 ease-[var(--ease-out-expo)] ${
           hidden ? "-translate-y-full" : "translate-y-0"
-        } ${solid || menu ? "border-b border-white/10 bg-navy-950/92 backdrop-blur-md" : "border-b border-transparent bg-transparent"}`}
+        } ${solid || menu ? "border-b border-ink/10 bg-paper/95 shadow-[0_6px_24px_-12px_rgb(26_28_70/0.18)] backdrop-blur-md" : "border-b border-transparent bg-gradient-to-b from-canvas/85 to-transparent"}`}
       >
         <div className={`shell flex items-center justify-between transition-[height] duration-300 ${solid ? "h-16" : "h-16 lg:h-[88px]"}`}>
           <Logo className={`relative z-[60] transition-transform duration-300 ${solid ? "lg:scale-90" : ""} origin-left`} />
@@ -91,8 +92,8 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
                         aria-expanded={open === i}
                         aria-controls={`nav-panel-${i}`}
                         onClick={() => setOpen(open === i ? null : i)}
-                        className={`group relative flex items-center gap-1.5 py-3 text-[12.5px] font-medium uppercase tracking-[0.07em] transition-colors ${
-                          isCurrent(item.href) || open === i ? "text-paper" : "text-paper/75 hover:text-paper"
+                        className={`group relative flex items-center gap-1.5 py-3 text-[0.875rem] font-semibold transition-colors ${
+                          isCurrent(item.href) || open === i ? "text-indigo-700" : "text-ink/80 hover:text-indigo-700"
                         }`}
                       >
                         {item.label}
@@ -107,7 +108,7 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
                           open === i ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0"
                         }`}
                       >
-                        <div className="relative border border-white/10 bg-navy-900/98 backdrop-blur-md">
+                        <div className="relative border border-ink/10 bg-paper shadow-[0_18px_40px_-16px_rgb(26_28_70/0.25)]">
                           <span
                             aria-hidden
                             className={`absolute left-0 top-0 h-px w-full origin-left bg-yellow-400 transition-transform duration-500 ease-[var(--ease-out-expo)] ${
@@ -119,12 +120,12 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
                               <li key={c.href}>
                                 <Link
                                   href={c.href}
-                                  className="group flex gap-4 px-5 py-3.5 transition-colors hover:bg-white/[0.04] focus-visible:bg-white/[0.04]"
+                                  className="group flex gap-4 px-5 py-3.5 transition-colors hover:bg-canvas focus-visible:bg-canvas"
                                 >
-                                  <span className="t-micro pt-[3px] text-yellow-400/80">{String(j + 1).padStart(2, "0")}</span>
+                                  <span className="t-micro pt-[3px] text-blue-500">{String(j + 1).padStart(2, "0")}</span>
                                   <span>
-                                    <span className="block text-[13px] font-semibold uppercase tracking-[0.05em] text-paper">{c.label}</span>
-                                    {c.note ? <span className="mt-1 block text-[12.5px] leading-snug text-steel-500">{c.note}</span> : null}
+                                    <span className="block text-[0.9375rem] font-bold text-ink">{c.label}</span>
+                                    {c.note ? <span className="mt-1 block text-[0.8125rem] leading-snug text-steel-500">{c.note}</span> : null}
                                   </span>
                                 </Link>
                               </li>
@@ -137,8 +138,8 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
                     <Link
                       href={item.href}
                       aria-current={isCurrent(item.href) ? "page" : undefined}
-                      className={`group relative block py-3 text-[12.5px] font-medium uppercase tracking-[0.07em] transition-colors ${
-                        isCurrent(item.href) ? "text-paper" : "text-paper/75 hover:text-paper"
+                      className={`group relative block py-3 text-[0.875rem] font-semibold transition-colors ${
+                        isCurrent(item.href) ? "text-indigo-700" : "text-ink/80 hover:text-indigo-700"
                       }`}
                     >
                       {item.label}
@@ -153,9 +154,7 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
           <div className="relative z-[60] flex items-center gap-3">
             <Link
               href="#enquire"
-              className={`group inline-flex h-10 items-center gap-2 px-4 text-[12px] font-semibold uppercase tracking-[0.08em] transition-colors duration-300 lg:h-11 lg:px-5 ${
-                solid ? "bg-yellow-400 text-navy-950 hover:bg-yellow-200" : "border border-yellow-400/70 text-yellow-400 hover:bg-yellow-400 hover:text-navy-950"
-              }`}
+              className="group inline-flex h-10 items-center gap-2 bg-yellow-400 px-4 text-[0.8125rem] font-bold uppercase tracking-[0.05em] text-ink transition-colors duration-300 hover:bg-indigo-700 hover:text-paper lg:h-11 lg:px-5"
             >
               Enquire
               <Icon name="arrow-right" size={15} className="arrow-nudge hidden sm:block" />
@@ -168,8 +167,8 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
               onClick={() => setMenu((m) => !m)}
               className="relative flex h-10 w-10 items-center justify-center lg:hidden"
             >
-              <span className={`absolute h-px w-6 bg-paper transition-transform duration-300 ${menu ? "rotate-45" : "-translate-y-[4px]"}`} />
-              <span className={`absolute h-px w-6 bg-paper transition-transform duration-300 ${menu ? "-rotate-45" : "translate-y-[4px]"}`} />
+              <span className={`absolute h-0.5 w-6 bg-ink transition-transform duration-300 ${menu ? "rotate-45" : "-translate-y-[5px]"}`} />
+              <span className={`absolute h-0.5 w-6 bg-ink transition-transform duration-300 ${menu ? "-rotate-45" : "translate-y-[5px]"}`} />
             </button>
           </div>
         </div>
@@ -204,24 +203,24 @@ function MobileMenu({ open, items, settings, onClose }: { open: boolean; items: 
       role="dialog"
       aria-modal="true"
       aria-label="Site menu"
-      className={`fixed inset-0 z-40 flex flex-col bg-navy-950 transition-[clip-path,visibility] duration-700 ease-[var(--ease-out-expo)] lg:hidden ${
+      className={`fixed inset-0 z-40 flex flex-col bg-canvas transition-[clip-path,visibility] duration-700 ease-[var(--ease-out-expo)] lg:hidden ${
         open ? "visible [clip-path:inset(0_0_0_0)]" : "invisible [clip-path:inset(0_0_100%_0)]"
       }`}
       data-lenis-prevent
     >
-      <div aria-hidden className="dot-field pointer-events-none absolute inset-0 opacity-50" />
+      <div aria-hidden className="dot-field-light pointer-events-none absolute inset-0 opacity-60" />
       <nav aria-label="Mobile" className="relative flex-1 overflow-y-auto px-[var(--margin)] pb-8 pt-24">
-        <ol className="border-t border-white/10">
+        <ol className="border-t border-ink/10">
           {items.map((item, i) => (
             <li
               key={item.label}
-              className="border-b border-white/10"
+              className="border-b border-ink/10"
               style={{ transition: "opacity .6s, transform .8s var(--ease-out-expo)", transitionDelay: open ? `${120 + i * 50}ms` : "0ms", opacity: open ? 1 : 0, transform: open ? "none" : "translateY(24px)" }}
             >
               <div className="flex items-center justify-between">
                 <Link ref={i === 0 ? first : undefined} href={item.href} onClick={onClose} className="flex flex-1 items-baseline gap-4 py-4">
-                  <span className="t-micro text-yellow-400">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="font-display text-[clamp(1.9rem,8.5vw,3rem)] font-extrabold uppercase leading-none tracking-[-0.035em]">{item.label}</span>
+                  <span className="t-micro text-blue-500">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-display text-[clamp(1.5rem,6.5vw,2.25rem)] font-extrabold leading-tight tracking-[-0.02em] text-ink">{item.label}</span>
                 </Link>
                 {item.children ? (
                   <button
@@ -229,7 +228,7 @@ function MobileMenu({ open, items, settings, onClose }: { open: boolean; items: 
                     aria-expanded={expanded === i}
                     aria-label={`${item.label} sections`}
                     onClick={() => setExpanded(expanded === i ? null : i)}
-                    className="flex h-12 w-12 items-center justify-center"
+                    className="flex h-12 w-12 items-center justify-center text-ink"
                   >
                     <Icon name="plus" size={20} className={`transition-transform duration-300 ${expanded === i ? "rotate-45" : ""}`} />
                   </button>
@@ -240,7 +239,7 @@ function MobileMenu({ open, items, settings, onClose }: { open: boolean; items: 
                   <ul className="overflow-hidden pl-9">
                     {item.children.map((c) => (
                       <li key={c.href}>
-                        <Link href={c.href} onClick={onClose} className="t-label block py-3 text-steel-300">
+                        <Link href={c.href} onClick={onClose} className="block py-3 text-[0.9375rem] font-semibold text-steel-700">
                           {c.label}
                         </Link>
                       </li>
@@ -253,13 +252,13 @@ function MobileMenu({ open, items, settings, onClose }: { open: boolean; items: 
           ))}
         </ol>
       </nav>
-      <div className="relative border-t border-white/10 px-[var(--margin)] pb-[max(20px,env(safe-area-inset-bottom))] pt-5">
-        <Link href="#enquire" onClick={onClose} className="flex h-[52px] w-full items-center justify-center gap-3 bg-yellow-400 text-[13px] font-semibold uppercase tracking-[0.06em] text-navy-950">
+      <div className="relative border-t border-ink/10 px-[var(--margin)] pb-[max(20px,env(safe-area-inset-bottom))] pt-5">
+        <Link href="#enquire" onClick={onClose} className="flex h-[52px] w-full items-center justify-center gap-3 bg-yellow-400 text-[0.875rem] font-bold uppercase tracking-[0.05em] text-ink">
           Enquire leasing now <Icon name="arrow-right" size={18} />
         </Link>
         <div className="mt-4 flex items-center justify-between">
           <div className="flex gap-2">
-            <QuickIcon icon="phone" label="Call leasing team" href={settings.phone ? `tel:${settings.phone}` : null} />
+            <QuickIcon icon="phone" label="Call leasing team" href={settings.phone ? telHref(settings.phone) : null} />
             <QuickIcon icon="whatsapp" label="WhatsApp" href={settings.whatsapp ? `https://wa.me/${settings.whatsapp}` : null} />
           </div>
           <div className="flex gap-1">
@@ -274,7 +273,7 @@ function MobileMenu({ open, items, settings, onClose }: { open: boolean; items: 
 }
 
 function QuickIcon({ icon, label, href, small }: { icon: import("@/lib/content/types").IconName; label: string; href: string | null; small?: boolean }) {
-  const cls = `flex items-center justify-center border border-white/15 text-paper ${small ? "h-10 w-10" : "h-12 w-12"}`;
+  const cls = `flex items-center justify-center border border-ink/15 text-ink ${small ? "h-10 w-10" : "h-12 w-12"}`;
   // Contact links are CMS values (not yet supplied) — render inert until set.
   return href ? (
     <a href={href} aria-label={label} className={cls}>

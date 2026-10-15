@@ -1,26 +1,38 @@
 # Path Logicity — Architecture
 
 > Technical architecture of the Path Logicity marketing site.
-> Last updated: 2026-10-15 · Source of design truth: [`docs/UI-PLAN.md`](../docs/UI-PLAN.md) · Client round 2: [`docs/CLIENT-CHANGES-PLAN.md`](../docs/CLIENT-CHANGES-PLAN.md)
+> **Last updated: 2026-10-15** (premium redesign, Phases 1–4).
+> Design sources, in order of precedence:
+> 1. [`docs/REDESIGN-PLAN.md`](../docs/REDESIGN-PLAN.md) — current visual system and motion (round 3)
+> 2. [`docs/CLIENT-CHANGES-PLAN.md`](../docs/CLIENT-CHANGES-PLAN.md) — client round 2
+> 3. [`docs/UI-PLAN.md`](../docs/UI-PLAN.md) — original spec: structure, content, accessibility
+>
+> Handover and status: [`HANDOVER.md`](./HANDOVER.md). QA: [`docs/redesign/QA-REPORT.md`](../docs/redesign/QA-REPORT.md).
 
 ---
 
 ## 1. Overview
 
-A marketing site for **Path Logicity** — India's largest Multimodal Logistics Park
-(MMLP), a ~400-acre hub at Dobbaspet, Bengaluru, built by PATH Group. The site is
-**homepage-first**: one long scrolling homepage composed of 12 chapters, plus holding
-templates for inner pages (built after homepage sign-off).
+A marketing site for **Path Logicity**, India's largest Multimodal Logistics Park (MMLP): a
+~400-acre hub at Dobbaspet, Bengaluru, built by PATH Group. The site is **homepage-first**: one
+long scrolling homepage of 13 chapters, plus holding templates for the inner pages.
 
-**The core idea.** A single thin **route line** threads the whole page, from the hero to
-the enquiry button. Each section draws, bends, branches, or ends that line — the page
-behaves like the hub it describes. The visual language is a "technical survey drawing" on a
-**light** base (white / light-grey surfaces, brand-indigo footer — client round 2), with hairline
-grids, small caps labels and animated line-work in the client pinwheel colours.
+**The core idea.** A single thin **route line** threads the page from the hero to the enquiry
+button. Each section draws, bends, branches or ends it, so the page behaves like the hub it
+describes.
 
-**Fact-safety.** Only client-supplied facts appear as claims. Every unverified fact
-(coordinates, distances, dates, ESG metrics, news) is `null` in the content layer and
-renders as a labelled placeholder slot — never fabricated.
+**Visual direction — "quiet luxury, brand-led"** (round 3):
+- Neutral **porcelain/stone** light sections alternate with **midnight** (deep brand indigo)
+  anchor sections, at roughly 70/30 light to dark.
+- **Gold** is the one accent. The client's four-colour pinwheel appears as a 2px signature stripe
+  and in data and legends only.
+- Display type is Plus Jakarta Sans, with **Instrument Serif italic** accent words. Body text is
+  Open Sans, the client's brand font.
+
+**Fact-safety.** Only client-supplied facts appear as claims. Every unverified fact (coordinates,
+dates, ESG metrics, news) is `null` in the content layer and renders a review-only placeholder.
+Placeholders are hidden from visitors and shown only with `?annotations=on`. Nothing is
+fabricated.
 
 ---
 
@@ -28,17 +40,19 @@ renders as a labelled placeholder slot — never fabricated.
 
 | Layer | Choice | Notes |
 |---|---|---|
-| Framework | **Next.js 16.4** (App Router) | ⚠️ Breaking changes vs. older Next — read `node_modules/next/dist/docs/` before coding (see [`AGENTS.md`](../AGENTS.md)) |
-| UI runtime | **React 19.3** | Server Components by default; islands marked `"use client"` |
-| Language | **TypeScript 5.9** | `strict`; `@/*` path alias → project root |
-| Styling | **Tailwind CSS v4** | CSS-first `@theme` tokens in [`app/globals.css`](../app/globals.css); no `tailwind.config` |
-| Scroll scenes | **GSAP + ScrollTrigger** | Route draws, pinned scenes, counters, camera tweens |
-| Smooth scroll | **Lenis** | Disabled under reduced motion |
-| Micro-interactions | Plain CSS transitions/keyframes | No second animation library |
-| Fonts | `next/font/google` | **Open Sans** (the client's site font) for display, text and labels |
+| Framework | **Next.js 16.4** (App Router, Turbopack) | ⚠️ Breaking changes vs. older Next. Read `node_modules/next/dist/docs/` before coding (see [`AGENTS.md`](../AGENTS.md)) |
+| UI runtime | **React 19.3** | Server Components by default, with islands marked `"use client"`. Uses React's native `<ViewTransition>` for route changes |
+| Language | **TypeScript 5.9** | `strict`; the `@/*` alias maps to the project root |
+| Styling | **Tailwind CSS v4** | CSS-first `@theme` tokens in [`app/globals.css`](../app/globals.css); there is no `tailwind.config` |
+| Scroll scenes | **GSAP 3 + ScrollTrigger** | Route draws, pins, odometers, camera tweens, reveals |
+| Smooth scroll | **Lenis** | Mouse and trackpad only; off on touch devices and under reduced motion |
+| Micro-interactions | CSS keyframes + GSAP `quickTo` | No second animation library |
+| Fonts | `next/font/google` | **Plus Jakarta Sans** (display) · **Instrument Serif** italic (accents, not preloaded) · **Open Sans** (body) |
+| Images | `next/image` | AVIF/WebP ([`next.config.ts`](../next.config.ts)) |
 
-Scripts: `dev` · `build` · `start` · `typecheck` (`tsc --noEmit`). Dev preview config in
-[`.claude/launch.json`](../.claude/launch.json) (port 3000).
+Scripts: `dev` · `build` · `start` · `typecheck` (`tsc --noEmit`). Preview configs live in
+[`.claude/launch.json`](../.claude/launch.json): `dev` runs on port 3000 and `prod` serves the
+production build on port 3100.
 
 ---
 
@@ -46,254 +60,269 @@ Scripts: `dev` · `build` · `start` · `typecheck` (`tsc --noEmit`). Dev previe
 
 ```
 site/
-├─ app/                         App Router entry
-│  ├─ layout.tsx                Fonts, Nav, JourneyRail, EnquireBlock, Footer, SmoothScroll, MobileActionBar
-│  ├─ page.tsx                  Homepage — composes the 12 section components (server component)
-│  ├─ globals.css               @theme design tokens + utilities + keyframes
-│  ├─ icon.svg                  Favicon
-│  └─ [chapter]/page.tsx        Holding template for inner pages (static params, dynamicParams=false)
+├─ app/
+│  ├─ layout.tsx          Fonts · head scripts (annotations, preloader) · Preloader · SmoothScroll ·
+│  │                      SurfaceMorph · Nav · <ViewTransition> main · EnquireBlock · Footer ·
+│  │                      JourneyRail · MobileActionBar
+│  ├─ page.tsx            Homepage — composes the section components (server component)
+│  ├─ globals.css         @theme tokens · utilities (type, card, grain, glow, pinwheel-stripe, img-grade)
+│  │                      · keyframes (preloader, hero window, marquee, view transition, reveals)
+│  ├─ icon.svg            Favicon
+│  └─ [chapter]/page.tsx  Holding template for inner pages (static params, dynamicParams=false)
 │
-├─ components/                  One folder per section + /ui primitives
-│  ├─ navigation/   Nav, NavDropdown(in Nav), MobileMenu, MobileActionBar, JourneyRail, Logo, useHeroThreshold
-│  ├─ hero/         Hero (pinned scroll scene, video/poster slot, location HUD, reticle)
-│  ├─ stats/        ScaleIndex (400 → 4 branching nodes)
-│  ├─ master-plan/  MasterPlan, PlanSvg, planGeometry.ts (interactive zone plan + bottom sheet)
-│  ├─ project-status/ ProjectStatus (sticky media + milestone timeline + scrubber)
-│  ├─ path-group/   PathGroup, EvolutionLine (editorial paper chapter)
-│  ├─ advantage/    HubOpener (converging routes), SpecDrawing (axonometric callouts), GatiShaktiBand
-│  ├─ connectivity-map/ ConnectivityMap, mapGeometry.ts (client location map + route overlay + planner + zoom)
-│  ├─ sustainability/ Sustainability (IGBC ring), BusinessValue (spec row of diagram-icons)
-│  ├─ site-tour/    SiteTourPreview (perspective plan orbit)
-│  ├─ news/         NewsPreview (ARIA tabs, featured + rows, graceful sparsity)
-│  ├─ contact/      EnquireBlock, EnquiryForm (intent toggle, industry chips, validation)
-│  ├─ footer/       Footer (link columns + oversized wordmark)
-│  ├─ providers/    SmoothScroll (Lenis)
-│  └─ ui/           Route, Metric, AssetSlot, ContentSlot, Button/ArrowLink, SectionHeader,
-│                   Counter, Icon, Reveal, SurveyGrid, PartnerLogos
+├─ components/
+│  ├─ navigation/   Nav (+ MobileMenu), MobileActionBar, JourneyRail, Logo,
+│  │                useHeroThreshold (useScrolledPast / useHideOnScroll)
+│  ├─ hero/         Hero — midnight cinematic hero on the entry-gate render, window reveal, word rise
+│  ├─ stats/        ScaleIndex — 400 odometer → 4 branching nodes with hover image previews
+│  ├─ master-plan/  MasterPlan (official drawing ⇄ interactive zones), PlanSvg (light/dark tone), planGeometry
+│  ├─ project-status/ ProjectStatus — sticky Constra viewer (image or MP4) + milestone timeline
+│  ├─ path-group/   PathGroup (glass metrics strip, serif quote), EvolutionLine
+│  ├─ gallery/      RendersGallery — midnight, pinned horizontal scroll of client renders
+│  ├─ advantage/    HubOpener (midnight showpiece), SpecDrawing, GatiShaktiBand (midnight + partner marquee)
+│  ├─ connectivity-map/ ConnectivityMap + mapGeometry — client location map, route overlays, establishing shot
+│  ├─ sustainability/ Sustainability (IGBC ring), BusinessValue
+│  ├─ site-tour/    SiteTourPreview — midnight perspective plan
+│  ├─ news/         NewsPreview — ARIA tabs, featured + rows
+│  ├─ contact/      EnquireBlock (image panel, contact rows), EnquiryForm
+│  ├─ footer/       Footer — midnight, grain + glow, pinwheel stripe, partner marquee
+│  ├─ providers/    SmoothScroll (Lenis), Preloader (M1), SurfaceMorph (M3)
+│  └─ ui/           Route, Metric, Counter (odometer), AssetSlot, RevealMedia, ContentSlot,
+│                   Button/ArrowLink, Magnetic, SectionHeader, Reveal/RevealLines, Icon,
+│                   PartnerLogos, SurveyGrid
 │
-├─ content/
-│  └─ home.ts                   Typed seed content — the ONLY place facts live
+├─ content/home.ts        Typed seed content — the ONLY place facts live
 ├─ lib/
+│  ├─ accent.tsx          `*word*` → <em> accent words (Instrument Serif italic)
+│  ├─ contours.ts         Generative contour art for AssetSlot placeholders
 │  ├─ content/
-│  │  ├─ index.ts               getHomepage() / getSettings() / getNavigation() / getEnquiry() — CMS swap point
-│  │  └─ types.ts               All content models (mirror future CMS schema)
-│  ├─ contours.ts               Generative contour paths for AssetSlot placeholders
+│  │  ├─ index.ts         getHomepage / getSettings / getNavigation / getEnquiry / getPartners, telHref — CMS swap point
+│  │  └─ types.ts         Content models (mirror the future CMS schema)
 │  └─ motion/
-│     ├─ gsap.ts                GSAP registration + MQ media-query presets
-│     ├─ route.ts               scalePath() + applyRouteProgress() — the route maths
-│     ├─ hooks.ts               useSize, useIsoLayoutEffect, …
-│     └─ useLinks.ts            Smooth-scroll anchor link handling
+│     ├─ gsap.ts          GSAP + ScrollTrigger registration, MQ media-query presets
+│     ├─ hooks.ts         useMotion (lazy, shared IntersectionObserver), useSize, useIsoLayoutEffect …
+│     ├─ route.ts         scalePath() + applyRouteProgress() (cached path lengths)
+│     └─ useLinks.ts      boxIn / curve / useLinks — measured leader and branch lines
 │
 ├─ public/
-│  └─ client/                   Client brand assets scraped from pathlogicity.com (+ MANIFEST.md)
-├─ reference/                   Concept note PDF + client-site/BRAND-EXTRACT.md
-├─ docs/UI-PLAN.md              Full design spec (source of truth)
-└─ architecture files/          This document
+│  ├─ client/             Client assets from pathlogicity.com (+ MANIFEST.md): logos, renders, 345.webp map,
+│  │                      hero-gate.webp (graded hero), logo-mark-160.png, partners/ (NHLML, RVNL, KIADB, IGBC)
+│  ├─ constra/            Drop folder for Constra timelapses/photos (awaited)
+│  └─ construction/       Representative stock progress image (labelled as such) + CREDITS.md
+├─ reference/             Concept note PDF + client-site/BRAND-EXTRACT.md
+├─ docs/                  UI-PLAN · CLIENT-CHANGES-PLAN · REDESIGN-PLAN · redesign/ (phase screenshots, QA report)
+└─ architecture files/    ARCHITECTURE.md (this) · HANDOVER.md
 ```
 
 ---
 
-## 4. Rendering & routing model
+## 4. Rendering & routing
 
-- **Homepage** ([`app/page.tsx`](../app/page.tsx)) is a **Server Component**. It calls the
-  content getters at build time and renders the section components top to bottom. Interactive
-  sections are Client Components (`"use client"`) that receive typed props — no client-side
-  data fetching.
-- **Shared chrome** lives in [`app/layout.tsx`](../app/layout.tsx): `Nav`, `JourneyRail`,
-  `MobileActionBar`, the shared `EnquireBlock` (final CTA, on every page per the brief),
-  `Footer`, and the `SmoothScroll` (Lenis) provider.
-- **Inner pages** (`/path-group`, `/logicity-advantage`, `/sustainability`, `/site-tour`,
-  `/news`, `/blogs`) are served by [`app/[chapter]/page.tsx`](../app/%5Bchapter%5D/page.tsx)
-  as holding templates. `generateStaticParams()` enumerates them and `dynamicParams = false`
-  404s anything else. Full templates follow homepage sign-off (UI-PLAN §6).
-- Sub-sections are **anchors** (e.g. `/logicity-advantage#amenities`) so dropdown links scroll
-  to them and are shareable.
-- All pages are **statically generated**; CMS content will arrive via ISR / on-demand revalidation.
+- **Homepage** ([`app/page.tsx`](../app/page.tsx)) is a **Server Component**. It calls the content
+  getters at build time and renders the sections in order. Interactive sections are Client
+  Components that receive typed props; there is no client-side data fetching.
+- **Shared chrome** ([`app/layout.tsx`](../app/layout.tsx)): Nav, JourneyRail (homepage only),
+  MobileActionBar, the shared EnquireBlock (the final CTA on every page), Footer, and the
+  providers (Preloader, SmoothScroll, SurfaceMorph).
+- **Route transitions:** `<main>` is wrapped in React's `<ViewTransition default="page-wipe">`.
+  Next.js navigations are transitions, so the old page lifts away and the new one wipes up over a
+  midnight curtain (CSS in `globals.css`). This is off under reduced motion.
+- **Inner pages** (`/path-group`, `/logicity-advantage`, `/sustainability`, `/site-tour`, `/news`,
+  `/blogs`) use the holding template [`app/[chapter]/page.tsx`](../app/%5Bchapter%5D/page.tsx).
+  `dynamicParams = false` returns a 404 for anything else.
+- **Sub-sections are anchors** (e.g. `/logicity-advantage#amenities`), so they are shareable.
+- **All pages are statically generated.** CMS content will later arrive through ISR or on-demand
+  revalidation.
 
 ---
 
 ## 5. Content layer (CMS readiness)
 
-The single most important architectural seam.
-
 ```
 Components ──props──> lib/content/index.ts ──reads──> content/home.ts   (today)
-                               │
                                └── later: CMS query (Sanity / Payload / Strapi)
 ```
 
-- **Components never import `content/` directly.** They import getters from
-  [`lib/content`](../lib/content/index.ts). Swapping the data source to a CMS means changing
-  only those getters — the UI is untouched.
-- **Models** are defined in [`lib/content/types.ts`](../lib/content/types.ts): `SiteSettings`,
-  `MediaAsset`, `MetricData`, `ScaleNode`, `Zone`, `Milestone`, `Destination`, `Initiative`,
-  `Benefit`, `NewsItem`, `NavItem`. These mirror the future CMS schema.
-- **Fact-safety is enforced by types:** every optional fact (`distanceKm`, `coordinates`,
-  `milestone.date`, `initiative.metric`, `news.*`) is nullable. The UI renders a `ContentSlot`
-  or hides the element when the value is `null`, so a made-up value can never appear by accident.
-- **`MediaAsset`** carries `slot`/`spec`/`alt` plus optional `src`/`poster`. When `src` is
-  present, `AssetSlot` shows the real image; when absent, it shows the framed placeholder.
+- **Components never import `content/` directly.** Swapping in a CMS means changing only the
+  getters in [`lib/content`](../lib/content/index.ts).
+- **Models** ([`lib/content/types.ts`](../lib/content/types.ts)): `SiteSettings` (with `address`),
+  `MediaAsset` (`src` may be an image **or an MP4/WebM**, plus an optional `credit`),
+  `MetricData`, `ScaleNode` (optional `image`), `Zone`, `Milestone`, `Destination`, `Initiative`,
+  `Benefit`, `NewsItem`, `NavItem`, `Partner`, `GalleryItem` (`fit: cover|contain`).
+- **Fact-safety by type:** every optional fact is nullable. The UI renders a `ContentSlot` or hides
+  the element. `ContentSlot` and asset annotations carry `.slot-annotation`, which CSS hides unless
+  `html[data-annotations="on"]` is set (via `?annotations=on`).
+- **Accent words:** headline strings in content may wrap 1–2 words in `*asterisks*`.
+  `lib/accent.tsx` turns them into `<em>`, rendered in Instrument Serif italic. CMS fields can use
+  the same convention.
 
 ---
 
 ## 6. Design system
 
-### 6.1 Tokens ([`app/globals.css`](../app/globals.css), `@theme`)
-- **Surfaces (light theme):** sections sit on `canvas` #f5f7fa / `canvas-2` #ecf0f5 (cool mist);
-  `paper` #fff is for cards, panels and tiles only; `paper-2` / `paper-3` are tinted fills inside cards. **Text:** `ink`
-  (headings), `steel-700` (body), `steel-500` (muted). `navy-*` / `indigo-*` only for the footer
-  and overlays on photography.
-- **Client brand accents** (scraped from the live site — see
-  [`reference/client-site/BRAND-EXTRACT.md`](../reference/client-site/BRAND-EXTRACT.md)):
-  - `yellow-400` = **gold `#e7ac00`** — **action fills only** (CTAs, selected chips, route head); never text on white
-  - `green-500` = **`#449e35`** — sustainability + completed state
-  - `blue-500` = **`#0066b1`** — small accent text (indices, kickers, links), focus ring
-  - `indigo-700` = **`#201f85`** — footer, emphasis words, hover wipes
-  - `orange-500` = **`#ff6600`** — supporting pinwheel accent
-- Large numerals cycle the pinwheel (`PINWHEEL_TEXT` in `ui/Metric`), as on the client site.
-- **Motion:** `--ease-out-expo`, `--ease-route`, `--animate-pulse-soft`.
-- **Strict colour roles** are a design rule, not just convention: gold = action, green =
-  sustainability/completed. The client recolour kept the roles and only remapped the hex.
+### 6.1 Tokens ([`app/globals.css`](../app/globals.css) `@theme`)
 
-### 6.2 Layout & type utilities (CSS `@utility`)
-- `shell` (max 1600px + responsive margin), `grid-12` (4 → 8 → 12 cols), `section-pad`.
-- Type scale: `t-hero`, `t-xxl`, `t-xl`, `t-l`, `t-m`, `t-s`, `t-body-l`, `t-label`, `t-micro`,
-  `tnum` — fluid `clamp()`, sentence case, display capped (hero ≤ 5.25rem), labels ≥ 12px.
-- Textures: `dot-field` / `dot-field-light` (survey grid), `SurveyGrid` component for section grids.
+| Group | Tokens | Role |
+|---|---|---|
+| Light surfaces | `porcelain` #f8f8f5 · `stone` #efeeea | Section backgrounds (alternate) |
+| Cards | `paper` #fff · `paper-2/3` | Cards, panels, tiles, white text on dark |
+| Text | `ink` #111233 · `steel-700` #4a4c5e · `steel-500` #646678 | Headings · body · muted (≥ 4.5:1 on stone) |
+| Midnight | `midnight` #0d0e35 · `midnight-2` #16174a | Deep anchor sections, footer, hero |
+| Brand indigo | `indigo-700` #201f85 (+ 500/400/300/50) | Labels, links, accent words on light, hover wipes |
+| **Gold** | `yellow-400` #e7ac00 (+ 300/200/50) | **The one accent**: CTAs, rules, route comet, numerals and accent words on midnight. Never small text on white |
+| Pinwheel | `green-500` #449e35 · `blue-500` #0066b1 · `orange-500` #ff6600 | Signature stripe, map legend and modes, sustainability (green), status dots |
 
-### 6.3 The signature device — `Route` ([`components/ui/Route.tsx`](../components/ui/Route.tsx))
-One SVG primitive renders the moving "vehicle" line everywhere:
-- Takes a path `d` in **normalised 0–100 space**; `scalePath()` ([`lib/motion/route.ts`](../lib/motion/route.ts))
-  rescales it to the measured container size (via `useSize`), re-applied on resize.
-- `applyRouteProgress(p, …)` drives a dormant hairline + a fading trail + a yellow comet head
-  via `stroke-dashoffset` / `pathLength`.
-- Three drive modes: **imperative** (`ref.set(p)` for scroll-synced scenes), `auto="scrub"`
-  (ScrollTrigger scrub), `auto="enter"` (timed draw on entry). Defaults to fully drawn for
-  SSR / no-JS / reduced motion.
-- **Continuity hand-off:** each section's route exits at a named column "port" and the next
-  enters at the same x, so the line reads as one unbroken path across section boundaries
-  (UI-PLAN §3.4).
+`:root` also holds `--margin`, `--gutter`, `--line-*` and `--shadow-card` (a layered soft shadow).
+
+### 6.2 Typography (`@utility`)
+- `t-hero` (≤ 6rem) · `t-xl` · `t-l` · `t-m` · `t-s` use Plus Jakarta Sans at 500–600 weight,
+  with tight tracking and slight word spacing. `t-xxl` is the big numeral.
+- `t-body-l`: Open Sans at 17–19.5px, line-height 1.7. Labels (`t-label`, `t-micro`) are 12px,
+  uppercase and wide-tracked.
+- Accent words: `em` inside headings uses `font-serif` italic, coloured by `--accent-color`
+  (indigo by default, gold inside `.on-dark`, overridable per line).
+
+### 6.3 Surfaces and utilities
+- `shell` (max 1600px), `grid-12` (4 → 8 → 12 columns), `section-pad` (generous), `card` (white,
+  2px radius, soft shadow).
+- **Midnight sections:** `bg-midnight` + `on-dark` (gold focus ring, gold accent words) +
+  `grain` (2% film noise) + `glow-brand` (gold and indigo radial glows) + `data-surface="dark"`
+  (for SurfaceMorph). Currently these are the renders gallery, hub opener, Gati Shakti, site tour
+  and footer. The hero is midnight over photography.
+- `pinwheel-stripe` (2px, four colours): under the solid nav, at the top of Gati Shakti and the
+  footer, and in the preloader.
+- `img-grade` (one colour grade for every photo). The hero grade is baked into
+  `public/client/hero-gate.webp` for performance.
+
+### 6.4 The signature device — `Route` ([`components/ui/Route.tsx`](../components/ui/Route.tsx))
+- Paths are written in **normalised 0–100 space**. `scalePath()` rescales them to the measured
+  container. `applyRouteProgress()` drives a dormant hairline, a trail and a gold comet head;
+  path lengths are cached per geometry.
+- `tone` is the surface the route sits on. Light (default) gives an indigo hairline and trail;
+  dark gives white.
+- There are three drive modes: imperative (`ref.set(p)`), `auto="scrub"` and `auto="enter"`. The
+  route renders fully drawn for SSR, no-JS and reduced motion.
 
 ---
 
 ## 7. Motion system
 
-- **Setup** ([`lib/motion/gsap.ts`](../lib/motion/gsap.ts)): registers `ScrollTrigger`, sets
-  defaults, and exposes `MQ` media-query presets (`motion`, `desktop`, `mobile`).
-- **`gsap.matchMedia()`** gates every scroll scene on `(prefers-reduced-motion: no-preference)`
-  and on breakpoint — pinned desktop scenes become time-based reveals on mobile, and nothing
-  animates under reduced motion.
-- **Allowed motion:** line clip reveals, scrubbed route draws, counters (one pass), clip-path
-  wipes, slow video zoom, pinned horizontal scroll, map camera viewBox tweens.
-- **Pinned scenes** (only three): Hero, Master Plan, Amenities. Each uses one ScrollTrigger,
-  killed on unmount.
-- **Reduced motion** (global, enforced in CSS + JS): routes render fully drawn, counters show
-  final values, no pinning/parallax, site-tour orbit stops, Lenis disabled. Counters keep the
-  final number in the DOM so screen readers announce the real value, not "0".
+**Setup:** [`lib/motion/gsap.ts`](../lib/motion/gsap.ts) exposes the `MQ` presets (`motion`,
+`desktop`, `mobile`). Every scene runs inside `gsap.matchMedia()`, so **nothing animates under
+reduced motion**.
+
+**Lazy scenes:** [`useMotion`](../lib/motion/hooks.ts) sets up scenes within 1.5 viewports of the
+fold immediately. Other scenes are set up when they come within one viewport, through a **single
+shared IntersectionObserver**. A coalesced `ScrollTrigger.refresh()` runs only when a late scene
+creates a pin.
+
+| ID | Motion | Where |
+|---|---|---|
+| M1 | Pinwheel preloader. Once per session, **desktop only**, set before paint by a head script (`html[data-preload]`); the hero intro waits under it; CSS failsafe | `providers/Preloader` |
+| M2 | Hero window reveal (transform-only, composited) + word-by-word rise; accent word arrives last | `hero/Hero` + CSS |
+| M3 | Surface morph: an entering light or dark section blends from the previous colour (`immediateRender:false`, completes before its text is readable) | `providers/SurfaceMorph` |
+| M4 | Image reveal: wipe up, settle from 1.2×, ±5% parallax | `ui/RevealMedia` (inside `AssetSlot`; `reveal={false}` opts out) |
+| M5 | Pinned horizontal renders gallery with gold progress (desktop); native swipe on mobile | `gallery/RendersGallery` |
+| M6 | Magnetic CTAs (fine pointers only), via `display: contents` wrapper + `data-magnetic-inner` | `ui/Magnetic` |
+| M7 | Odometer digits (reels; final value stays in the DOM for SSR and screen readers) | `ui/Counter` |
+| M8 | Map establishing shot (site → region on scroll) + gold route traces; any click hands control to the user | `connectivity-map/ConnectivityMap` |
+| M9 | Partner logo marquee (pauses on hover; static under reduced motion) | `ui/PartnerLogos marquee` |
+| M10 | Hub showpiece: routes converge, the pinwheel spins in, gold pulse | `advantage/HubOpener` |
+| M11 | Headline letter-spacing settle; section intro paragraphs fade up | `ui/Reveal`, `ui/SectionHeader` |
+| M12 | Route transitions (`<ViewTransition>`) | `app/layout.tsx` + CSS |
+
+**Pinned scenes:** the hero (desktop, scrubbed exit) and the renders gallery (desktop). Each is
+one ScrollTrigger, killed on unmount.
+
+**Scroll state:** the nav, rail and action bar use `useScrolledPast` / `useHideOnScroll`, which
+re-render only when a threshold is crossed, never per frame.
 
 ---
 
-## 8. Homepage sections (data flow)
+## 8. Homepage sections (order and data flow)
 
-| # | Section | Component | Key content | Interaction |
+| # | Section | Component | Content | Surface |
 |---|---|---|---|---|
-| 01 | Hero | `hero/Hero` | `hero` + `settings` | Pinned scroll scene; video/poster slot; location HUD + site reticle |
-| 02 | Scale Index | `stats/ScaleIndex` | `scale` | 400 counter → route branches to 4 nodes |
-| 03 | Master Plan | `master-plan/MasterPlan` | `zones` | Interactive SVG zones + index + detail panel; toggle to the official master plan drawing |
-| 04 | Project Status | `project-status/ProjectStatus` | `milestones`, `statusLastUpdated` | Sticky Constra viewer (image or MP4) + milestone timeline + scrubber |
-| 05 | PATH Group | `path-group/PathGroup` | `pathGroup` | Paper chapter; metric band; evolution line |
-| 06a | Advantage opener | `advantage/HubOpener` | — | ~24 routes converge on the hub (scrubbed) |
-| 06b | At a glance | `advantage/SpecDrawing` | `glance` | Axonometric plan + leader-line callouts |
-| 07a | Connectivity | `connectivity-map/ConnectivityMap` | `destinations` | Client location map + route overlays, pins, callouts; Region/Site zoom |
-| 07b | PM Gati Shakti | `advantage/GatiShaktiBand` | `gatiShakti`, `partners` | Typographic equation + national facts + partner logos |
-| 08a | Sustainability | `sustainability/Sustainability` | `sustainability` | Ring around the official IGBC mark |
-| 08b | Business Value | `sustainability/BusinessValue` | `benefits` | 5-col spec row of animated diagram-icons |
-| 09 | Site Tour | `site-tour/SiteTourPreview` | `siteTour` | Perspective plan on a slow orbit |
-| 10 | News | `news/NewsPreview` | `news` | ARIA tabs; featured + rows; graceful sparsity |
-| 11 | Final CTA | `contact/EnquireBlock` → `EnquiryForm` | `enquiry`, `settings` | Intent toggle; industry chips; route ends at Submit |
-| 12 | Footer | `footer/Footer` | `navigation`, `settings` | Link columns + oversized wordmark |
+| 01 | Hero | `hero/Hero` | `hero`, `settings` | Midnight over the entry-gate render |
+| 02 | Scale | `stats/ScaleIndex` | `scale` | Porcelain |
+| 03 | Master plan | `master-plan/MasterPlan` | `zones` | Stone (official drawing by default) |
+| 04 | Project status | `project-status/ProjectStatus` | `milestones`, `statusLastUpdated` | Porcelain |
+| 05 | PATH Group | `path-group/PathGroup` | `pathGroup` | Stone |
+| 05.5 | Renders gallery | `gallery/RendersGallery` | `renders` | **Midnight** |
+| 06 | Hub opener | `advantage/HubOpener` | — | **Midnight** |
+| 06.1 | At a glance | `advantage/SpecDrawing` | `glance` | Stone |
+| 07 | Connectivity | `connectivity-map/ConnectivityMap` | `destinations` | Porcelain |
+| 07.1 | PM Gati Shakti + partners | `advantage/GatiShaktiBand` | `gatiShakti`, `partners` | **Midnight** |
+| 08 | Sustainability | `sustainability/Sustainability` | `sustainability` | Porcelain + green glow |
+| 08.1 | Business value | `sustainability/BusinessValue` | `benefits` | Stone |
+| 09 | Site tour | `site-tour/SiteTourPreview` | `siteTour` | **Midnight** |
+| 10 | News | `news/NewsPreview` | `news` | Porcelain |
+| 11 | Enquire | `contact/EnquireBlock` | `enquiry`, `settings` | Stone |
+| 12 | Footer | `footer/Footer` | `navigation`, `settings`, partners | **Midnight** |
 
 ---
 
-## 9. Client brand integration (2026-10-12)
+## 9. Client integration history
 
-The client asked to keep this UI/UX + animation but adopt their existing brand from
-[pathlogicity.com](https://www.pathlogicity.com/). Approach: **recolour in place + real imagery
-+ verified facts**, with zero structural/animation change.
-
-- **Colours:** `@theme` token hex values remapped onto the client pinwheel (gold/green/blue/
-  indigo/orange); hardcoded marker/route RGBs updated to match. Role system preserved.
-- **Logo:** [`navigation/Logo.tsx`](../components/navigation/Logo.tsx) uses the client's official
-  assets — pinwheel mark (`logo-mark.png`) + wordmark text (`logo-text{,-white}.png`, white keyed
-  out, tone-matched: paper-white on dark, full colour on light). Layout unchanged.
-- **Imagery:** `AssetSlot` extended with an optional `src` — a real client photo fills the same
-  framed slot (registration corners kept) via `next/image`. Wired into Hero, PATH Group, zones,
-  Sustainability, and News.
-- **Facts:** `content/home.ts` updated with verified figures (27 yrs · 17+ states · ~5,000
-  workforce · Phase 1 Q4 2026 · Mangalore 339 km · Chennai 376 km · KIA 55 km · Dodbele 3.5 km)
-  and the real project updates in News.
-- **Assets:** downloaded to [`public/client/`](../public/client) (served at `/client/*`),
-  catalogued in [`public/client/MANIFEST.md`](../public/client/MANIFEST.md); full extract in
-  [`reference/client-site/BRAND-EXTRACT.md`](../reference/client-site/BRAND-EXTRACT.md).
-
-**Open reconciliations:** certification (our *IGBC Platinum* vs client *GRIHA*); official logo
-file for a transparent/white version; whether to surface the real master-plan image anywhere.
-
----
-
-## 9b. Client round 2 (2026-10-15)
-
-Feedback: fonts, too dark, Constra collaterals, IGBC logo, other logos, location map. Plan and
-decisions in [`docs/CLIENT-CHANGES-PLAN.md`](../docs/CLIENT-CHANGES-PLAN.md).
-
-- **Light theme + Open Sans** (tokens/type above); footer in client indigo with their official lockup.
-- **§07 map:** `ConnectivityMap` draws on `/client/345.webp` (the client's own location map).
-  `mapGeometry.ts` holds route points in that image's pixel space (1320×1232), smoothed with
-  Catmull-Rom; camera = SVG `viewBox` tween (Region / Site).
-- **Logos:** `content/home.ts` → `partners` (NHLML, RVNL, KIADB from pathlogicity.com; IGBC from
-  igbc.in) rendered by `ui/PartnerLogos` in §07.1 and the footer. IGBC mark also centres the §08 ring.
-- **Constra:** `MediaAsset.src` may be an MP4/WebM (plays inline in §04) and `credit` labels the
-  frame. Real Constra files are still awaited — drop them in `public/constra/`.
-- **Contact:** phone, email, registered office and LinkedIn/Instagram from the client site.
+- **Round 1 (2026-10-12):** recoloured onto the client pinwheel; real logo, imagery and verified
+  facts. See [`reference/client-site/BRAND-EXTRACT.md`](../reference/client-site/BRAND-EXTRACT.md)
+  and [`public/client/MANIFEST.md`](../public/client/MANIFEST.md).
+- **Round 2 (2026-10-15):** light theme, font change, the location map on the client's own
+  `345.webp` (route points in image pixel space, Catmull-Rom smoothed), partner and IGBC logos,
+  Constra-ready status viewer, real contact details. See
+  [`docs/CLIENT-CHANGES-PLAN.md`](../docs/CLIENT-CHANGES-PLAN.md).
+- **Round 3 (2026-10-15, premium redesign):** quiet-luxury system, midnight anchors, renders
+  gallery, motion M1–M12, QA. See [`docs/REDESIGN-PLAN.md`](../docs/REDESIGN-PLAN.md).
 
 ---
 
 ## 10. Accessibility
 
-- Semantic landmarks, one `h1` (hero), sequential headings, skip link, visible focus
-  (2px blue on light / gold in the indigo footer, never removed).
-- Every interactive map/diagram has a **real control list** as the primary interface (zone
-  index, route planner); the SVG is a focusable enhancement with `aria-pressed`/`aria-selected`.
-- ARIA tabs for News; disclosure buttons for dropdowns; bottom sheets trap focus and close on Esc.
-- Counters keep the final value in the DOM; `AssetSlot` wrappers carry `role="img"` + label
-  (the inner real image is decorative `alt=""`).
-- Full `prefers-reduced-motion` support (see §7). Contrast verified per token pair (gold is
-  never text on paper).
+- Semantic landmarks, one `h1`, sequential headings, a skip link, and a visible focus ring:
+  indigo on light, gold on `.on-dark`, including the nav while it floats over the hero.
+- Interactive diagrams have a **real control list** as the primary interface (zone index, route
+  planner); the SVG is an enhancement.
+- ARIA tabs for News; disclosure buttons for dropdowns; Esc closes menus.
+- Odometers, reveals and the preloader all degrade to final, visible content without JS or under
+  reduced motion (verified: no hidden content).
+- Lighthouse accessibility is **100**. Decorative dimming only touches `aria-hidden` numerals, at
+  ≥ 3:1 contrast.
 
 ---
 
 ## 11. Performance
 
-- Hero **poster is the LCP** (preloaded, `priority`); video starts after paint, skipped on
-  Save-Data / slow / reduced motion.
-- `next/image` (AVIF/WebP, responsive `sizes`, lazy below the fold) — configured in
-  [`next.config.ts`](../next.config.ts).
-- Heavy islands (master plan, connectivity map, site tour) mount on approach; animate only
-  `transform` / `opacity` / `clip-path` / `stroke-dashoffset`; one ScrollTrigger per scene,
-  killed on unmount.
-- Targets (UI-PLAN §9): LCP < 2.0s (4G mobile), CLS < 0.05, INP < 200ms, initial JS < 180 KB gz.
+Measured on the production build ([`docs/redesign/QA-REPORT.md`](../docs/redesign/QA-REPORT.md)):
+
+| | Score / metric |
+|---|---|
+| Lighthouse desktop | **96** perf · 100 accessibility · 100 best practices · 100 SEO · LCP 1.0s · CLS 0 |
+| Lighthouse mobile | **~70** perf (67–75 across runs) · 100 accessibility · 100 best practices · 100 SEO · CLS 0 |
+| Real paint (412px, 4× CPU) | FCP 256ms · LCP 624ms |
+
+Key decisions:
+- The hero poster is the LCP (preloaded); its grade is baked into the file.
+- The preloader is skipped on phones.
+- Scenes mount lazily (§7).
+- Hero reveal and parallax use transforms only.
+- Lenis is off on touch.
+- The 160px logo mark is used inside SVG.
+- Instrument Serif is not preloaded.
+
+The remaining mobile cost is React hydration plus GSAP set-up. HANDOVER lists the next steps.
 
 ---
 
-## 12. Build & run
+## 12. Build, run, QA
 
 ```bash
-npm run dev        # Next dev server (port 3000)
-npm run build      # Production build (static generation)
-npm run start      # Serve the production build
-npm run typecheck  # tsc --noEmit
+npm run dev          # Next dev server (port 3000)
+npm run build        # Production build (static generation)
+npm run start        # Serve the production build (or launch config "prod" on :3100)
+npm run typecheck    # tsc --noEmit
+npx lighthouse http://localhost:3100/ --view    # with the prod server running
 ```
 
 > ⚠️ Per [`AGENTS.md`](../AGENTS.md), this is Next.js 16.4 with breaking changes vs. older
 > versions. Read the relevant guide in `node_modules/next/dist/docs/` before writing code that
-> touches Next APIs (routing, `next/image`, fonts, metadata).
+> touches Next APIs (routing, `next/image`, fonts, metadata, view transitions).

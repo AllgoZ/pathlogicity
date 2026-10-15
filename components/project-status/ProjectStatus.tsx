@@ -10,7 +10,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 
 const STATUS: Record<MilestoneStatus, { label: string; text: string; dot: string }> = {
   completed: { label: "Completed", text: "text-green-700", dot: "bg-green-500 border-green-500" },
-  "in-progress": { label: "In progress", text: "text-blue-500", dot: "bg-yellow-400 border-yellow-400" },
+  "in-progress": { label: "In progress", text: "text-indigo-700", dot: "bg-yellow-400 border-yellow-400" },
   upcoming: { label: "Upcoming", text: "text-steel-500", dot: "bg-paper border-steel-500" },
 };
 
@@ -61,18 +61,18 @@ export function ProjectStatus({ milestones, lastUpdated }: { milestones: Milesto
   const counts = milestones.reduce<Record<string, number>>((a, x) => ({ ...a, [x.status]: (a[x.status] ?? 0) + 1 }), {});
 
   return (
-    <section ref={section} id="status" data-stage="explore" aria-labelledby="status-title" className="relative bg-canvas section-pad">
+    <section ref={section} id="status" data-stage="explore" aria-labelledby="status-title" className="relative bg-porcelain section-pad">
       <div className="shell grid-12 gap-y-10">
         <SectionHeader
           className="col-span-4 sm:col-span-8 lg:col-span-8"
           index="04"
           chapter="Project Status · Site progress"
           id="status-title"
-          lines={["Watch the project", "take shape"]}
+          lines={["Watch the project", "*take shape*"]}
           body="Milestones from approval to operations, with on-site progress captured through Constra construction monitoring."
         />
         <div className="col-span-4 flex flex-col justify-end gap-6 sm:col-span-8 lg:col-span-4">
-          <p className="t-micro flex flex-wrap items-center gap-x-3 gap-y-2 text-steel-700">
+          <p className={`t-micro flex flex-wrap items-center gap-x-3 gap-y-2 text-steel-700 ${lastUpdated ? "" : "slot-annotation"}`}>
             <span className="relative flex h-2 w-2">
               <span className="absolute inset-0 rounded-full bg-green-500 animate-pulse-soft" />
               <span className="relative h-2 w-2 rounded-full bg-green-500" />
@@ -95,7 +95,7 @@ export function ProjectStatus({ milestones, lastUpdated }: { milestones: Milesto
         {/* Media viewer */}
         <div className="col-span-4 sm:col-span-8 lg:col-span-7">
           <div className="lg:sticky lg:top-24">
-            <div className="relative overflow-hidden border border-ink/10 bg-paper-2">
+            <div className="relative overflow-hidden rounded-[2px] bg-paper-2 shadow-[var(--shadow-card)]">
               <div key={m.id} className="[animation:wipe-in_.8s_var(--ease-out-expo)_both]">
                 {isVideo(m.media.src) ? (
                   <video
@@ -110,11 +110,11 @@ export function ProjectStatus({ milestones, lastUpdated }: { milestones: Milesto
                     aria-label={m.media.alt}
                   />
                 ) : (
-                  <AssetSlot slot={m.media.slot} spec={m.media.spec} ratio="16/9" id={`04.${active + 1}`} variant={active + 1} label={m.media.alt} src={m.media.src} focus="center" sizes="(min-width: 1024px) 60vw, 100vw" />
+                  <AssetSlot slot={m.media.slot} spec={m.media.spec} ratio="16/9" id={`04.${active + 1}`} variant={active + 1} label={m.media.alt} src={m.media.src} focus="center" reveal={false} sizes="(min-width: 1024px) 60vw, 100vw" />
                 )}
               </div>
               {m.media.credit ? (
-                <p className="t-micro absolute right-4 top-4 bg-paper/95 px-3 py-1.5 text-ink shadow-sm">{m.media.credit}</p>
+                <p className="t-micro absolute right-4 top-4 bg-midnight/70 px-3 py-1.5 text-paper backdrop-blur-md">{m.media.credit}</p>
               ) : null}
               <div className="absolute bottom-5 left-5 hidden items-center gap-3 border border-ink/10 bg-paper/95 px-3 py-2 shadow-sm sm:flex">
                 <span aria-hidden className={`h-2 w-2 rounded-full border ${STATUS[m.status].dot}`} />
@@ -169,16 +169,16 @@ export function ProjectStatus({ milestones, lastUpdated }: { milestones: Milesto
                   <span aria-hidden className={`absolute left-0 top-1.5 h-[11px] w-[11px] rounded-full border ${s.dot}`}>
                     {x.status === "in-progress" ? <span className="absolute inset-0 rounded-full bg-yellow-400 animate-pulse-soft" /> : null}
                   </span>
-                  <div className={`transition-opacity duration-500 ${on ? "opacity-100" : "opacity-50"}`}>
+                  <div>
                     <p className={`t-micro ${s.text}`}>{s.label}</p>
-                    <p className="mt-3 font-display text-[clamp(2.25rem,3.4vw,3.25rem)] font-light leading-none tracking-[-0.03em] text-indigo-700">
+                    <p className={`mt-2 font-serif text-[clamp(2.75rem,4vw,4rem)] italic leading-none text-indigo-700 transition-opacity duration-500 ${on ? "opacity-100" : "opacity-60"}`} aria-hidden>
                       {String(i + 1).padStart(2, "0")}
                     </p>
                     <div className="mt-4 space-y-2.5">
                       <p className="t-s text-ink">{x.title ?? <ContentSlot>Milestone — to be supplied</ContentSlot>}</p>
                       <p className="flex flex-wrap gap-3">
                         {x.phase ? <span className="t-micro text-steel-700">{x.phase}</span> : <ContentSlot>Phase</ContentSlot>}
-                        {x.date ? <span className="t-micro text-blue-500">{x.date}</span> : <ContentSlot>Date — CMS</ContentSlot>}
+                        {x.date ? <span className="t-micro text-indigo-700">{x.date}</span> : <ContentSlot>Date — CMS</ContentSlot>}
                       </p>
                     </div>
                   </div>

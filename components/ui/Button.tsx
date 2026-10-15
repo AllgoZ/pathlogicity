@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 import { Icon } from "./Icon";
+import { Magnetic } from "./Magnetic";
 
 type Variant = "primary" | "outline-light" | "outline-dark" | "outline-yellow";
 
@@ -25,6 +26,7 @@ function Inner({ children, variant, arrow }: { children: ReactNode; variant: Var
         />
       ) : null}
       <span
+        data-magnetic-inner
         className={`relative z-10 inline-flex items-center gap-3 ${variant === "primary" ? "transition-colors duration-300 group-hover:text-paper" : ""}`}
       >
         {children}
@@ -42,11 +44,13 @@ type LinkBtnProps = Omit<ComponentProps<typeof Link>, "className"> & {
 
 export function ButtonLink({ variant = "primary", arrow = true, className = "", children, ...rest }: LinkBtnProps) {
   return (
-    <Link className={`${base} ${variants[variant]} ${className}`} {...rest}>
-      <Inner variant={variant} arrow={arrow}>
-        {children}
-      </Inner>
-    </Link>
+    <Magnetic>
+      <Link className={`${base} ${variants[variant]} ${className}`} {...rest}>
+        <Inner variant={variant} arrow={arrow}>
+          {children}
+        </Inner>
+      </Link>
+    </Magnetic>
   );
 }
 
@@ -54,11 +58,13 @@ type BtnProps = ComponentProps<"button"> & { variant?: Variant; arrow?: boolean 
 
 export function Button({ variant = "primary", arrow = true, className = "", children, ...rest }: BtnProps) {
   return (
-    <button className={`${base} ${variants[variant]} disabled:opacity-60 ${className}`} {...rest}>
-      <Inner variant={variant} arrow={arrow}>
-        {children}
-      </Inner>
-    </button>
+    <Magnetic>
+      <button className={`${base} ${variants[variant]} disabled:opacity-60 ${className}`} {...rest}>
+        <Inner variant={variant} arrow={arrow}>
+          {children}
+        </Inner>
+      </button>
+    </Magnetic>
   );
 }
 

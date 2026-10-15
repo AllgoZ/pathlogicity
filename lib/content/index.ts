@@ -18,6 +18,7 @@ export const getHomepage = () => ({
   milestones: home.milestones,
   statusLastUpdated: home.statusLastUpdated,
   pathGroup: home.pathGroup,
+  renders: home.renders,
   glance: home.glance,
   destinations: home.destinations,
   gatiShakti: home.gatiShakti,

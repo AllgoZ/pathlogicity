@@ -88,7 +88,7 @@ export const Route = forwardRef<RouteHandle, Props>(function Route(
 
   // tone = the SURFACE the route sits on. Light (default): indigo hairline + blue trail.
   const dormant = tone === "light" ? "rgb(32 31 133 / 0.12)" : "rgb(255 255 255 / 0.16)";
-  const trailColor = tone === "light" ? "rgb(0 102 177 / 0.6)" : "rgb(255 255 255 / 0.6)";
+  const trailColor = tone === "light" ? "rgb(32 31 133 / 0.5)" : "rgb(255 255 255 / 0.6)";
 
   return (
     <div ref={wrap} aria-hidden className={`pointer-events-none absolute inset-0 ${className}`}>

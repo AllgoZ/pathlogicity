@@ -4,6 +4,7 @@ import { ScaleIndex } from "@/components/stats/ScaleIndex";
 import { MasterPlan } from "@/components/master-plan/MasterPlan";
 import { ProjectStatus } from "@/components/project-status/ProjectStatus";
 import { PathGroup } from "@/components/path-group/PathGroup";
+import { RendersGallery } from "@/components/gallery/RendersGallery";
 import { HubOpener } from "@/components/advantage/HubOpener";
 import { SpecDrawing } from "@/components/advantage/SpecDrawing";
 import { ConnectivityMap } from "@/components/connectivity-map/ConnectivityMap";
@@ -27,6 +28,7 @@ export default function HomePage() {
       <MasterPlan zones={home.zones} />
       <ProjectStatus milestones={home.milestones} lastUpdated={home.statusLastUpdated} />
       <PathGroup data={home.pathGroup} />
+      <RendersGallery items={home.renders} />
       <HubOpener />
       <SpecDrawing glance={home.glance} />
       <ConnectivityMap destinations={home.destinations} />

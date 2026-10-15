@@ -1,26 +1,24 @@
-import Image from "next/image";
 import Link from "next/link";
 import { getPartners, telHref } from "@/lib/content";
 import type { NavItem, SiteSettings } from "@/lib/content/types";
 import { Icon } from "@/components/ui/Icon";
+import { Logo } from "@/components/navigation/Logo";
 import { ContentSlot } from "@/components/ui/ContentSlot";
 import { PartnerLogos } from "@/components/ui/PartnerLogos";
 import { Route } from "@/components/ui/Route";
 
-/** The conclusion of the story — brand indigo, as on pathlogicity.com. The route resolves onto the wordmark. */
+/** The conclusion of the story — a midnight anchor with grain, a brand glow and the pinwheel stripe. The route resolves onto the wordmark. */
 export function Footer({ navigation, settings }: { navigation: NavItem[]; settings: SiteSettings }) {
   const groups = navigation.filter((n) => n.children);
   const simple = navigation.filter((n) => !n.children && n.href !== "/");
   const link = "text-[0.9375rem] text-paper/80 transition-colors hover:text-paper";
 
   return (
-    <footer className="on-dark relative overflow-hidden bg-indigo-700 pt-16 text-paper lg:pt-24">
+    <footer data-surface="dark" className="on-dark grain glow-brand overflow-hidden bg-midnight pt-16 text-paper lg:pt-24">
+      <div aria-hidden className="pinwheel-stripe absolute inset-x-0 top-0 h-[2px]" />
       <div className="shell grid-12 gap-y-12">
         <div className="col-span-4 sm:col-span-8 lg:col-span-3">
-          <Link href="/" aria-label="Path Logicity — home" className="inline-block">
-            {/* The client's own footer lockup (white on brand indigo) */}
-            <Image src="/client/logo-lockup-indigo.webp" alt="Path Logicity Bengaluru" width={256} height={91} className="h-14 w-auto" sizes="160px" />
-          </Link>
+          <Logo tone="light" />
           <p className="mt-6 text-[0.9375rem] text-paper/85">India&apos;s largest multimodal logistics hub</p>
           <p className="t-micro mt-2 text-paper/60">Dobbaspet · Bengaluru</p>
         </div>
@@ -93,7 +91,7 @@ export function Footer({ navigation, settings }: { navigation: NavItem[]; settin
                   <Icon name={s.icon} size={16} />
                 </a>
               ) : (
-                <span key={s.label} role="img" aria-label={`${s.label} (link to be supplied)`} className="flex h-10 w-10 items-center justify-center border border-paper/15 text-paper/40">
+                <span key={s.label} role="img" aria-label={`${s.label} (link to be supplied)`} className="slot-annotation flex h-10 w-10 items-center justify-center border border-paper/15 text-paper/40">
                   <Icon name={s.icon} size={16} />
                 </span>
               ),
@@ -105,7 +103,7 @@ export function Footer({ navigation, settings }: { navigation: NavItem[]; settin
       {/* Authorities + certification */}
       <div className="shell mt-14 lg:mt-16">
         <p className="t-micro text-paper/60">In association with</p>
-        <PartnerLogos partners={getPartners()} compact tone="dark" className="mt-4" />
+        <PartnerLogos partners={getPartners()} compact tone="dark" marquee className="mt-4" />
       </div>
 
       {/* Final route → wordmark */}
@@ -115,7 +113,7 @@ export function Footer({ navigation, settings }: { navigation: NavItem[]; settin
         </div>
         <p
           aria-hidden
-          className="select-none whitespace-nowrap px-[var(--margin)] font-display text-[13vw] font-extrabold leading-[0.8] tracking-[-0.04em] text-paper/[0.07] [margin-bottom:-0.1em]"
+          className="select-none whitespace-nowrap px-[var(--margin)] font-display text-[13vw] font-semibold leading-[0.8] tracking-[-0.04em] text-paper/[0.07] [margin-bottom:-0.1em]"
         >
           Path Logicity
         </p>
@@ -124,7 +122,11 @@ export function Footer({ navigation, settings }: { navigation: NavItem[]; settin
       <div className="relative border-t border-paper/15">
         <div className="shell flex flex-col gap-4 py-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="t-micro text-paper/60">
-            © {new Date().getFullYear()} PATH India Ltd. · <ContentSlot tone="dark">Privacy</ContentSlot> · <ContentSlot tone="dark">Terms</ContentSlot>
+            © {new Date().getFullYear()} PATH India Ltd.
+            <span className="slot-annotation">
+              {" "}
+              · <ContentSlot tone="dark">Privacy</ContentSlot> · <ContentSlot tone="dark">Terms</ContentSlot>
+            </span>
           </p>
           <a href="#main" className="group t-micro flex items-center gap-2 text-paper/75 hover:text-paper">
             Back to top <Icon name="arrow-up" size={14} />

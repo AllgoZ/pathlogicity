@@ -2,55 +2,62 @@
 
 import { useRef } from "react";
 import { gsap, MQ, ScrollTrigger } from "@/lib/motion/gsap";
-import { useIsoLayoutEffect } from "@/lib/motion/hooks";
+import { useMotion } from "@/lib/motion/hooks";
 
 const fmt = (v: number, decimals: number) =>
   v.toLocaleString("en-IN", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 
+const DIGITS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
 /**
- * Counts up once on entering the viewport. The final value is always in the DOM
- * for screen readers and no-JS; the animated digits are visual only.
+ * M7 — Odometer. Each digit is a 0–9 reel that rolls into place once, staggered
+ * from the right, when the number enters view. Reels render at their final
+ * position for SSR/no-JS/reduced motion, and the real value is always in the DOM
+ * for screen readers (the reels are aria-hidden).
  */
-export function Counter({ value, decimals = 0, duration = 1.4, className = "" }: { value: number; decimals?: number; duration?: number; className?: string }) {
+export function Counter({ value, decimals = 0, duration = 1.8, className = "" }: { value: number; decimals?: number; duration?: number; className?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const final = fmt(value, decimals);
 
-  useIsoLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const mm = gsap.matchMedia();
+  useMotion(ref, (mm) => {
+    const el = ref.current!;
     mm.add(MQ.motion, () => {
-      const o = { v: 0 };
-      el.textContent = fmt(0, decimals);
+      const reels = gsap.utils.toArray<HTMLElement>("[data-reel]", el);
+      const land = (_: number, t: HTMLElement) => -Number(t.dataset.reel) * 10;
+      gsap.set(reels, { y: 0, yPercent: 0 });
       const st = ScrollTrigger.create({
         trigger: el,
         start: "top 88%",
         once: true,
-        onEnter: () =>
-          gsap.to(o, {
-            v: value,
-            duration,
-            ease: "expo.out",
-            onUpdate: () => {
-              el.textContent = fmt(o.v, decimals);
-            },
-          }),
+        onEnter: () => gsap.to(reels, { yPercent: land, duration, ease: "expo.out", stagger: { each: 0.09, from: "end" } }),
       });
       return () => {
         st.kill();
-        el.textContent = final;
+        gsap.set(reels, { y: 0, yPercent: land });
       };
     });
-    return () => mm.revert();
-  }, [value, decimals, duration, final]);
+  }, [final, duration]);
 
   return (
-    <span className={`tnum inline-grid ${className}`}>
-      <span aria-hidden className="invisible col-start-1 row-start-1">
-        {final}
-      </span>
-      <span ref={ref} aria-hidden className="col-start-1 row-start-1">
-        {final}
+    <span className={`tnum inline-flex ${className}`}>
+      <span ref={ref} aria-hidden className="inline-flex">
+        {final.split("").map((c, i) =>
+          /\d/.test(c) ? (
+            <span key={i} className="relative inline-block h-[1.1em] overflow-hidden align-top leading-[1.1em]">
+              <span data-reel={c} className="flex flex-col" style={{ transform: `translateY(-${Number(c) * 10}%)` }}>
+                {DIGITS.map((d) => (
+                  <span key={d} className="block h-[1.1em]">
+                    {d}
+                  </span>
+                ))}
+              </span>
+            </span>
+          ) : (
+            <span key={i} className="inline-block h-[1.1em] align-top leading-[1.1em]">
+              {c}
+            </span>
+          ),
+        )}
       </span>
       <span className="sr-only">{final}</span>
     </span>

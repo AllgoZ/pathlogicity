@@ -1,6 +1,7 @@
 import { contourPaths } from "@/lib/contours";
 import Image from "next/image";
 import type { ReactNode } from "react";
+import { RevealMedia } from "./RevealMedia";
 
 type Props = {
   slot: string;
@@ -23,6 +24,8 @@ type Props = {
   /** Hint for the responsive image width; defaults to a full-width frame. */
   sizes?: string;
   priority?: boolean;
+  /** M4 wipe + settle + parallax on scroll (default on; off for the hero and keyed viewers) */
+  reveal?: boolean;
 };
 
 const hasImageCorner = (src?: string | null) => Boolean(src);
@@ -49,6 +52,7 @@ export function AssetSlot({
   focus = "center",
   sizes = "(min-width: 1024px) 100vw, 100vw",
   priority = false,
+  reveal = true,
 }: Props) {
   const paths = contourPaths(variant);
   // Light theme: every placeholder is a light frame; "ink"/"navy" kept as aliases for a deeper grey.
@@ -66,15 +70,29 @@ export function AssetSlot({
       style={ratio ? { aspectRatio: ratio } : undefined}
     >
       {hasImage ? (
-        <Image
-          src={src as string}
-          alt=""
-          fill
-          sizes={sizes}
-          priority={priority}
-          className="object-cover"
-          style={{ objectPosition: focus }}
-        />
+        reveal ? (
+          <RevealMedia>
+            <Image
+              src={src as string}
+              alt=""
+              fill
+              sizes={sizes}
+              priority={priority}
+              className="img-grade object-cover"
+              style={{ objectPosition: focus }}
+            />
+          </RevealMedia>
+        ) : (
+          <Image
+            src={src as string}
+            alt=""
+            fill
+            sizes={sizes}
+            priority={priority}
+            className="img-grade object-cover"
+            style={{ objectPosition: focus }}
+          />
+        )
       ) : (
         <svg
           aria-hidden
@@ -104,14 +122,14 @@ export function AssetSlot({
         </div>
       ) : null}
 
-      {annotate ? (
-        <>
-          {/* registration corners */}
+      {annotate && !hasImage ? (
+        <span aria-hidden className="slot-annotation">
+          {/* registration corners — review-only, placeholders only */}
           <span aria-hidden className={`absolute left-3 top-3 h-4 w-4 border-l border-t ${corner}`} />
           <span aria-hidden className={`absolute right-3 top-3 h-4 w-4 border-r border-t ${corner}`} />
           <span aria-hidden className={`absolute bottom-3 left-3 h-4 w-4 border-b border-l ${corner}`} />
           <span aria-hidden className={`absolute bottom-3 right-3 h-4 w-4 border-b border-r ${corner}`} />
-        </>
+        </span>
       ) : null}
 
       {annotate && !hasImage ? (

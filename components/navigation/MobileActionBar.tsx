@@ -5,12 +5,12 @@ import { useEffect, useState } from "react";
 import { telHref } from "@/lib/content";
 import type { SiteSettings } from "@/lib/content/types";
 import { Icon } from "@/components/ui/Icon";
-import { useHeroThreshold, useScrollY } from "./useHeroThreshold";
+import { useHeroThreshold, useScrolledPast } from "./useHeroThreshold";
 
 /** Thumb-reach conversion bar on mobile, after the hero, hidden while the form is visible. */
 export function MobileActionBar({ settings }: { settings: SiteSettings }) {
   const threshold = useHeroThreshold();
-  const y = useScrollY();
+  const pastHero = useScrolledPast(threshold);
   const [formVisible, setFormVisible] = useState(false);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export function MobileActionBar({ settings }: { settings: SiteSettings }) {
     return () => io.disconnect();
   }, []);
 
-  const show = y > threshold && !formVisible;
+  const show = pastHero && !formVisible;
   const cell = "flex h-14 w-14 shrink-0 items-center justify-center border-l border-ink/10 text-indigo-700";
 
   return (
@@ -52,7 +52,7 @@ export function MobileActionBar({ settings }: { settings: SiteSettings }) {
             <Icon name="whatsapp" size={20} />
           </a>
         ) : (
-          <span className={`${cell} opacity-40`} role="img" aria-label="WhatsApp (number to be supplied)">
+          <span className={`slot-annotation ${cell} opacity-40`} role="img" aria-label="WhatsApp (number to be supplied)">
             <Icon name="whatsapp" size={20} />
           </span>
         )}

@@ -25,7 +25,7 @@ export function EvolutionLine({ steps }: { steps: string[] }) {
       <span
         data-evo-line
         aria-hidden
-        className="absolute bottom-2 left-[7px] top-2 w-px origin-top bg-blue-500 lg:bottom-auto lg:left-0 lg:right-[12%] lg:top-[7px] lg:h-px lg:w-auto lg:origin-left"
+        className="absolute bottom-2 left-[7px] top-2 w-px origin-top bg-indigo-700 lg:bottom-auto lg:left-0 lg:right-[12%] lg:top-[7px] lg:h-px lg:w-auto lg:origin-left"
       />
       {steps.map((s, i) => {
         const last = i === steps.length - 1;
@@ -41,10 +41,10 @@ export function EvolutionLine({ steps }: { steps: string[] }) {
                 </svg>
               </span>
             ) : (
-              <span aria-hidden className="absolute left-0 top-0 block h-[15px] w-[15px] rounded-full border-2 border-blue-500 bg-paper" />
+              <span aria-hidden className="absolute left-0 top-0 block h-[15px] w-[15px] rounded-full border-2 border-indigo-700 bg-paper" />
             )}
             <p className="t-micro text-steel-500 lg:mt-8">{String(i + 1).padStart(2, "0")}</p>
-            <p className={`mt-2 font-display font-extrabold leading-[1.1] tracking-[-0.02em] ${last ? "text-[clamp(1.5rem,2.1vw,2.125rem)] text-indigo-700" : "text-[clamp(1.125rem,1.5vw,1.5rem)] text-ink"}`}>{s}</p>
+            <p className={`mt-2 font-display font-semibold leading-[1.1] tracking-[-0.02em] ${last ? "text-[clamp(1.5rem,2.1vw,2.125rem)] text-indigo-700" : "text-[clamp(1.125rem,1.5vw,1.5rem)] text-ink"}`}>{s}</p>
           </li>
         );
       })}

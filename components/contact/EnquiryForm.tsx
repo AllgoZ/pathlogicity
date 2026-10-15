@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { Icon } from "@/components/ui/Icon";
+import { Magnetic } from "@/components/ui/Magnetic";
 
 type Intent = "lease" | "visit";
 type Values = {
@@ -104,7 +105,7 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
       {/* Intent toggle — one form, both brief CTAs */}
       <fieldset>
         <legend className="t-micro mb-3 text-steel-500">I want to</legend>
-        <div className="relative grid grid-cols-2 border border-ink/15 bg-canvas p-1">
+        <div className="relative grid grid-cols-2 border border-ink/15 bg-porcelain p-1">
           <span
             aria-hidden
             className="absolute bottom-1 top-1 w-[calc(50%-4px)] bg-indigo-700 transition-transform duration-500 ease-[var(--ease-out-expo)]"
@@ -114,7 +115,7 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
             <label key={k} className="relative z-10 cursor-pointer">
               <input type="radio" name="intent" value={k} checked={intent === k} onChange={() => setIntent(k)} className="peer sr-only" />
               <span
-                className={`flex h-11 items-center justify-center text-[0.875rem] font-bold transition-colors duration-300 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-blue-500 ${
+                className={`flex h-11 items-center justify-center text-[0.875rem] font-bold transition-colors duration-300 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-indigo-700 ${
                   intent === k ? "text-paper" : "text-steel-700"
                 }`}
               >
@@ -156,7 +157,7 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
             <label key={ind} className="cursor-pointer">
               <input type="radio" name="industry" value={ind} checked={v.industry === ind} onChange={() => set("industry", ind)} className="peer sr-only" />
               <span
-                className={`flex h-11 items-center border px-4 text-[0.875rem] font-semibold transition-colors duration-200 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-blue-500 ${
+                className={`flex h-11 items-center border px-4 text-[0.875rem] font-semibold transition-colors duration-200 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-indigo-700 ${
                   v.industry === ind ? "border-yellow-400 bg-yellow-400 text-ink" : "border-ink/15 text-ink/80 hover:border-ink/40"
                 }`}
               >
@@ -192,12 +193,12 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
       <div className="mt-7">
         <label className="flex cursor-pointer items-start gap-3">
           <input type="checkbox" name="consent" checked={v.consent} onChange={(e) => set("consent", e.target.checked)} aria-invalid={!!errors.consent} aria-describedby={errors.consent ? errId("consent") : undefined} className="peer sr-only" />
-          <span aria-hidden className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center border transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-blue-500 ${v.consent ? "border-yellow-400 bg-yellow-400 text-ink" : "border-ink/30 bg-paper"}`}>
+          <span aria-hidden className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center border transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-indigo-700 ${v.consent ? "border-yellow-400 bg-yellow-400 text-ink" : "border-ink/30 bg-paper"}`}>
             {v.consent ? <Icon name="check" size={14} strokeWidth={2} /> : null}
           </span>
           <span className="text-sm leading-relaxed text-steel-700">
             I agree to be contacted by the Path Logicity leasing team about this enquiry.{" "}
-            <span className="t-micro text-steel-500">[ Privacy notice link & consent wording — client legal ]</span>
+            <span className="slot-annotation t-micro text-steel-500">[ Privacy notice link & consent wording — client legal ]</span>
           </span>
         </label>
         {errors.consent ? <ErrorText id={errId("consent")}>{errors.consent}</ErrorText> : null}
@@ -206,20 +207,22 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
       {/* The route arrives at the destination: the submit button */}
       <div className="mt-10 flex items-center gap-0">
         <span aria-hidden className="relative hidden h-px flex-1 bg-ink/15 sm:block">
-          <span className="route-arrive absolute inset-y-0 left-0 w-full origin-left bg-gradient-to-r from-transparent via-blue-500/50 to-yellow-400" />
+          <span className="route-arrive absolute inset-y-0 left-0 w-full origin-left bg-gradient-to-r from-transparent via-indigo-700/40 to-yellow-400" />
           <span className="absolute -right-[3px] -top-[3px] h-1.5 w-1.5 rounded-full bg-yellow-400 shadow-[0_0_0_6px_rgb(231_172_0/0.16)]" />
         </span>
+        <Magnetic>
         <button
           type="submit"
           disabled={state === "sending"}
           className="group relative inline-flex h-14 w-full items-center justify-center gap-3 overflow-hidden bg-yellow-400 px-7 text-[0.875rem] font-bold uppercase tracking-[0.05em] text-ink disabled:opacity-70 sm:w-auto"
         >
           <span aria-hidden className="absolute inset-0 origin-left scale-x-0 bg-indigo-700 transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-x-100" />
-          <span className="relative z-10 inline-flex items-center gap-3 transition-colors duration-300 group-hover:text-paper">
+          <span data-magnetic-inner className="relative z-10 inline-flex items-center gap-3 transition-colors duration-300 group-hover:text-paper">
             {state === "sending" ? "Sending…" : intent === "visit" ? "Plan a site visit" : "Submit lease enquiry"}
             <Icon name="arrow-right" size={18} className="arrow-nudge" />
           </span>
         </button>
+        </Magnetic>
       </div>
       <p className="sr-only" aria-live="polite">
         {state === "sending" ? "Sending your enquiry" : ""}
@@ -229,7 +232,7 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
 }
 
 const inputCls =
-  "block h-11 w-full border-0 border-b border-ink/25 bg-transparent px-0 text-[1.0625rem] text-ink outline-none transition-colors duration-300 focus:border-blue-500 aria-[invalid=true]:border-[#c62828] focus-visible:outline-none";
+  "block h-11 w-full border-0 border-b border-ink/25 bg-transparent px-0 text-[1.0625rem] text-ink outline-none transition-colors duration-300 focus:border-indigo-700 aria-[invalid=true]:border-[#c62828] focus-visible:outline-none";
 
 function Field({ label, name, id, error, children }: { label: string; name: string; id: string; error?: string; children: ReactNode }) {
   return (

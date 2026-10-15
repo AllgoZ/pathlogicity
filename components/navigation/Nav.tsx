@@ -7,28 +7,21 @@ import { telHref } from "@/lib/content";
 import type { NavItem, SiteSettings } from "@/lib/content/types";
 import { Icon } from "@/components/ui/Icon";
 import { Logo } from "./Logo";
-import { useHeroThreshold, useScrollY } from "./useHeroThreshold";
+import { Magnetic } from "@/components/ui/Magnetic";
+import { useHeroThreshold, useHideOnScroll, useScrolledPast } from "./useHeroThreshold";
 
 export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSettings }) {
   const pathname = usePathname();
   const threshold = useHeroThreshold();
-  const y = useScrollY();
   const [open, setOpen] = useState<number | null>(null);
   const [menu, setMenu] = useState(false);
-  const [hidden, setHidden] = useState(false);
-  const lastY = useRef(0);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const solid = y > threshold;
-
+  const solid = useScrolledPast(threshold);
   // Hide on fast downward scroll after the hero; reveal on any upward scroll.
-  useEffect(() => {
-    const dy = y - lastY.current;
-    if (y < threshold + 240 || menu || open !== null) setHidden(false);
-    else if (dy > 8) setHidden(true);
-    else if (dy < -4) setHidden(false);
-    lastY.current = y;
-  }, [y, threshold, menu, open]);
+  const hidden = useHideOnScroll(threshold + 240, menu || open !== null);
+  // over the midnight hero (home only, before the bar turns solid) the nav switches to light text
+  const onImage = pathname === "/" && !solid && !menu;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -69,12 +62,17 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
       </a>
 
       <header
-        className={`fixed inset-x-0 top-0 z-50 transition-[transform,background-color,height,border-color] duration-300 ease-[var(--ease-out-expo)] ${
+        className={`${onImage ? "on-dark" : ""} fixed inset-x-0 top-0 z-50 transition-[transform,background-color,height,border-color] duration-300 ease-[var(--ease-out-expo)] ${
           hidden ? "-translate-y-full" : "translate-y-0"
-        } ${solid || menu ? "border-b border-ink/10 bg-paper/95 shadow-[0_6px_24px_-12px_rgb(26_28_70/0.18)] backdrop-blur-md" : "border-b border-transparent bg-gradient-to-b from-canvas/85 to-transparent"}`}
+        } ${solid || menu ? "border-b border-ink/[0.06] bg-porcelain/90 shadow-[0_8px_30px_-18px_rgb(17_18_51/0.25)] backdrop-blur-xl" : "border-b border-transparent bg-transparent"}`}
       >
+        {/* the client pinwheel as a 2px signature stripe, drawn in once the nav turns solid */}
+        <span
+          aria-hidden
+          className={`pinwheel-stripe absolute inset-x-0 bottom-0 h-[2px] origin-left transition-transform duration-700 ease-[var(--ease-out-expo)] ${solid && !menu ? "scale-x-100" : "scale-x-0"}`}
+        />
         <div className={`shell flex items-center justify-between transition-[height] duration-300 ${solid ? "h-16" : "h-16 lg:h-[88px]"}`}>
-          <Logo className={`relative z-[60] transition-transform duration-300 ${solid ? "lg:scale-90" : ""} origin-left`} />
+          <Logo tone={onImage ? "light" : "dark"} className={`relative z-[60] transition-transform duration-300 ${solid ? "lg:scale-90" : ""} origin-left`} />
 
           <nav aria-label="Primary" className="hidden lg:block">
             <ul className="flex items-center gap-[clamp(14px,1.9vw,34px)]">
@@ -93,7 +91,7 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
                         aria-controls={`nav-panel-${i}`}
                         onClick={() => setOpen(open === i ? null : i)}
                         className={`group relative flex items-center gap-1.5 py-3 text-[0.875rem] font-semibold transition-colors ${
-                          isCurrent(item.href) || open === i ? "text-indigo-700" : "text-ink/80 hover:text-indigo-700"
+                          onImage ? (isCurrent(item.href) || open === i ? "text-paper" : "text-paper/75 hover:text-paper") : isCurrent(item.href) || open === i ? "text-indigo-700" : "text-ink/80 hover:text-indigo-700"
                         }`}
                       >
                         {item.label}
@@ -120,9 +118,9 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
                               <li key={c.href}>
                                 <Link
                                   href={c.href}
-                                  className="group flex gap-4 px-5 py-3.5 transition-colors hover:bg-canvas focus-visible:bg-canvas"
+                                  className="group flex gap-4 px-5 py-3.5 transition-colors hover:bg-porcelain focus-visible:bg-porcelain"
                                 >
-                                  <span className="t-micro pt-[3px] text-blue-500">{String(j + 1).padStart(2, "0")}</span>
+                                  <span className="t-micro pt-[3px] text-indigo-700">{String(j + 1).padStart(2, "0")}</span>
                                   <span>
                                     <span className="block text-[0.9375rem] font-bold text-ink">{c.label}</span>
                                     {c.note ? <span className="mt-1 block text-[0.8125rem] leading-snug text-steel-500">{c.note}</span> : null}
@@ -139,7 +137,7 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
                       href={item.href}
                       aria-current={isCurrent(item.href) ? "page" : undefined}
                       className={`group relative block py-3 text-[0.875rem] font-semibold transition-colors ${
-                        isCurrent(item.href) ? "text-indigo-700" : "text-ink/80 hover:text-indigo-700"
+                        onImage ? (isCurrent(item.href) ? "text-paper" : "text-paper/75 hover:text-paper") : isCurrent(item.href) ? "text-indigo-700" : "text-ink/80 hover:text-indigo-700"
                       }`}
                     >
                       {item.label}
@@ -152,6 +150,7 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
           </nav>
 
           <div className="relative z-[60] flex items-center gap-3">
+            <Magnetic strength={0.22}>
             <Link
               href="#enquire"
               className="group inline-flex h-10 items-center gap-2 bg-yellow-400 px-4 text-[0.8125rem] font-bold uppercase tracking-[0.05em] text-ink transition-colors duration-300 hover:bg-indigo-700 hover:text-paper lg:h-11 lg:px-5"
@@ -159,6 +158,7 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
               Enquire
               <Icon name="arrow-right" size={15} className="arrow-nudge hidden sm:block" />
             </Link>
+            </Magnetic>
             <button
               type="button"
               aria-expanded={menu}
@@ -167,8 +167,8 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
               onClick={() => setMenu((m) => !m)}
               className="relative flex h-10 w-10 items-center justify-center lg:hidden"
             >
-              <span className={`absolute h-0.5 w-6 bg-ink transition-transform duration-300 ${menu ? "rotate-45" : "-translate-y-[5px]"}`} />
-              <span className={`absolute h-0.5 w-6 bg-ink transition-transform duration-300 ${menu ? "-rotate-45" : "translate-y-[5px]"}`} />
+              <span className={`absolute h-0.5 w-6 transition-transform duration-300 ${onImage ? "bg-paper" : "bg-ink"} ${menu ? "rotate-45" : "-translate-y-[5px]"}`} />
+              <span className={`absolute h-0.5 w-6 transition-transform duration-300 ${onImage ? "bg-paper" : "bg-ink"} ${menu ? "-rotate-45" : "translate-y-[5px]"}`} />
             </button>
           </div>
         </div>
@@ -203,7 +203,7 @@ function MobileMenu({ open, items, settings, onClose }: { open: boolean; items: 
       role="dialog"
       aria-modal="true"
       aria-label="Site menu"
-      className={`fixed inset-0 z-40 flex flex-col bg-canvas transition-[clip-path,visibility] duration-700 ease-[var(--ease-out-expo)] lg:hidden ${
+      className={`fixed inset-0 z-40 flex flex-col bg-porcelain transition-[clip-path,visibility] duration-700 ease-[var(--ease-out-expo)] lg:hidden ${
         open ? "visible [clip-path:inset(0_0_0_0)]" : "invisible [clip-path:inset(0_0_100%_0)]"
       }`}
       data-lenis-prevent
@@ -219,8 +219,8 @@ function MobileMenu({ open, items, settings, onClose }: { open: boolean; items: 
             >
               <div className="flex items-center justify-between">
                 <Link ref={i === 0 ? first : undefined} href={item.href} onClick={onClose} className="flex flex-1 items-baseline gap-4 py-4">
-                  <span className="t-micro text-blue-500">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="font-display text-[clamp(1.5rem,6.5vw,2.25rem)] font-extrabold leading-tight tracking-[-0.02em] text-ink">{item.label}</span>
+                  <span className="t-micro text-indigo-700">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-display text-[clamp(1.5rem,6.5vw,2.25rem)] font-semibold leading-tight tracking-[-0.02em] text-ink">{item.label}</span>
                 </Link>
                 {item.children ? (
                   <button
@@ -280,7 +280,7 @@ function QuickIcon({ icon, label, href, small }: { icon: import("@/lib/content/t
       <Icon name={icon} size={small ? 16 : 20} />
     </a>
   ) : (
-    <span aria-label={`${label} (link to be supplied)`} role="img" className={`${cls} opacity-50`} title={`${label} — to be supplied`}>
+    <span aria-label={`${label} (link to be supplied)`} role="img" className={`slot-annotation ${cls} opacity-50`} title={`${label} — to be supplied`}>
       <Icon name={icon} size={small ? 16 : 20} />
     </span>
   );

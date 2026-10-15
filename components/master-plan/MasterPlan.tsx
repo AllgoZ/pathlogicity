@@ -11,7 +11,6 @@ import { ArrowLink } from "@/components/ui/Button";
 import { ContentSlot } from "@/components/ui/ContentSlot";
 import { Icon } from "@/components/ui/Icon";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { SurveyGrid } from "@/components/ui/SurveyGrid";
 import { PlanSvg } from "./PlanSvg";
 import { zoneGeom } from "./planGeometry";
 
@@ -27,7 +26,7 @@ export function MasterPlan({ zones }: { zones: Zone[] }) {
   const [active, setActive] = useState<string | null>(null);
   const [hover, setHover] = useState<string | null>(null);
   /** "plan" = interactive schematic · "official" = the client's official master plan drawing */
-  const [view, setView] = useState<"plan" | "official">("plan");
+  const [view, setView] = useState<"plan" | "official">("official");
   const names = Object.fromEntries(zones.map((z) => [z.id, z.name]));
   const zone = zones.find((z) => z.id === active) ?? null;
   const routeD = active ? zoneGeom[active].route : "M 632 600 L 632 600";
@@ -73,20 +72,19 @@ export function MasterPlan({ zones }: { zones: Zone[] }) {
   };
 
   return (
-    <section ref={section} id="explore" data-stage="explore" aria-labelledby="explore-title" className="relative overflow-hidden bg-canvas-2 section-pad">
-      <SurveyGrid />
+    <section ref={section} id="explore" data-stage="explore" aria-labelledby="explore-title" className="relative overflow-hidden bg-stone section-pad">
       <div className="shell relative grid-12 gap-y-8">
         <SectionHeader
           className="col-span-4 sm:col-span-8 lg:col-span-7"
           index="03"
           chapter="Explore Path Logicity"
           id="explore-title"
-          lines={["Explore the", "ecosystem"]}
+          lines={["Explore the", "*ecosystem*"]}
           body="Warehousing, rail, dry port, commercial, yards, roads and green infrastructure — one connected plan. Select a zone to explore it."
         />
         <div className="col-span-4 self-end sm:col-span-8 lg:col-span-4 lg:col-start-9">
           <div className="border-l-2 border-yellow-400 pl-5">
-            <p className="t-micro text-blue-500">Interactive plan · official drawing</p>
+            <p className="t-micro text-indigo-700">Interactive plan · official drawing</p>
             <p className="mt-2 text-[0.9375rem] leading-relaxed text-steel-700">Explore the zones on the interactive schematic, or switch to the official master plan drawing.</p>
             <div role="group" aria-label="Plan view" className="mt-4 inline-flex border border-ink/15 bg-paper p-1">
               {(["plan", "official"] as const).map((v) => (
@@ -142,7 +140,7 @@ export function MasterPlan({ zones }: { zones: Zone[] }) {
 
         {/* Plan */}
         <div className="col-span-4 sm:col-span-8 lg:col-span-9">
-          <div ref={planWrap} className="relative border border-ink/10 bg-paper">
+          <div ref={planWrap} className="card relative overflow-hidden">
             {/* grid references */}
             <div aria-hidden className={`t-micro pointer-events-none absolute inset-x-0 top-0 hidden h-7 grid-cols-10 border-b border-ink/10 text-steel-500 ${view === "official" ? "" : "sm:grid"}`}>
               {COLS.map((c) => (
@@ -191,7 +189,7 @@ export function MasterPlan({ zones }: { zones: Zone[] }) {
             {/* hover tag */}
             <div aria-hidden className={`pointer-events-none absolute left-10 top-10 hidden ${view === "official" ? "" : "sm:block"}`}>
               <p className={`t-micro transition-opacity duration-300 ${hover || active ? "opacity-100" : "opacity-0"}`}>
-                <span className="text-blue-500">Zone {zones.find((z) => z.id === (hover ?? active))?.index ?? "—"}</span>
+                <span className="text-indigo-700">Zone {zones.find((z) => z.id === (hover ?? active))?.index ?? "—"}</span>
                 <span className="text-steel-700"> / {names[hover ?? active ?? ""] ?? ""} / Grid {zoneGeom[hover ?? active ?? "roads"]?.grid}</span>
               </p>
             </div>
@@ -200,7 +198,7 @@ export function MasterPlan({ zones }: { zones: Zone[] }) {
             <div aria-hidden className={`pointer-events-none absolute bottom-3 left-10 right-4 hidden items-center justify-between ${view === "official" ? "" : "sm:flex"}`}>
               <p className="t-micro text-steel-500">
                 <span className="mr-2 inline-block h-2.5 w-2.5 border border-ink align-middle" /> Main gate
-                <span className="ml-5 mr-2 inline-block h-0.5 w-5 bg-blue-500 align-middle" /> Route to zone
+                <span className="ml-5 mr-2 inline-block h-0.5 w-5 bg-indigo-700 align-middle" /> Route to zone
               </p>
               <p className="t-micro flex items-center gap-2 text-steel-500">
                 <svg width="12" height="16" viewBox="0 0 12 16" aria-hidden>
@@ -226,7 +224,7 @@ function ZonePanel({ zone, onClose, className = "" }: { zone: Zone | null; onClo
   if (!zone) {
     return (
       <div className={`border border-ink/10 bg-paper/95 p-6 shadow-[0_18px_40px_-20px_rgb(26_28_70/0.3)] backdrop-blur-md ${className}`}>
-        <p className="t-micro text-blue-500">Interactive plan</p>
+        <p className="t-micro text-indigo-700">Interactive plan</p>
         <p className="t-s mt-3 max-w-[24ch] text-ink">Seven zones. One connected ecosystem.</p>
         <p className="mt-3 text-sm text-steel-700">Select a zone on the plan or from the index.</p>
       </div>
@@ -237,7 +235,7 @@ function ZonePanel({ zone, onClose, className = "" }: { zone: Zone | null; onClo
       <span aria-hidden className="absolute -top-px left-0 h-px w-16 bg-yellow-400" />
       <div className="p-6">
         <div className="flex items-start justify-between">
-          <p className="t-micro text-blue-500">
+          <p className="t-micro text-indigo-700">
             Zone {zone.index} <span className="text-steel-500">/ Grid {zoneGeom[zone.id]?.grid}</span>
           </p>
           <button type="button" onClick={onClose} aria-label="Close zone details" className="-m-2 p-2 text-steel-500 hover:text-ink">

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getNavigation } from "@/lib/content";
 import { ArrowLink } from "@/components/ui/Button";
-import { SurveyGrid } from "@/components/ui/SurveyGrid";
 
 /** Holding template for inner chapters (built after homepage sign-off — docs/UI-PLAN.md §6). */
 const CHAPTERS: Record<string, { index: string; title: string[]; anchor: string }> = {
@@ -32,12 +31,11 @@ export default async function ChapterPage({ params }: { params: Promise<{ chapte
   const nav = getNavigation().find((n) => n.href === `/${chapter}`);
 
   return (
-    <section className="relative flex min-h-[86svh] items-end overflow-hidden bg-canvas-2 pb-20 pt-40">
-      <SurveyGrid />
+    <section className="relative flex min-h-[86svh] items-end overflow-hidden bg-stone pb-20 pt-40">
       <div className="shell relative grid-12 gap-y-12">
         <div className="col-span-4 sm:col-span-8 lg:col-span-7">
           <p className="t-label text-ink">
-            <span className="text-blue-500">{c.index} /</span> Chapter in design
+            <span className="text-indigo-700">{c.index} /</span> Chapter in design
           </p>
           <h1 className="t-xl mt-5 text-ink">
             {c.title.map((t) => (
@@ -55,7 +53,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ chapte
           <ol className="col-span-4 self-end border-t border-ink/10 sm:col-span-8 lg:col-span-4 lg:col-start-9">
             {nav.children.map((ch, i) => (
               <li key={ch.href} id={ch.href.split("#")[1]} className="flex gap-4 border-b border-ink/10 py-4">
-                <span className="t-micro text-blue-500">{String(i + 1).padStart(2, "0")}</span>
+                <span className="t-micro text-indigo-700">{String(i + 1).padStart(2, "0")}</span>
                 <span>
                   <span className="t-label block text-ink">{ch.label}</span>
                   {ch.note ? <span className="mt-1 block text-sm text-steel-500">{ch.note}</span> : null}

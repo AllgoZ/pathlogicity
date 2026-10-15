@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useHeroThreshold, useScrollY } from "./useHeroThreshold";
+import { useHeroThreshold, useScrolledPast } from "./useHeroThreshold";
 
 const STAGES = ["discover", "explore", "understand", "believe", "enquire"] as const;
 type Stage = (typeof STAGES)[number];
@@ -14,7 +14,7 @@ export function JourneyRail() {
   const [active, setActive] = useState<Stage | null>(null);
   const [anchors, setAnchors] = useState<Partial<Record<Stage, string>>>({});
   const threshold = useHeroThreshold();
-  const y = useScrollY();
+  const pastHero = useScrolledPast(threshold * 0.9);
 
   useEffect(() => {
     const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-stage]"));
@@ -37,8 +37,9 @@ export function JourneyRail() {
     return () => io.disconnect();
   }, []);
 
-  if (!Object.keys(anchors).length) return null;
-  const visible = y > threshold * 0.9 && active;
+  // only meaningful where every stage exists (the homepage); avoids href-less links on inner pages
+  if (Object.keys(anchors).length < STAGES.length) return null;
+  const visible = pastHero && active;
   const idx = active ? STAGES.indexOf(active) : 0;
 
   return (
@@ -74,7 +75,7 @@ export function JourneyRail() {
         ))}
       </ol>
       {/* active stage, set vertically so it never overlaps page content */}
-      <p aria-hidden className="t-micro mt-6 text-right text-blue-500 [writing-mode:vertical-rl]" style={{ marginLeft: "auto" }}>
+      <p aria-hidden className="t-micro mt-6 text-right text-indigo-700 [writing-mode:vertical-rl]" style={{ marginLeft: "auto" }}>
         {active}
       </p>
     </nav>

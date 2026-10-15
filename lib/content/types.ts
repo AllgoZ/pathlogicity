@@ -85,6 +85,8 @@ export interface ScaleNode {
   label: string;
   text: string;
   href: string;
+  /** hover preview image (desktop) */
+  image?: string;
 }
 
 export interface Zone {
@@ -167,4 +169,14 @@ export interface Partner {
   logo: string;
   width: number;
   height: number;
+}
+
+/** A card in the renders gallery */
+export interface GalleryItem {
+  id: string;
+  title: string;
+  caption: string;
+  media: MediaAsset;
+  /** "contain" for drawings (e.g. the master plan) shown whole on a white card */
+  fit?: "cover" | "contain";
 }

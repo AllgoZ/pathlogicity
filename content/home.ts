@@ -8,6 +8,7 @@
 import type {
   Benefit,
   Destination,
+  GalleryItem,
   Initiative,
   MediaAsset,
   MetricData,
@@ -79,7 +80,7 @@ export const navigation: NavItem[] = [
 ];
 
 export const hero = {
-  headline: ["India's", "Largest", "Multimodal", "Logistics Hub"],
+  headline: ["India's", "Largest", "*Multimodal*", "Logistics Hub"],
   copy: "A connected logistics ecosystem at Dobbaspet, Bengaluru, built to move businesses faster.",
   location: { primary: "Dobbaspet", secondary: "Bengaluru", roads: ["NH 648", "NH 48", "STRR"] },
   siteTag: "Phase 1 · 138 Acres",
@@ -87,9 +88,9 @@ export const hero = {
     slot: "Project Video",
     spec: "Drone aerial of site · 1920×1080 + 4:5 mobile · MP4/WebM · 12–20s loop · ≤6 MB",
     src: null,
-    // Client key visual used as the hero still until drone footage is supplied.
-    poster: "/client/main.webp",
-    alt: "Multimodal logistics — road, rail, air and port connectivity at Path Logicity",
+    // The client's entry-gate render (PATH Logicity sign) as the hero still until drone footage is supplied.
+    poster: "/client/hero-gate.webp", // gate render with the cool grade baked in (no live CSS filter)
+    alt: "Render of the Path Logicity entry gate, with trucks arriving on the approach road",
   } satisfies MediaAsset,
 };
 
@@ -97,10 +98,10 @@ export const scale = {
   metric: { value: 400, unit: "Acres", label: "400-acre integrated development" } satisfies MetricData,
   result: ["Integrated", "Logistics", "Ecosystem"],
   nodes: [
-    { id: "location", icon: "crosshair", label: "Location", text: "Strategic Dobbaspet, Bengaluru location", href: "#connectivity" },
-    { id: "connectivity", icon: "network", label: "Connectivity", text: "Road + Rail + Air + Ports", href: "#connectivity" },
-    { id: "ecosystem", icon: "warehouse", label: "Ecosystem", text: "Warehousing + Dry Port + Logistics + Commercial", href: "#explore" },
-    { id: "legacy", icon: "legacy", label: "Legacy", text: "PATH Group's infrastructure experience", href: "#path-group" },
+    { id: "location", icon: "crosshair", label: "Location", text: "Strategic Dobbaspet, Bengaluru location", href: "#connectivity", image: "/client/345.webp" },
+    { id: "connectivity", icon: "network", label: "Connectivity", text: "Road + Rail + Air + Ports", href: "#connectivity", image: "/client/image-1729245560924.webp" },
+    { id: "ecosystem", icon: "warehouse", label: "Ecosystem", text: "Warehousing + Dry Port + Logistics + Commercial", href: "#explore", image: "/client/image-1729245699855.webp" },
+    { id: "legacy", icon: "legacy", label: "Legacy", text: "PATH Group's infrastructure experience", href: "#path-group", image: "/client/image-1729245444632.webp" },
   ] satisfies ScaleNode[],
 };
 
@@ -111,7 +112,7 @@ export const zones: Zone[] = [
     name: "Warehousing",
     short: "Grade-A warehousing at the core of the ecosystem.",
     facts: ["~5.2 Mn sq. ft. of Grade-A warehousing"],
-    media: { slot: "Warehousing", spec: "Site photograph · 3:2", src: "/client/image-1729245154858.webp", alt: "Grade-A warehousing at Path Logicity" },
+    media: { slot: "Warehousing", spec: "Site photograph · 3:2", src: "/client/image-1729245699855.webp", alt: "Render of Grade-A warehousing rows" },
   },
   {
     id: "rail",
@@ -119,7 +120,7 @@ export const zones: Zone[] = [
     name: "Rail Terminal",
     short: "A state-of-the-art rail terminal inside the hub.",
     facts: ["~40 acres dedicated to a state-of-the-art rail terminal", "6 railway sidings enabling seamless multimodal movement"],
-    media: { slot: "Rail Terminal", spec: "Site photograph · 3:2", src: "/client/image-1729245469753.webp", alt: "Rail terminal and sidings at Path Logicity" },
+    media: { slot: "Rail Terminal", spec: "Site photograph · 3:2", src: "/client/image-1720613648983.webp", alt: "Aerial render of Path Logicity with the rail terminal" },
   },
   {
     id: "icd",
@@ -136,7 +137,7 @@ export const zones: Zone[] = [
     name: "Commercial",
     short: "Commercial infrastructure serving the hub.",
     facts: ["~1.76 Mn sq. ft. of commercial space"],
-    media: { slot: "Commercial", spec: "Render or photograph · 3:2", src: "/client/image-1729245352630.webp", alt: "Commercial space at Path Logicity" },
+    media: { slot: "Commercial", spec: "Render or photograph · 3:2", src: null, alt: "Commercial space at Path Logicity" },
   },
   {
     id: "yards",
@@ -154,7 +155,7 @@ export const zones: Zone[] = [
     short: "The internal network that keeps the hub moving.",
     facts: [],
     pending: "Internal road specification to be supplied",
-    media: { slot: "Roads", spec: "Drone photograph · 3:2", alt: "Internal roads at Path Logicity" },
+    media: { slot: "Roads", spec: "Drone photograph · 3:2", src: "/client/image-1729245469753.webp", alt: "Render of the Path Logicity entry gate and approach road" },
   },
   {
     id: "green",
@@ -213,13 +214,13 @@ export const milestones: Milestone[] = [
     phase: "Phase 1",
     title: "First phase operational",
     date: "Q4 2026",
-    media: progressMedia("04", "/client/image-1729245154858.webp", "Render of Path Logicity with the rail terminal and warehousing", "Project render"),
+    media: progressMedia("04", "/client/image-1720613648983.webp", "Aerial render of Path Logicity with the rail terminal and warehousing", "Project render"),
   },
 ];
 export const statusLastUpdated: string | null = null;
 
 export const pathGroup = {
-  headline: { from: "From building infrastructure", to: ["To connecting", "India's supply chains"] },
+  headline: { from: "From building infrastructure", to: ["To connecting", "India's *supply chains*"] },
   metrics: [
     { value: 27, unit: "Years", label: "of infrastructure legacy" },
     { value: 17, suffix: "+", unit: "States", label: "pan-India presence" },
@@ -233,8 +234,8 @@ export const pathGroup = {
   photo: {
     slot: "PATH Group Photography",
     spec: "Real PATH infrastructure project · 21:9 · ≥2560px wide",
-    src: "/client/image-1729245608818.webp",
-    alt: "Path Logicity logistics park development",
+    src: "/client/image-1729245444632.webp",
+    alt: "Aerial view of large-scale warehousing and logistics infrastructure",
   } satisfies MediaAsset,
 };
 
@@ -249,6 +250,17 @@ export const glance: (MetricData & { id: string; zone: string })[] = [
   { id: "phase1", zone: "phase1", value: 138, unit: "Acres · Phase 1", label: "the first phase, targeted for Q4 2026" },
 ];
 
+/** §05.5 — the client's own renders (pathlogicity.com), shown as a pinned horizontal gallery. Illustrative. */
+const render = (src: string, alt: string): MediaAsset => ({ slot: "Render", spec: "Client render · 16:10", src, alt });
+export const renders: GalleryItem[] = [
+  { id: "gate", title: "The entry gate", caption: "Arrival from the approach road", media: render("/client/image-1729245469753.webp", "Render of the Path Logicity entry gate") },
+  { id: "icd", title: "Container yard & ICD", caption: "Gantry cranes at the inland container depot", media: render("/client/image-1729245560924.webp", "Render of the container yard with gantry cranes") },
+  { id: "aerial", title: "Rail terminal & warehousing", caption: "The park from above", media: render("/client/image-1720613648983.webp", "Aerial render of Path Logicity with the rail terminal") },
+  { id: "warehousing", title: "Grade-A warehousing", caption: "~5.2 million sq. ft. of warehousing space", media: render("/client/image-1729245699855.webp", "Render of Grade-A warehousing rows") },
+  { id: "green", title: "Solar roofs, green belts", caption: "Sustainability built into the layout", media: render("/client/image-1729245154858.webp", "Render of warehouses with rooftop solar and green belts") },
+  { id: "plan", title: "The master plan", caption: "Official layout of the park", media: render("/client/image-1731136566206.webp", "Official Path Logicity master plan"), fit: "contain" },
+];
+
 export const destinations: Destination[] = [
   { id: "nh648", name: "NH 648", subtitle: "Adjacent · towards Devanahalli", mode: "road", kind: "corridor", level: "region", distanceKm: null, durationText: null, note: null },
   { id: "nh48", name: "NH 48", subtitle: "Multi-lane · via Nelamangala to Bengaluru", mode: "road", kind: "corridor", level: "region", distanceKm: null, durationText: null, note: null },
@@ -261,7 +273,7 @@ export const destinations: Destination[] = [
 ];
 
 export const gatiShakti = {
-  headline: ["Connecting India's", "logistics future"],
+  headline: ["Connecting India's", "*logistics future*"],
   tagline: "Driving India's vision for integrated and efficient logistics.",
   equation: [
     { label: "Road", icon: "road" },
@@ -284,7 +296,7 @@ export const gatiShakti = {
 };
 
 export const sustainability = {
-  headline: ["Moving business forward.", "Responsibly."],
+  headline: ["Moving business forward.", "*Responsibly.*"],
   certification: { body: "IGBC", level: "Platinum", type: "Pre-Certification" },
   initiatives: [
     { id: "solar", icon: "solar", name: "Solar Energy", text: null, metric: null },
@@ -294,7 +306,7 @@ export const sustainability = {
     { id: "efficiency", icon: "efficiency", name: "Resource Efficiency", text: null, metric: null },
   ] satisfies Initiative[],
   story: ["More efficient infrastructure", "Smarter logistics", "More sustainable growth"],
-  media: { slot: "Sustainability Imagery", spec: "Solar / green spaces on site · 4:5", src: "/client/image-1720613648983.webp", alt: "Green, sustainable logistics infrastructure at Path Logicity" } satisfies MediaAsset,
+  media: { slot: "Sustainability Imagery", spec: "Solar / green spaces on site · 4:5", src: "/client/image-1729245154858.webp", alt: "Render of warehouses with rooftop solar and green belts" } satisfies MediaAsset,
 };
 
 export const benefits: Benefit[] = [
@@ -347,7 +359,7 @@ export const news: NewsItem[] = [
 ];
 
 export const enquiry = {
-  headline: ["Let's build", "your", "logistics", "advantage"],
+  headline: ["Let's build", "your", "*logistics*", "advantage"],
   copy: ["Tell us about your business requirements.", "Let's explore the right solution at Path Logicity."],
   industries: ["FMCG", "E-commerce", "Retail", "Automotive", "Pharma", "Logistics", "Others"],
 };

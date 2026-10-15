@@ -1,6 +1,7 @@
 "use client";
 
 import { createElement, useRef, type ElementType, type ReactNode } from "react";
+import { accent } from "@/lib/accent";
 import { gsap, MQ } from "@/lib/motion/gsap";
 import { useMotion } from "@/lib/motion/hooks";
 
@@ -26,9 +27,11 @@ export function RevealLines({
     mm.add(MQ.motion, () => {
       gsap.from(ref.current!.querySelectorAll("[data-line]"), {
         yPercent: 108,
-        duration: 1.1,
-        stagger: 0.07,
+        letterSpacing: "0.02em",
+        duration: 1.2,
+        stagger: 0.08,
         ease: "expo.out",
+        clearProps: "letterSpacing",
         scrollTrigger: { trigger: ref.current, start: "top 85%", once: true },
       });
     });
@@ -39,7 +42,7 @@ export function RevealLines({
     lines.map((line, i) => (
       <span key={i} className="block overflow-hidden pb-[0.14em] -mb-[0.14em]">
         <span data-line className={`block ${lineClassNames[i] ?? ""}`}>
-          {line}
+          {accent(line)}
         </span>
       </span>
     )),

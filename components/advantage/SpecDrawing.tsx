@@ -7,7 +7,7 @@ import { useMotion } from "@/lib/motion/hooks";
 import { boxIn, useLinks } from "@/lib/motion/useLinks";
 import { ArrowLink } from "@/components/ui/Button";
 import { ContentSlot } from "@/components/ui/ContentSlot";
-import { Metric, PINWHEEL_TEXT } from "@/components/ui/Metric";
+import { Metric } from "@/components/ui/Metric";
 import { Reveal } from "@/components/ui/Reveal";
 import { PlanSvg } from "@/components/master-plan/PlanSvg";
 
@@ -80,7 +80,7 @@ export function SpecDrawing({ glance }: { glance: Homepage["glance"] }) {
               dots.current[id] = el;
             }}
             aria-hidden
-            className={`absolute top-9 hidden h-2 w-2 rounded-full transition-colors duration-300 lg:block ${side === "r" ? "left-0" : "right-0"} ${on ? "bg-yellow-400" : "bg-blue-500/60"}`}
+            className={`absolute top-9 hidden h-2 w-2 rounded-full transition-colors duration-300 lg:block ${side === "r" ? "left-0" : "right-0"} ${on ? "bg-yellow-400" : "bg-indigo-700/60"}`}
           />
           <Metric data={g} size="m" valueClassName={on ? "text-indigo-700" : "text-ink"} className={`transition-opacity duration-300 ${active && !on ? "opacity-40" : ""}`} />
         </button>
@@ -89,16 +89,16 @@ export function SpecDrawing({ glance }: { glance: Homepage["glance"] }) {
   };
 
   return (
-    <div ref={section} id="at-a-glance" className="relative bg-canvas-2 section-pad">
+    <div ref={section} id="at-a-glance" className="relative bg-stone section-pad">
       <div className="shell grid-12 gap-y-8">
         <div className="col-span-4 sm:col-span-8 lg:col-span-6">
           <p className="t-label text-ink">
-            <span className="text-blue-500">06.1 /</span> Project at a glance
+            <span className="text-indigo-700">06.1 /</span> Project at a glance
           </p>
           <h3 className="t-l mt-5 text-ink">
             Scale,
             <br />
-            specified.
+            <em>specified.</em>
           </h3>
         </div>
         <p className="t-body-l col-span-4 self-end text-steel-700 sm:col-span-8 lg:col-span-4 lg:col-start-9">
@@ -118,7 +118,7 @@ export function SpecDrawing({ glance }: { glance: Homepage["glance"] }) {
                   d={d}
                   pathLength={1}
                   strokeDasharray="1 1"
-                  stroke={active === id ? "var(--color-blue-500)" : "rgb(26 28 70 / 0.3)"}
+                  stroke={active === id ? "var(--color-indigo-700)" : "rgb(26 28 70 / 0.3)"}
                   strokeWidth={active === id ? 1.5 : 1}
                   className="transition-[stroke] duration-300"
                 />
@@ -159,8 +159,8 @@ export function SpecDrawing({ glance }: { glance: Homepage["glance"] }) {
       <Reveal className="shell mt-16 lg:mt-24">
         <div className="grid-12 items-end gap-y-6 border-t border-ink/15 pt-10">
           <div className="col-span-4 sm:col-span-4 lg:col-span-5">
-            <p className="t-micro text-blue-500">Phase 1</p>
-            <Metric data={{ ...phase1, unit: "Acres" }} size="xl" showLabel={false} valueClassName={PINWHEEL_TEXT[0]} className="mt-4" />
+            <p className="t-micro text-indigo-700">Phase 1</p>
+            <Metric data={{ ...phase1, unit: "Acres" }} size="xl" showLabel={false} className="mt-4" />
           </div>
           <p className="t-s col-span-4 max-w-[26ch] text-ink sm:col-span-4 lg:col-span-4">{phase1.label}.</p>
           <div className="col-span-4 flex flex-col items-start gap-4 sm:col-span-8 lg:col-span-3 lg:items-end">

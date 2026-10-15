@@ -32,23 +32,23 @@ export function NewsPreview({ items }: { items: NewsItem[] }) {
   };
 
   return (
-    <section id="news" data-stage="believe" aria-labelledby="news-title" className="on-light relative bg-paper text-navy-950 section-pad">
+    <section id="news" data-stage="believe" aria-labelledby="news-title" className="relative bg-canvas text-ink section-pad">
       <div className="shell">
         <div className="grid-12 gap-y-6">
           <div className="col-span-4 sm:col-span-8 lg:col-span-8">
-            <p className="t-label">
-              <span className="text-navy-950/45">10 /</span> Newsroom
+            <p className="t-label text-ink">
+              <span className="text-blue-500">10 /</span> Newsroom
             </p>
-            <RevealLines id="news-title" lines={["Path Logicity", "in the news"]} className="t-xl mt-6" />
+            <RevealLines id="news-title" lines={["Path Logicity", "in the news"]} className="t-xl mt-5 text-ink" />
           </div>
           <div className="col-span-4 flex items-end sm:col-span-8 lg:col-span-3 lg:col-start-10 lg:justify-end">
-            <ArrowLink href="/news" tone="dark">
+            <ArrowLink href="/news">
               View all
             </ArrowLink>
           </div>
         </div>
 
-        <div role="tablist" aria-label="News categories" className="no-scrollbar mt-12 flex gap-8 overflow-x-auto border-b border-navy-950/15 lg:mt-16">
+        <div role="tablist" aria-label="News categories" className="no-scrollbar mt-12 flex gap-8 overflow-x-auto border-b border-ink/15 lg:mt-16">
           {TABS.map((t, i) => (
             <button
               key={t.id}
@@ -62,10 +62,10 @@ export function NewsPreview({ items }: { items: NewsItem[] }) {
               tabIndex={tab === t.id ? 0 : -1}
               onClick={() => setTab(t.id)}
               onKeyDown={(e) => onKey(e, i)}
-              className={`relative shrink-0 pb-4 text-[13px] font-semibold uppercase tracking-[0.07em] transition-colors ${tab === t.id ? "text-navy-950" : "text-steel-700 hover:text-navy-950"}`}
+              className={`relative shrink-0 pb-4 text-[0.9375rem] font-bold transition-colors ${tab === t.id ? "text-indigo-700" : "text-steel-500 hover:text-ink"}`}
             >
               {t.label}
-              <span aria-hidden className={`absolute -bottom-px left-0 h-[2px] w-full origin-left bg-navy-950 transition-transform duration-300 ${tab === t.id ? "scale-x-100" : "scale-x-0"}`} />
+              <span aria-hidden className={`absolute -bottom-px left-0 h-[3px] w-full origin-left bg-yellow-400 transition-transform duration-300 ${tab === t.id ? "scale-x-100" : "scale-x-0"}`} />
             </button>
           ))}
         </div>
@@ -81,18 +81,18 @@ export function NewsPreview({ items }: { items: NewsItem[] }) {
                 </div>
                 <Meta item={featured} />
                 <h3 className="t-m mt-3 max-w-[22ch]">{featured.headline ?? <ContentSlot tone="light">Featured headline — to be published</ContentSlot>}</h3>
-                <span className="mt-5 inline-flex items-center gap-3 text-[13px] font-semibold uppercase tracking-[0.07em]">
+                <span className="mt-5 inline-flex items-center gap-3 text-[0.8125rem] font-bold uppercase tracking-[0.05em] text-indigo-700">
                   Read more <Icon name="arrow-right" size={18} className="arrow-nudge" />
                 </span>
               </article>
               {rest.length ? (
                 <ul className="col-span-4 sm:col-span-8 lg:col-span-5">
                   {rest.slice(0, 3).map((n) => (
-                    <li key={n.id} className="group border-b border-navy-950/15 py-6 first:border-t first:pt-6 lg:first:border-t-0 lg:first:pt-0">
+                    <li key={n.id} className="group border-b border-ink/15 py-6 first:border-t first:pt-6 lg:first:border-t-0 lg:first:pt-0">
                       <Meta item={n} />
                       <div className="mt-3 flex items-start justify-between gap-6">
                         <p className="t-s max-w-[28ch]">{n.headline ?? <ContentSlot tone="light">Headline — to be published</ContentSlot>}</p>
-                        <Icon name="arrow-right" size={20} className="arrow-nudge mt-1 shrink-0" />
+                        <Icon name="arrow-right" size={20} className="arrow-nudge mt-1 shrink-0 text-indigo-700" />
                       </div>
                     </li>
                   ))}
@@ -113,7 +113,7 @@ export function NewsPreview({ items }: { items: NewsItem[] }) {
 
 function Meta({ item }: { item: NewsItem }) {
   return (
-    <p className="t-micro mt-5 flex flex-wrap gap-3 text-steel-700">
+    <p className="t-micro mt-5 flex flex-wrap gap-3 text-blue-500">
       {item.source ?? <ContentSlot tone="light">Source</ContentSlot>}
       <span aria-hidden>·</span>
       {item.date ?? <ContentSlot tone="light">Date</ContentSlot>}
@@ -123,14 +123,14 @@ function Meta({ item }: { item: NewsItem }) {
 
 function EmptyState({ label }: { label: string }) {
   return (
-    <div className="grid-12 items-center gap-y-8 border border-navy-950/15 p-8 lg:p-14">
+    <div className="grid-12 items-center gap-y-8 border border-ink/15 bg-paper p-8 lg:p-14">
       <div className="col-span-4 sm:col-span-8 lg:col-span-7">
         <p className="t-micro text-steel-700">{label}</p>
         <p className="t-m mt-3 max-w-[20ch]">Updates are on their way.</p>
         <p className="mt-3 max-w-[44ch] text-steel-700">Meanwhile, follow the project as it takes shape — milestones are tracked live in Project Status.</p>
       </div>
       <div className="col-span-4 sm:col-span-8 lg:col-span-4 lg:col-start-9 lg:justify-self-end">
-        <ArrowLink href="#status" tone="dark">
+        <ArrowLink href="#status">
           Follow project status
         </ArrowLink>
       </div>

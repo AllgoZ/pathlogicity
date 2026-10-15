@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRef } from "react";
 import type { Homepage } from "@/lib/content";
 import { gsap, MQ } from "@/lib/motion/gsap";
@@ -43,13 +44,13 @@ export function Sustainability({ data }: { data: Homepage["sustainability"] }) {
   });
 
   return (
-    <section ref={section} id="sustainability" data-stage="believe" aria-labelledby="sus-title" className="on-light relative overflow-hidden bg-paper text-navy-950 section-pad">
+    <section ref={section} id="sustainability" data-stage="believe" aria-labelledby="sus-title" className="relative overflow-hidden bg-canvas text-ink section-pad">
       <div className="shell grid-12 gap-y-10">
         <div className="col-span-4 sm:col-span-8 lg:col-span-8">
           <p className="t-label flex items-center gap-3">
             <span className="text-green-700">08 /</span> Sustainability · ESG
           </p>
-          <RevealLines id="sus-title" lines={data.headline} lineClassNames={["", "text-green-700"]} className="t-l mt-6" />
+          <RevealLines id="sus-title" lines={data.headline} lineClassNames={["", "text-green-700"]} className="t-l mt-5 text-ink" />
         </div>
         <p className="t-body-l col-span-4 self-end text-steel-700 sm:col-span-8 lg:col-span-3 lg:col-start-10">
           Infrastructure, efficiency and sustainability — engineered to work together.
@@ -61,8 +62,8 @@ export function Sustainability({ data }: { data: Homepage["sustainability"] }) {
         <div className="col-span-4 sm:col-span-8 lg:col-span-7">
           <div data-ring className="relative mx-auto aspect-square w-full max-w-[600px]">
             <svg viewBox="0 0 560 560" className="absolute inset-0 h-full w-full" fill="none" aria-hidden>
-              <circle cx="280" cy="280" r={R + 46} stroke="rgb(7 14 38 / 0.08)" strokeDasharray="2 8" />
-              <circle cx="280" cy="280" r={R} stroke="rgb(7 14 38 / 0.1)" strokeWidth="1" />
+              <circle cx="280" cy="280" r={R + 46} stroke="rgb(26 28 70 / 0.1)" strokeDasharray="2 8" />
+              <circle cx="280" cy="280" r={R} stroke="rgb(26 28 70 / 0.1)" strokeWidth="1" />
               <circle
                 data-ring-arc
                 cx="280"
@@ -80,15 +81,18 @@ export function Sustainability({ data }: { data: Homepage["sustainability"] }) {
               </g>
             </svg>
 
-            {/* IGBC lockup */}
+            {/* IGBC lockup — the official IGBC mark (igbc.in) with the rating */}
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <p className="t-label text-green-700">{data.certification.body}</p>
-              <p className="mt-2 font-display text-[clamp(2.75rem,7vw,5.5rem)] font-extrabold uppercase leading-[0.85] tracking-[-0.05em]">{data.certification.level}</p>
-              <p className="t-label mt-3">{data.certification.type}</p>
-              <span aria-hidden className="mt-5 block h-px w-12 bg-navy-950/30" />
-              <p className="t-micro mt-4 max-w-[18ch] text-steel-700">
-                <span className="slot-annotation">[ Official IGBC mark — with usage rights ]</span>
-              </p>
+              <Image
+                src="/client/partners/igbc.png"
+                alt="Indian Green Building Council (IGBC)"
+                width={420}
+                height={666}
+                sizes="120px"
+                className="h-[clamp(84px,14vw,128px)] w-auto"
+              />
+              <p className="mt-3 font-display text-[clamp(1.75rem,3.6vw,2.75rem)] font-extrabold leading-none tracking-[-0.02em] text-green-700">{data.certification.level}</p>
+              <p className="t-label mt-2 text-ink">{data.certification.type}</p>
             </div>
 
             {/* initiative nodes on the ring */}
@@ -101,14 +105,14 @@ export function Sustainability({ data }: { data: Homepage["sustainability"] }) {
               return (
                 <div key={it.id} className="absolute" style={{ left: `${x}%`, top: `${y}%` }}>
                   <div data-ring-node className="group relative -translate-x-1/2 -translate-y-1/2">
-                    <span className="flex h-14 w-14 items-center justify-center border border-navy-950/20 bg-paper text-green-700 transition-colors duration-300 group-hover:border-green-700 group-hover:bg-green-700 group-hover:text-paper sm:h-16 sm:w-16">
+                    <span className="flex h-14 w-14 items-center justify-center border border-ink/15 bg-paper text-green-700 shadow-sm transition-colors duration-300 group-hover:border-green-700 group-hover:bg-green-700 group-hover:text-paper sm:h-16 sm:w-16">
                       <Icon name={it.icon} size={26} draw />
                     </span>
                     <div
                       data-ring-copy
                       className={`absolute top-1/2 hidden w-[150px] -translate-y-1/2 sm:block ${right ? "left-[calc(100%+14px)]" : left ? "right-[calc(100%+14px)] text-right" : "left-1/2 top-[calc(100%+12px)] -translate-x-1/2 translate-y-0 text-center"}`}
                     >
-                      <p className="t-label leading-tight">{it.name}</p>
+                      <p className="t-label leading-tight text-ink">{it.name}</p>
                       {it.metric ? <Metric data={it.metric} size="m" tone="light" /> : null}
                     </div>
                   </div>
@@ -120,15 +124,15 @@ export function Sustainability({ data }: { data: Homepage["sustainability"] }) {
 
         {/* Initiatives list + imagery */}
         <div className="col-span-4 sm:col-span-8 lg:col-span-4 lg:col-start-9">
-          <ul className="border-t border-navy-950/15">
+          <ul className="border-t border-ink/15">
             {data.initiatives.map((it, i) => (
-              <li key={it.id} className="group flex items-start gap-4 border-b border-navy-950/15 py-4">
+              <li key={it.id} className="group flex items-start gap-4 border-b border-ink/15 py-4">
                 <span className="t-micro pt-1 text-green-700">{String(i + 1).padStart(2, "0")}</span>
                 <div className="flex-1">
-                  <p className="t-label">{it.name}</p>
+                  <p className="t-label text-ink">{it.name}</p>
                   <p className="mt-1.5">{it.text ? <span className="text-sm text-steel-700">{it.text}</span> : <ContentSlot tone="light">Verified detail to be supplied</ContentSlot>}</p>
                 </div>
-                <Icon name={it.icon} size={20} className="mt-0.5 text-navy-950/40 transition-colors group-hover:text-green-700" />
+                <Icon name={it.icon} size={20} className="mt-0.5 text-ink/40 transition-colors group-hover:text-green-700" />
               </li>
             ))}
           </ul>
@@ -138,11 +142,11 @@ export function Sustainability({ data }: { data: Homepage["sustainability"] }) {
 
       {/* Story strip */}
       <div className="shell mt-20 lg:mt-28">
-        <ol data-story className="grid gap-6 border-t border-navy-950/15 pt-10 lg:grid-cols-3 lg:gap-0">
+        <ol data-story className="grid gap-6 border-t border-ink/15 pt-10 lg:grid-cols-3 lg:gap-0">
           {data.story.map((s, i) => (
             <li key={s} data-story-step className="relative flex items-center gap-5 lg:pr-10">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-green-700 font-mono text-xs text-green-700">{String(i + 1).padStart(2, "0")}</span>
-              <p className="font-display text-[clamp(1.2rem,1.9vw,1.85rem)] font-extrabold uppercase leading-[0.98] tracking-[-0.025em]">{s}</p>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-green-700 text-xs font-bold text-green-700">{String(i + 1).padStart(2, "0")}</span>
+              <p className="font-display text-[clamp(1.125rem,1.5vw,1.5rem)] font-bold leading-[1.2] text-ink">{s}</p>
               {i < data.story.length - 1 ? (
                 <span aria-hidden data-story-line className="ml-auto hidden h-px w-16 shrink-0 bg-green-700 lg:block xl:w-24">
                   <span className="relative -top-[3px] float-right block h-0 w-0 border-y-[3.5px] border-l-[6px] border-y-transparent border-l-green-700" />

@@ -29,7 +29,7 @@ type Props = {
 
 /** The signature device: a thin route line with a moving yellow "vehicle" head. */
 export const Route = forwardRef<RouteHandle, Props>(function Route(
-  { d, tone = "dark", base = true, initial = 1, auto, scrubStart = "top 75%", scrubEnd = "bottom 40%", keepHead = true, className = "", strokeWidth = 1.5 },
+  { d, tone = "light", base = true, initial = 1, auto, scrubStart = "top 75%", scrubEnd = "bottom 40%", keepHead = true, className = "", strokeWidth = 1.5 },
   ref,
 ) {
   const wrap = useRef<HTMLDivElement>(null);
@@ -86,8 +86,9 @@ export const Route = forwardRef<RouteHandle, Props>(function Route(
     return () => mm.revert();
   }, [auto, scaled, scrubStart, scrubEnd, set]);
 
-  const dormant = tone === "light" ? "rgb(7 14 38 / 0.14)" : "rgb(255 255 255 / 0.12)";
-  const trailColor = tone === "light" ? "rgb(7 14 38 / 0.55)" : "rgb(196 201 214 / 0.55)";
+  // tone = the SURFACE the route sits on. Light (default): indigo hairline + blue trail.
+  const dormant = tone === "light" ? "rgb(32 31 133 / 0.12)" : "rgb(255 255 255 / 0.16)";
+  const trailColor = tone === "light" ? "rgb(0 102 177 / 0.6)" : "rgb(255 255 255 / 0.6)";
 
   return (
     <div ref={wrap} aria-hidden className={`pointer-events-none absolute inset-0 ${className}`}>
@@ -120,7 +121,7 @@ export const Route = forwardRef<RouteHandle, Props>(function Route(
         className="absolute left-0 top-0 block opacity-0 will-change-transform"
         style={{ width: 0, height: 0 }}
       >
-        <span className="absolute -left-[3px] -top-[3px] h-1.5 w-1.5 rounded-full bg-yellow-400 shadow-[0_0_0_6px_rgb(231_172_0/0.16),0_0_24px_4px_rgb(231_172_0/0.35)]" />
+        <span className="absolute -left-[3px] -top-[3px] h-1.5 w-1.5 rounded-full bg-yellow-400 shadow-[0_0_0_6px_rgb(231_172_0/0.2),0_0_18px_3px_rgb(231_172_0/0.4)]" />
       </span>
     </div>
   );

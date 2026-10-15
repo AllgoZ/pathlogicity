@@ -56,12 +56,12 @@ export function PlanSvg({
       className={nested ? className : `block h-auto w-full ${className}`} fill="none" role={interactive ? "group" : "img"} aria-label="Illustrative schematic of the Path Logicity master plan">
       <defs>
         <pattern id="plan-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-          <path d="M0 0v8" stroke="rgb(255 255 255 / 0.06)" strokeWidth="1" />
+          <path d="M0 0v8" stroke="rgb(26 28 70 / 0.07)" strokeWidth="1" />
         </pattern>
       </defs>
 
       {showGrid ? (
-        <g aria-hidden stroke="rgb(255 255 255 / 0.05)" strokeWidth="1">
+        <g aria-hidden stroke="rgb(26 28 70 / 0.06)" strokeWidth="1">
           {Array.from({ length: 11 }).map((_, i) => (
             <path key={`v${i}`} d={`M ${i * 100} 0 V ${PLAN_H}`} />
           ))}
@@ -72,10 +72,10 @@ export function PlanSvg({
       ) : null}
 
       {/* rail line beyond the site */}
-      <path aria-hidden d="M 0 124 L 1000 102" stroke="rgb(147 187 230 / 0.25)" strokeWidth="1" strokeDasharray="2 6" />
+      <path aria-hidden d="M 0 124 L 1000 102" stroke="rgb(0 102 177 / 0.4)" strokeWidth="1" strokeDasharray="2 6" />
 
       {/* site boundary */}
-      <path aria-hidden d={boundary} fill="url(#plan-hatch)" stroke="rgb(255 255 255 / 0.35)" strokeWidth="1.2" strokeDasharray="10 5" />
+      <path aria-hidden d={boundary} fill="url(#plan-hatch)" stroke="rgb(26 28 70 / 0.4)" strokeWidth="1.2" strokeDasharray="10 5" />
 
       {ZONE_ORDER.map((id) => {
         const g = zoneGeom[id];
@@ -102,15 +102,15 @@ export function PlanSvg({
             {isRoad ? (
               <>
                 <path d={g.d} stroke="transparent" strokeWidth="22" />
-                <path d={g.d} stroke={isFocus ? "rgb(231 172 0 / 0.4)" : "rgb(255 255 255 / 0.1)"} strokeWidth="9" className="transition-[stroke] duration-300" />
-                <path d={g.d} stroke={isFocus ? "rgb(231 172 0 / 0.9)" : "rgb(255 255 255 / 0.28)"} strokeWidth="1" strokeDasharray="6 6" className="transition-[stroke] duration-300" />
+                <path d={g.d} stroke={isFocus ? "rgb(231 172 0 / 0.45)" : "rgb(26 28 70 / 0.1)"} strokeWidth="9" className="transition-[stroke] duration-300" />
+                <path d={g.d} stroke={isFocus ? "rgb(180 132 0)" : "rgb(26 28 70 / 0.35)"} strokeWidth="1" strokeDasharray="6 6" className="transition-[stroke] duration-300" />
               </>
             ) : (
               <>
                 <path
                   d={g.d}
-                  fill={isFocus ? (id === "green" ? "rgb(68 158 53 / 0.55)" : "rgb(32 31 133 / 0.78)") : id === "green" ? "rgb(68 158 53 / 0.16)" : "rgb(90 138 210 / 0.12)"}
-                  stroke={isFocus ? "var(--color-yellow-400)" : "rgb(255 255 255 / 0.3)"}
+                  fill={isFocus ? (id === "green" ? "rgb(68 158 53 / 0.7)" : "rgb(32 31 133 / 0.85)") : id === "green" ? "rgb(68 158 53 / 0.22)" : "rgb(0 102 177 / 0.1)"}
+                  stroke={isFocus ? "var(--color-yellow-400)" : "rgb(26 28 70 / 0.32)"}
                   strokeWidth={isFocus ? 1.5 : 1}
                   className="transition-[fill,stroke] duration-300"
                 />
@@ -118,9 +118,9 @@ export function PlanSvg({
                   <path
                     aria-hidden
                     d={g.detail}
-                    stroke={isFocus ? "rgb(243 239 230 / 0.6)" : "rgb(255 255 255 / 0.18)"}
+                    stroke={isFocus ? "rgb(255 255 255 / 0.7)" : "rgb(26 28 70 / 0.2)"}
                     strokeWidth="1"
-                    fill={id === "icd" || id === "commercial" ? (isFocus ? "rgb(243 239 230 / 0.08)" : "none") : "none"}
+                    fill={id === "icd" || id === "commercial" ? (isFocus ? "rgb(255 255 255 / 0.12)" : "none") : "none"}
                     className="pointer-events-none transition-[stroke] duration-300"
                   />
                 ) : null}
@@ -133,17 +133,17 @@ export function PlanSvg({
 
       {/* gate */}
       <g aria-hidden transform={`translate(${GATE.x} ${GATE.y})`}>
-        <rect x="-9" y="-9" width="18" height="18" fill="var(--color-navy-950)" stroke="rgb(243 239 230 / 0.8)" />
-        <path d="M -4 0 H 4 M 0 -4 V 4" stroke="var(--color-yellow-400)" />
+        <rect x="-9" y="-9" width="18" height="18" fill="var(--color-paper)" stroke="var(--color-ink)" />
+        <path d="M -4 0 H 4 M 0 -4 V 4" stroke="var(--color-blue-500)" strokeWidth="1.5" />
       </g>
 
       {/* route from gate to the selected zone */}
       {routeD !== undefined ? (
         <g aria-hidden className="pointer-events-none">
           <path ref={routeRef} d={routeD} stroke="none" />
-          <path ref={routeTrailRef} d={routeD} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1} stroke="var(--color-yellow-400)" strokeWidth="2.5" strokeLinecap="round" />
+          <path ref={routeTrailRef} d={routeD} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1} stroke="var(--color-blue-500)" strokeWidth="2.5" strokeLinecap="round" />
           <g ref={headRef} opacity={0}>
-            <circle r="11" fill="rgb(231 172 0 / 0.18)" />
+            <circle r="11" fill="rgb(231 172 0 / 0.3)" />
             <circle r="4.5" fill="var(--color-yellow-400)" />
           </g>
         </g>

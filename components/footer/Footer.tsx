@@ -1,42 +1,48 @@
+import Image from "next/image";
 import Link from "next/link";
+import { getPartners, telHref } from "@/lib/content";
 import type { NavItem, SiteSettings } from "@/lib/content/types";
 import { Icon } from "@/components/ui/Icon";
 import { ContentSlot } from "@/components/ui/ContentSlot";
-import { Logo } from "@/components/navigation/Logo";
+import { PartnerLogos } from "@/components/ui/PartnerLogos";
 import { Route } from "@/components/ui/Route";
 
-/** The conclusion of the story — the route resolves onto the wordmark. */
+/** The conclusion of the story — brand indigo, as on pathlogicity.com. The route resolves onto the wordmark. */
 export function Footer({ navigation, settings }: { navigation: NavItem[]; settings: SiteSettings }) {
   const groups = navigation.filter((n) => n.children);
   const simple = navigation.filter((n) => !n.children && n.href !== "/");
+  const link = "text-[0.9375rem] text-paper/80 transition-colors hover:text-paper";
 
   return (
-    <footer className="relative overflow-hidden bg-navy-950 pt-20 lg:pt-28">
+    <footer className="on-dark relative overflow-hidden bg-indigo-700 pt-16 text-paper lg:pt-24">
       <div className="shell grid-12 gap-y-12">
         <div className="col-span-4 sm:col-span-8 lg:col-span-3">
-          <Logo />
-          <p className="t-micro mt-8 text-steel-300">India&apos;s largest multimodal logistics hub</p>
-          <p className="t-micro mt-2 text-steel-500">Dobbaspet · Bengaluru</p>
+          <Link href="/" aria-label="Path Logicity — home" className="inline-block">
+            {/* The client's own footer lockup (white on brand indigo) */}
+            <Image src="/client/logo-lockup-indigo.webp" alt="Path Logicity Bengaluru" width={256} height={91} className="h-14 w-auto" sizes="160px" />
+          </Link>
+          <p className="mt-6 text-[0.9375rem] text-paper/85">India&apos;s largest multimodal logistics hub</p>
+          <p className="t-micro mt-2 text-paper/60">Dobbaspet · Bengaluru</p>
         </div>
 
         <nav aria-label="Footer" className="col-span-4 grid grid-cols-2 gap-x-8 gap-y-10 sm:col-span-8 sm:grid-cols-4 lg:col-span-6">
           <div>
-            <p className="t-micro text-steel-500">Navigate</p>
+            <p className="t-micro text-yellow-400">Navigate</p>
             <ul className="mt-5 space-y-3">
               <li>
-                <Link href="/" className="text-sm text-paper/80 transition-colors hover:text-paper">
+                <Link href="/" className={link}>
                   Home
                 </Link>
               </li>
               {simple.map((n) => (
                 <li key={n.href}>
-                  <Link href={n.href} className="text-sm text-paper/80 transition-colors hover:text-paper">
+                  <Link href={n.href} className={link}>
                     {n.label}
                   </Link>
                 </li>
               ))}
               <li>
-                <Link href="#enquire" className="text-sm text-paper/80 transition-colors hover:text-paper">
+                <Link href="#enquire" className={link}>
                   Contact
                 </Link>
               </li>
@@ -44,11 +50,11 @@ export function Footer({ navigation, settings }: { navigation: NavItem[]; settin
           </div>
           {groups.map((g) => (
             <div key={g.label}>
-              <p className="t-micro text-steel-500">{g.label}</p>
+              <p className="t-micro text-yellow-400">{g.label}</p>
               <ul className="mt-5 space-y-3">
                 {g.children!.map((c) => (
                   <li key={c.href}>
-                    <Link href={c.href} className="text-sm text-paper/80 transition-colors hover:text-paper">
+                    <Link href={c.href} className={link}>
                       {c.label}
                     </Link>
                   </li>
@@ -59,26 +65,35 @@ export function Footer({ navigation, settings }: { navigation: NavItem[]; settin
         </nav>
 
         <div className="col-span-4 sm:col-span-8 lg:col-span-3">
-          <p className="t-micro text-steel-500">Leasing contact</p>
-          <div className="mt-5 space-y-2 text-sm text-paper/80">
-            <p>{settings.leasingName ?? <ContentSlot>Leasing contact name</ContentSlot>}</p>
-            <p>{settings.phone ? <a href={`tel:${settings.phone}`}>{settings.phone}</a> : <ContentSlot>Phone</ContentSlot>}</p>
-            <p>{settings.email ? <a href={`mailto:${settings.email}`}>{settings.email}</a> : <ContentSlot>Email</ContentSlot>}</p>
+          <p className="t-micro text-yellow-400">Contact</p>
+          <div className="mt-5 space-y-2 text-[0.9375rem] text-paper/85">
+            {settings.leasingName ? <p>{settings.leasingName}</p> : null}
+            <p>{settings.phone ? <a href={telHref(settings.phone)} className="hover:text-paper">{settings.phone}</a> : <ContentSlot tone="dark">Phone</ContentSlot>}</p>
+            <p>{settings.email ? <a href={`mailto:${settings.email}`} className="hover:text-paper">{settings.email}</a> : <ContentSlot tone="dark">Email</ContentSlot>}</p>
+            {settings.address ? (
+              <address className="pt-2 not-italic leading-relaxed text-paper/70">
+                {settings.address.map((l) => (
+                  <span key={l} className="block">
+                    {l}
+                  </span>
+                ))}
+              </address>
+            ) : null}
           </div>
           <Link
             href="#enquire"
-            className="group mt-8 inline-flex h-12 items-center gap-3 border border-yellow-400/70 px-5 text-[12.5px] font-semibold uppercase tracking-[0.07em] text-yellow-400 transition-colors hover:bg-yellow-400 hover:text-navy-950"
+            className="group mt-7 inline-flex h-12 items-center gap-3 bg-yellow-400 px-5 text-[0.8125rem] font-bold uppercase tracking-[0.05em] text-ink transition-colors hover:bg-paper"
           >
             Enquire now <Icon name="arrow-right" size={16} className="arrow-nudge" />
           </Link>
           <div className="mt-6 flex gap-2">
             {settings.socials.map((s) =>
               s.href ? (
-                <a key={s.label} href={s.href} aria-label={s.label} className="flex h-10 w-10 items-center justify-center border border-white/15 hover:border-paper">
+                <a key={s.label} href={s.href} aria-label={s.label} target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center border border-paper/25 transition-colors hover:border-paper hover:bg-paper hover:text-indigo-700">
                   <Icon name={s.icon} size={16} />
                 </a>
               ) : (
-                <span key={s.label} role="img" aria-label={`${s.label} (link to be supplied)`} className="flex h-10 w-10 items-center justify-center border border-white/10 text-paper/40">
+                <span key={s.label} role="img" aria-label={`${s.label} (link to be supplied)`} className="flex h-10 w-10 items-center justify-center border border-paper/15 text-paper/40">
                   <Icon name={s.icon} size={16} />
                 </span>
               ),
@@ -87,25 +102,31 @@ export function Footer({ navigation, settings }: { navigation: NavItem[]; settin
         </div>
       </div>
 
+      {/* Authorities + certification */}
+      <div className="shell mt-14 lg:mt-16">
+        <p className="t-micro text-paper/60">In association with</p>
+        <PartnerLogos partners={getPartners()} compact tone="dark" className="mt-4" />
+      </div>
+
       {/* Final route → wordmark */}
-      <div className="relative mt-20 lg:mt-28">
+      <div className="relative mt-14 lg:mt-20">
         <div className="relative h-16">
-          <Route d="M 0 50 C 30 50, 40 50, 60 50 L 96 50" auto="enter" base />
+          <Route d="M 0 50 C 30 50, 40 50, 60 50 L 96 50" auto="enter" base tone="dark" />
         </div>
         <p
           aria-hidden
-          className="select-none whitespace-nowrap px-[var(--margin)] font-display text-[15.2vw] font-extrabold uppercase leading-[0.78] tracking-[-0.06em] text-paper/[0.06] [margin-bottom:-0.12em]"
+          className="select-none whitespace-nowrap px-[var(--margin)] font-display text-[13vw] font-extrabold leading-[0.8] tracking-[-0.04em] text-paper/[0.07] [margin-bottom:-0.1em]"
         >
           Path Logicity
         </p>
       </div>
 
-      <div className="relative border-t border-white/10">
+      <div className="relative border-t border-paper/15">
         <div className="shell flex flex-col gap-4 py-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="t-micro text-steel-500">
-            © {new Date().getFullYear()} PATH · <ContentSlot>Privacy</ContentSlot> · <ContentSlot>Terms</ContentSlot>
+          <p className="t-micro text-paper/60">
+            © {new Date().getFullYear()} PATH India Ltd. · <ContentSlot tone="dark">Privacy</ContentSlot> · <ContentSlot tone="dark">Terms</ContentSlot>
           </p>
-          <a href="#main" className="group t-micro flex items-center gap-2 text-steel-300 hover:text-paper">
+          <a href="#main" className="group t-micro flex items-center gap-2 text-paper/75 hover:text-paper">
             Back to top <Icon name="arrow-up" size={14} />
           </a>
         </div>

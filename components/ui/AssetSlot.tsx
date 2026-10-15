@@ -25,6 +25,8 @@ type Props = {
   priority?: boolean;
 };
 
+const hasImageCorner = (src?: string | null) => Boolean(src);
+
 /**
  * Deliberate placeholder for client imagery/video (docs/UI-PLAN.md §4.6).
  * Registration corners + contour art + mono annotations. Annotations hide with
@@ -35,7 +37,7 @@ export function AssetSlot({
   spec,
   id,
   ratio,
-  tone = "navy",
+  tone = "paper",
   variant = 0,
   animated = true,
   compact = false,
@@ -49,10 +51,11 @@ export function AssetSlot({
   priority = false,
 }: Props) {
   const paths = contourPaths(variant);
-  const bg = tone === "ink" ? "bg-ink" : tone === "paper" ? "bg-paper-2" : "bg-navy-800";
-  const stroke = tone === "paper" ? "rgb(7 14 38 / 0.10)" : "rgb(255 255 255 / 0.075)";
-  const text = tone === "paper" ? "text-navy-950/60" : "text-paper/55";
-  const corner = tone === "paper" ? "border-navy-950/35" : "border-paper/35";
+  // Light theme: every placeholder is a light frame; "ink"/"navy" kept as aliases for a deeper grey.
+  const bg = tone === "paper" ? "bg-paper-2" : "bg-paper-3";
+  const stroke = "rgb(32 31 133 / 0.10)";
+  const text = "text-ink/60";
+  const corner = hasImageCorner(src) ? "border-paper/80" : "border-ink/30";
   const hasImage = Boolean(src);
 
   return (
@@ -95,7 +98,7 @@ export function AssetSlot({
       {animated && !hasImage ? (
         <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
           <div
-            className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-white/[0.035] to-transparent"
+            className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-white/[0.5] to-transparent"
             style={{ animation: "sweep 9s ease-in-out infinite" }}
           />
         </div>
@@ -116,7 +119,7 @@ export function AssetSlot({
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="t-micro">{id ? `Asset slot ${id}` : "Asset slot"}</p>
-            <p className={`t-label mt-1 ${tone === "paper" ? "text-navy-950/80" : "text-paper/85"}`}>{slot}</p>
+            <p className="t-label mt-1 text-ink/80">{slot}</p>
           </div>
           {ratio ? <p className="t-micro">{ratio.replace("/", " : ")}</p> : null}
         </div>

@@ -29,6 +29,7 @@ export type IconName =
   | "wrench"
   | "atm"
   | "phone"
+  | "mail"
   | "whatsapp"
   | "download"
   | "arrow-right"
@@ -61,9 +62,12 @@ export interface MediaAsset {
   slot: string;
   /** Asset spec shown on the placeholder so the client knows what to supply */
   spec: string;
+  /** Image, or an .mp4/.webm video (e.g. a Constra timelapse) where the component supports it */
   src?: string | null;
   poster?: string | null;
   alt: string;
+  /** Source/credit line shown on the frame, e.g. "Constra site capture · 12 Oct 2026" */
+  credit?: string | null;
 }
 
 export interface MetricData {
@@ -151,5 +155,16 @@ export interface SiteSettings {
   brochureUrl: string | null;
   /** Only rendered when verified — never fabricated */
   coordinates: { lat: number; lng: number } | null;
+  /** Registered office lines, as published by the client */
+  address: string[] | null;
   socials: { label: string; icon: IconName; href: string | null }[];
+}
+
+export interface Partner {
+  id: string;
+  name: string;
+  role: string;
+  logo: string;
+  width: number;
+  height: number;
 }

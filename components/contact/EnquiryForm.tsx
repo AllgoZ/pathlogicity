@@ -79,18 +79,18 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
 
   if (state === "done") {
     return (
-      <div role="status" className="flex min-h-[420px] flex-col justify-center border-t border-white/15 pt-10">
+      <div role="status" className="flex min-h-[420px] flex-col justify-center border-t border-ink/15 pt-10">
         <div className="flex items-center gap-4">
-          <span className="flex h-14 w-14 items-center justify-center border border-yellow-400 text-yellow-400">
+          <span className="flex h-14 w-14 items-center justify-center border border-green-500 text-green-500">
             <Icon name="check" size={26} draw className="is-drawing" />
           </span>
-          <p className="t-label text-yellow-400">{intent === "visit" ? "Site visit request received" : "Enquiry received"}</p>
+          <p className="t-label text-green-700">{intent === "visit" ? "Site visit request received" : "Enquiry received"}</p>
         </div>
-        <p className="t-l mt-8 max-w-[14ch]">Thank you, {v.name.split(" ")[0]}.</p>
+        <p className="t-l mt-8 max-w-[14ch] text-ink">Thank you, {v.name.split(" ")[0]}.</p>
         <p className="t-micro mt-6 max-w-[46ch] normal-case tracking-[0.03em] text-steel-500">
           [ Next-steps copy to be supplied by the leasing team ] · Demo build — this submission was not sent anywhere.
         </p>
-        <button type="button" onClick={() => { setV(EMPTY); setState("idle"); }} className="t-label mt-10 self-start text-paper underline-offset-4 hover:underline">
+        <button type="button" onClick={() => { setV(EMPTY); setState("idle"); }} className="t-label mt-10 self-start text-indigo-700 underline-offset-4 hover:underline">
           Send another enquiry
         </button>
       </div>
@@ -103,19 +103,19 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
     <form ref={form} onSubmit={submit} noValidate aria-describedby={`${uid}-req`}>
       {/* Intent toggle — one form, both brief CTAs */}
       <fieldset>
-        <legend className="t-micro mb-3 text-steel-300">I want to</legend>
-        <div className="relative grid grid-cols-2 border border-white/15 p-1">
+        <legend className="t-micro mb-3 text-steel-500">I want to</legend>
+        <div className="relative grid grid-cols-2 border border-ink/15 bg-canvas p-1">
           <span
             aria-hidden
-            className="absolute bottom-1 top-1 w-[calc(50%-4px)] bg-paper transition-transform duration-500 ease-[var(--ease-out-expo)]"
+            className="absolute bottom-1 top-1 w-[calc(50%-4px)] bg-indigo-700 transition-transform duration-500 ease-[var(--ease-out-expo)]"
             style={{ transform: intent === "visit" ? "translateX(calc(100% + 0px))" : "translateX(0)", left: 4 }}
           />
           {(["lease", "visit"] as const).map((k) => (
             <label key={k} className="relative z-10 cursor-pointer">
               <input type="radio" name="intent" value={k} checked={intent === k} onChange={() => setIntent(k)} className="peer sr-only" />
               <span
-                className={`flex h-11 items-center justify-center text-[12.5px] font-semibold uppercase tracking-[0.07em] transition-colors duration-300 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-yellow-400 ${
-                  intent === k ? "text-navy-950" : "text-paper/70"
+                className={`flex h-11 items-center justify-center text-[0.875rem] font-bold transition-colors duration-300 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-blue-500 ${
+                  intent === k ? "text-paper" : "text-steel-700"
                 }`}
               >
                 {k === "lease" ? "Lease space" : "Plan a site visit"}
@@ -141,7 +141,7 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
         </Field>
         <Field label="Phone number" name="phone" id={uid} error={errors.phone}>
           <div className="flex items-end">
-            <span className="mb-[11px] mr-3 font-mono text-sm text-steel-300" aria-hidden>
+            <span className="mb-[11px] mr-3 text-[0.9375rem] font-semibold text-steel-500" aria-hidden>
               +91
             </span>
             <input id={`${uid}-phone`} name="phone" type="tel" autoComplete="tel-national" inputMode="tel" value={v.phone} onChange={(e) => set("phone", e.target.value)} onBlur={() => blur("phone")} aria-invalid={!!errors.phone} aria-describedby={errors.phone ? errId("phone") : undefined} className={inputCls} />
@@ -150,14 +150,14 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
       </div>
 
       <fieldset className="mt-8" aria-describedby={errors.industry ? errId("industry") : undefined}>
-        <legend className="t-micro text-steel-300">Industry</legend>
+        <legend className="t-micro text-steel-500">Industry</legend>
         <div className="mt-3 flex flex-wrap gap-2">
           {industries.map((ind) => (
             <label key={ind} className="cursor-pointer">
               <input type="radio" name="industry" value={ind} checked={v.industry === ind} onChange={() => set("industry", ind)} className="peer sr-only" />
               <span
-                className={`flex h-11 items-center border px-4 text-[13px] font-medium transition-colors duration-200 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-yellow-400 ${
-                  v.industry === ind ? "border-yellow-400 bg-yellow-400 text-navy-950" : "border-white/20 text-paper/85 hover:border-white/50"
+                className={`flex h-11 items-center border px-4 text-[0.875rem] font-semibold transition-colors duration-200 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-blue-500 ${
+                  v.industry === ind ? "border-yellow-400 bg-yellow-400 text-ink" : "border-ink/15 text-ink/80 hover:border-ink/40"
                 }`}
               >
                 {ind}
@@ -171,7 +171,7 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
       {intent === "visit" ? (
         <div className="mt-8 sm:w-1/2">
           <Field label="Preferred visit date" name="visitDate" id={uid} error={errors.visitDate}>
-            <input id={`${uid}-visitDate`} name="visitDate" type="date" value={v.visitDate} onChange={(e) => set("visitDate", e.target.value)} onBlur={() => blur("visitDate")} aria-invalid={!!errors.visitDate} aria-describedby={errors.visitDate ? errId("visitDate") : undefined} className={`${inputCls} [color-scheme:dark]`} />
+            <input id={`${uid}-visitDate`} name="visitDate" type="date" value={v.visitDate} onChange={(e) => set("visitDate", e.target.value)} onBlur={() => blur("visitDate")} aria-invalid={!!errors.visitDate} aria-describedby={errors.visitDate ? errId("visitDate") : undefined} className={`${inputCls} [color-scheme:light]`} />
           </Field>
         </div>
       ) : null}
@@ -192,10 +192,10 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
       <div className="mt-7">
         <label className="flex cursor-pointer items-start gap-3">
           <input type="checkbox" name="consent" checked={v.consent} onChange={(e) => set("consent", e.target.checked)} aria-invalid={!!errors.consent} aria-describedby={errors.consent ? errId("consent") : undefined} className="peer sr-only" />
-          <span aria-hidden className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center border transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-yellow-400 ${v.consent ? "border-yellow-400 bg-yellow-400 text-navy-950" : "border-white/30"}`}>
+          <span aria-hidden className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center border transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-blue-500 ${v.consent ? "border-yellow-400 bg-yellow-400 text-ink" : "border-ink/30 bg-paper"}`}>
             {v.consent ? <Icon name="check" size={14} strokeWidth={2} /> : null}
           </span>
-          <span className="text-sm leading-relaxed text-steel-300">
+          <span className="text-sm leading-relaxed text-steel-700">
             I agree to be contacted by the Path Logicity leasing team about this enquiry.{" "}
             <span className="t-micro text-steel-500">[ Privacy notice link & consent wording — client legal ]</span>
           </span>
@@ -205,17 +205,17 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
 
       {/* The route arrives at the destination: the submit button */}
       <div className="mt-10 flex items-center gap-0">
-        <span aria-hidden className="relative hidden h-px flex-1 bg-white/15 sm:block">
-          <span className="route-arrive absolute inset-y-0 left-0 w-full origin-left bg-gradient-to-r from-transparent via-paper/50 to-yellow-400" />
+        <span aria-hidden className="relative hidden h-px flex-1 bg-ink/15 sm:block">
+          <span className="route-arrive absolute inset-y-0 left-0 w-full origin-left bg-gradient-to-r from-transparent via-blue-500/50 to-yellow-400" />
           <span className="absolute -right-[3px] -top-[3px] h-1.5 w-1.5 rounded-full bg-yellow-400 shadow-[0_0_0_6px_rgb(231_172_0/0.16)]" />
         </span>
         <button
           type="submit"
           disabled={state === "sending"}
-          className="group relative inline-flex h-14 w-full items-center justify-center gap-3 overflow-hidden bg-yellow-400 px-7 text-[13px] font-semibold uppercase tracking-[0.06em] text-navy-950 disabled:opacity-70 sm:w-auto"
+          className="group relative inline-flex h-14 w-full items-center justify-center gap-3 overflow-hidden bg-yellow-400 px-7 text-[0.875rem] font-bold uppercase tracking-[0.05em] text-ink disabled:opacity-70 sm:w-auto"
         >
-          <span aria-hidden className="absolute inset-0 origin-left scale-x-0 bg-navy-950 transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-x-100" />
-          <span className="relative z-10 inline-flex items-center gap-3 transition-colors duration-300 group-hover:text-yellow-400">
+          <span aria-hidden className="absolute inset-0 origin-left scale-x-0 bg-indigo-700 transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-x-100" />
+          <span className="relative z-10 inline-flex items-center gap-3 transition-colors duration-300 group-hover:text-paper">
             {state === "sending" ? "Sending…" : intent === "visit" ? "Plan a site visit" : "Submit lease enquiry"}
             <Icon name="arrow-right" size={18} className="arrow-nudge" />
           </span>
@@ -229,12 +229,12 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
 }
 
 const inputCls =
-  "block h-11 w-full border-0 border-b border-white/25 bg-transparent px-0 text-[1.0625rem] text-paper outline-none transition-colors duration-300 focus:border-yellow-400 aria-[invalid=true]:border-[#ff8a7a] focus-visible:outline-none";
+  "block h-11 w-full border-0 border-b border-ink/25 bg-transparent px-0 text-[1.0625rem] text-ink outline-none transition-colors duration-300 focus:border-blue-500 aria-[invalid=true]:border-[#c62828] focus-visible:outline-none";
 
 function Field({ label, name, id, error, children }: { label: string; name: string; id: string; error?: string; children: ReactNode }) {
   return (
     <div>
-      <label htmlFor={`${id}-${name}`} className="t-micro block text-steel-300">
+      <label htmlFor={`${id}-${name}`} className="t-micro block text-steel-500">
         {label}
       </label>
       <div className="mt-1">{children}</div>
@@ -245,8 +245,8 @@ function Field({ label, name, id, error, children }: { label: string; name: stri
 
 function ErrorText({ id, children }: { id: string; children: ReactNode }) {
   return (
-    <p id={id} className="mt-2 flex items-center gap-2 text-[13px] text-[#ffb3a8]">
-      <span aria-hidden className="inline-block h-1.5 w-1.5 rotate-45 bg-[#ff8a7a]" />
+    <p id={id} className="mt-2 flex items-center gap-2 text-[0.8125rem] font-semibold text-[#c62828]">
+      <span aria-hidden className="inline-block h-1.5 w-1.5 rotate-45 bg-[#c62828]" />
       {children}
     </p>
   );

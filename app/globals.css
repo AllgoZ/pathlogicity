@@ -1,53 +1,60 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   PATH LOGICITY — design tokens
-   Accent hues are the CLIENT BRAND palette, scraped from pathlogicity.com
-   (the logo pinwheel): green #449e35 · gold #e7ac00 · blue #0066b1 ·
-   indigo #201f85 · orange #ff6600. See reference/client-site/BRAND-EXTRACT.md.
-   Role system (yellow = action, green = sustainability) is unchanged — only
-   the hex values were remapped onto the client colours.
+   PATH LOGICITY — design tokens (light theme, client round 2 · 2026-10-15)
+   White / light-grey surfaces with the CLIENT BRAND pinwheel as accents
+   (pathlogicity.com): green #449e35 · gold #e7ac00 · blue #0066b1 ·
+   indigo #201f85 · orange #ff6600. See docs/CLIENT-CHANGES-PLAN.md.
+   Roles on light: gold = action FILLS only (never text on white),
+   blue = small accent text, green = sustainability / completed.
    ========================================================================== */
 
 @theme {
-  /* Depth — our navy "technical drawing" base. Indigo family now carries the
-     client blue/indigo (map land, rail lines, data on dark). */
-  --color-ink: #04081a;
-  --color-navy-950: #070e26;
-  --color-navy-900: #0b1535;
-  --color-navy-800: #13204a;
-  --color-navy-700: #1a2a5c;
-  --color-indigo-700: #201f85; /* client "Logicity" wordmark indigo */
+  /* Surfaces + text */
+  /* Page backgrounds — a soft cool "mist", so pure white is reserved for cards */
+  --color-canvas: #f5f7fa; /* base section background */
+  --color-canvas-2: #ecf0f5; /* alternate section background */
+  --color-paper: #ffffff; /* cards, panels, tiles — and white text on dark */
+  --color-paper-2: #f3f5f9; /* tinted fills inside cards */
+  --color-paper-3: #e8ecf3;
+  --color-ink: #1a1c46; /* headings — deep brand indigo-black */
+  --color-steel-700: #4b5168; /* body text */
+  --color-steel-500: #5f667c; /* muted text (≥4.5:1 on canvas-2) */
+  --color-steel-300: #c9cedb; /* hairlines on light, disabled */
+
+  /* Dark brand surfaces — footer + overlays on photography only */
+  --color-navy-950: #13144a;
+  --color-navy-900: #1a1b5e;
+  --color-navy-800: #23247a;
+  --color-navy-700: #2c2d8c;
+  --color-indigo-700: #201f85; /* client "Logicity" wordmark indigo — footer */
   --color-indigo-500: #2a44a8;
-  --color-indigo-400: #5a8ad2; /* lines/data on dark, leaning to client blue */
+  --color-indigo-400: #5a8ad2;
   --color-indigo-300: #93bbe6;
 
-  /* Client blue (pinwheel) — connectivity / data */
+  /* Client blue (pinwheel) — connectivity / data / accent text */
   --color-blue-500: #0066b1;
   --color-blue-400: #3f8bd0;
   --color-blue-300: #7fb2e0;
+  --color-blue-50: #eaf3fb;
 
-  /* Client orange (pinwheel) — supporting accent for multi-node cycles */
+  /* Client orange (pinwheel) */
+  --color-orange-600: #d95500; /* large numerals on white (3.3:1) */
   --color-orange-500: #ff6600;
   --color-orange-400: #ff8a3d;
 
-  /* Accents — strict roles (recoloured to client brand) */
-  --color-yellow-400: #e7ac00; /* ACTION ONLY — client gold */
+  /* Accents — strict roles */
+  --color-yellow-400: #e7ac00; /* ACTION FILLS — client gold */
   --color-yellow-200: #f3d35e;
+  --color-yellow-50: #fdf6e0;
   --color-green-500: #449e35; /* sustainability + completed — client green */
   --color-green-300: #78c45a;
-  --color-green-700: #2f6b22;
+  --color-green-700: #2f7a24;
+  --color-green-50: #edf6ea;
 
-  /* Light */
-  --color-paper: #f3efe6;
-  --color-paper-2: #e7e1d4;
-  --color-steel-700: #4a5470;
-  --color-steel-500: #8891a7;
-  --color-steel-300: #c4c9d6;
-
-  --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
+  --font-display: var(--font-open-sans), "Open Sans", Helvetica, Arial, sans-serif;
+  --font-sans: var(--font-open-sans), "Open Sans", Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-open-sans), "Open Sans", Helvetica, Arial, sans-serif;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-route: cubic-bezier(0.65, 0, 0.35, 1);
@@ -59,10 +66,10 @@
   --margin: clamp(16px, 4vw, 72px);
   --gutter: clamp(16px, 1.6vw, 28px);
   --nav-h: 88px;
-  --line-dark: rgb(255 255 255 / 0.1);
-  --line-dark-strong: rgb(255 255 255 / 0.18);
-  --line-light: rgb(7 14 38 / 0.12);
-  --line-light-strong: rgb(7 14 38 / 0.22);
+  --line-dark: rgb(255 255 255 / 0.14);
+  --line-dark-strong: rgb(255 255 255 / 0.24);
+  --line-light: rgb(26 28 70 / 0.12);
+  --line-light-strong: rgb(26 28 70 / 0.22);
 }
 
 /* --------------------------------------------------------------------------
@@ -70,29 +77,36 @@
    -------------------------------------------------------------------------- */
 @layer base {
   html {
-    background: var(--color-navy-950);
-    color: var(--color-paper);
+    background: var(--color-canvas);
+    color: var(--color-ink);
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
   }
   body {
     font-family: var(--font-sans);
     font-size: 1rem;
-    line-height: 1.6;
+    line-height: 1.65;
+    color: var(--color-steel-700);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: clip;
   }
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--color-ink);
+  }
   ::selection {
     background: var(--color-yellow-400);
-    color: var(--color-navy-950);
+    color: var(--color-ink);
   }
   :focus-visible {
-    outline: 2px solid var(--color-yellow-400);
+    outline: 2px solid var(--color-blue-500);
     outline-offset: 2px;
   }
-  .on-light :focus-visible {
-    outline-color: var(--color-navy-950);
+  .on-dark :focus-visible {
+    outline-color: var(--color-yellow-400);
   }
   button {
     cursor: pointer;
@@ -141,78 +155,77 @@ html.lenis body {
 /* --------------------------------------------------------------------------
    Typography
    -------------------------------------------------------------------------- */
+/* Open Sans (the client's site font). Display sizes capped so headlines never
+   dominate; labels raised to a readable 12–13px. Sentence case throughout. */
 @utility t-hero {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(2.9rem, 13vw, 4.5rem);
-  line-height: 0.88;
-  letter-spacing: -0.045em;
-  text-transform: uppercase;
+  font-size: clamp(2.25rem, 9vw, 3.25rem);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
   @media (width >= 40rem) {
-    font-size: clamp(3rem, min(9.6vw, 14.5vh), 11.5rem);
-    line-height: 0.86;
+    font-size: clamp(2.75rem, min(5.4vw, 9vh), 5.25rem);
+    line-height: 1.04;
   }
 }
 @utility t-xxl {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(7rem, 30vw, 26rem);
-  line-height: 0.8;
-  letter-spacing: -0.065em;
+  font-weight: 800;
+  font-size: clamp(5.5rem, 24vw, 9rem);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
   font-variant-numeric: tabular-nums;
   @media (width >= 64rem) {
-    font-size: clamp(7rem, 24vw, 26rem);
+    font-size: clamp(7rem, 13vw, 12rem);
   }
 }
 @utility t-xl {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(2.6rem, 7vw, 8rem);
-  line-height: 0.9;
-  letter-spacing: -0.04em;
-  text-transform: uppercase;
+  font-size: clamp(2rem, 4.4vw, 4.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
 }
 @utility t-l {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2.1rem, 4.6vw, 5rem);
-  line-height: 0.95;
-  letter-spacing: -0.035em;
-  text-transform: uppercase;
+  font-size: clamp(1.75rem, 3.3vw, 3.25rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
 }
 @utility t-m {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(1.5rem, 2.6vw, 2.75rem);
-  line-height: 1;
-  letter-spacing: -0.025em;
+  font-size: clamp(1.375rem, 2vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
 }
 @utility t-s {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(1.125rem, 1.4vw, 1.375rem);
-  line-height: 1.15;
-  letter-spacing: -0.015em;
+  font-size: clamp(1.0625rem, 1.2vw, 1.25rem);
+  line-height: 1.35;
+  letter-spacing: -0.005em;
 }
 @utility t-body-l {
-  font-size: clamp(1.0625rem, 1.35vw, 1.3125rem);
-  line-height: 1.5;
-  letter-spacing: -0.01em;
+  font-size: clamp(1.0625rem, 1.15vw, 1.1875rem);
+  line-height: 1.65;
 }
 @utility t-label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  line-height: 1.3;
-  letter-spacing: 0.08em;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  font-weight: 500;
+  font-weight: 700;
 }
 @utility t-micro {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  line-height: 1.3;
-  letter-spacing: 0.1em;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  font-weight: 600;
 }
 @utility no-scrollbar {
   scrollbar-width: none;
@@ -228,11 +241,11 @@ html.lenis body {
    Textures
    -------------------------------------------------------------------------- */
 @utility dot-field {
-  background-image: radial-gradient(circle at center, rgb(255 255 255 / 0.07) 1px, transparent 1.4px);
+  background-image: radial-gradient(circle at center, rgb(255 255 255 / 0.1) 1px, transparent 1.4px);
   background-size: 32px 32px;
 }
 @utility dot-field-light {
-  background-image: radial-gradient(circle at center, rgb(7 14 38 / 0.09) 1px, transparent 1.4px);
+  background-image: radial-gradient(circle at center, rgb(26 28 70 / 0.08) 1px, transparent 1.4px);
   background-size: 32px 32px;
 }
 
@@ -255,6 +268,11 @@ html.lenis body {
   to {
     opacity: 1;
     transform: none;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
   }
 }
 @keyframes pulse-soft {
@@ -395,7 +413,7 @@ html[data-annotations="off"] .slot-annotation {
 }
 .bv-grow rect {
   fill: transparent;
-  stroke: rgb(243 239 230 / 0.35);
+  stroke: rgb(26 28 70 / 0.3);
   transition: fill 0.4s, stroke 0.4s;
 }
 .bv-grow rect[data-first="true"] {
@@ -404,8 +422,8 @@ html[data-annotations="off"] .slot-annotation {
 }
 .group:hover .bv-grow rect,
 .is-on .bv-grow rect {
-  fill: rgb(243 239 230 / 0.85);
-  stroke: rgb(243 239 230 / 0.85);
+  fill: var(--color-blue-500);
+  stroke: var(--color-blue-500);
 }
 .group:hover .bv-grow rect[data-first="true"],
 .is-on .bv-grow rect[data-first="true"] {

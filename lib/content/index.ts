@@ -6,6 +6,10 @@ import * as home from "@/content/home";
 
 export const getSettings = () => home.settings;
 export const getNavigation = () => home.navigation;
+export const getPartners = () => home.partners;
+
+/** "+91 98998 80388" → "tel:+919899880388" */
+export const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
 
 export const getHomepage = () => ({
   hero: home.hero,

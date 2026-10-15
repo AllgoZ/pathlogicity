@@ -32,32 +32,32 @@ export default async function ChapterPage({ params }: { params: Promise<{ chapte
   const nav = getNavigation().find((n) => n.href === `/${chapter}`);
 
   return (
-    <section className="relative flex min-h-[86svh] items-end overflow-hidden bg-navy-950 pb-20 pt-40">
+    <section className="relative flex min-h-[86svh] items-end overflow-hidden bg-canvas-2 pb-20 pt-40">
       <SurveyGrid />
       <div className="shell relative grid-12 gap-y-12">
         <div className="col-span-4 sm:col-span-8 lg:col-span-7">
-          <p className="t-label">
-            <span className="text-yellow-400">{c.index} /</span> Chapter in design
+          <p className="t-label text-ink">
+            <span className="text-blue-500">{c.index} /</span> Chapter in design
           </p>
-          <h1 className="t-xl mt-6">
+          <h1 className="t-xl mt-5 text-ink">
             {c.title.map((t) => (
               <span key={t} className="block">
                 {t}
               </span>
             ))}
           </h1>
-          <p className="t-body-l mt-6 max-w-[40ch] text-steel-300">This page follows homepage sign-off. Its sections are planned below.</p>
+          <p className="t-body-l mt-5 max-w-[40ch] text-steel-700">This page follows homepage sign-off. Its sections are planned below.</p>
           <div className="mt-10">
             <ArrowLink href={c.anchor}>See the homepage preview</ArrowLink>
           </div>
         </div>
         {nav?.children ? (
-          <ol className="col-span-4 self-end border-t border-white/10 sm:col-span-8 lg:col-span-4 lg:col-start-9">
+          <ol className="col-span-4 self-end border-t border-ink/10 sm:col-span-8 lg:col-span-4 lg:col-start-9">
             {nav.children.map((ch, i) => (
-              <li key={ch.href} id={ch.href.split("#")[1]} className="flex gap-4 border-b border-white/10 py-4">
-                <span className="t-micro text-yellow-400">{String(i + 1).padStart(2, "0")}</span>
+              <li key={ch.href} id={ch.href.split("#")[1]} className="flex gap-4 border-b border-ink/10 py-4">
+                <span className="t-micro text-blue-500">{String(i + 1).padStart(2, "0")}</span>
                 <span>
-                  <span className="t-label block">{ch.label}</span>
+                  <span className="t-label block text-ink">{ch.label}</span>
                   {ch.note ? <span className="mt-1 block text-sm text-steel-500">{ch.note}</span> : null}
                 </span>
               </li>

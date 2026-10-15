@@ -13,7 +13,7 @@ const DIAGRAMS: Record<Benefit["id"], ReactNode> = {
   // shorter cycle
   tat: (
     <>
-      <circle cx="32" cy="32" r="25" stroke="rgb(255 255 255 / 0.18)" strokeDasharray="3 4" />
+      <circle cx="32" cy="32" r="25" stroke="rgb(26 28 70 / 0.18)" strokeDasharray="3 4" />
       {P("M32 18 A14 14 0 1 1 18.5 28.5", { stroke: "var(--color-yellow-400)" })}
       {P("M14.5 26 18.5 28.5 21.5 24.5", { stroke: "var(--color-yellow-400)" })}
       <circle cx="32" cy="32" r="2.5" fill="currentColor" />
@@ -22,7 +22,7 @@ const DIAGRAMS: Record<Benefit["id"], ReactNode> = {
   // stepping down
   cost: (
     <>
-      <path d="M8 56 H58" stroke="rgb(255 255 255 / 0.18)" />
+      <path d="M8 56 H58" stroke="rgb(26 28 70 / 0.18)" />
       {P("M8 12 H20 V24 H32 V36 H44 V48 H56", { stroke: "var(--color-yellow-400)" })}
       {P("M50 43 56 48 50 53")}
     </>
@@ -88,14 +88,14 @@ export function BusinessValue({ benefits }: { benefits: Benefit[] }) {
   });
 
   return (
-    <section ref={section} id="business-value" data-stage="believe" aria-labelledby="bv-title" className="relative bg-paper">
-      <div ref={panel} className="relative bg-navy-950 section-pad">
+    <section ref={section} id="business-value" data-stage="believe" aria-labelledby="bv-title" className="relative bg-canvas">
+      <div ref={panel} className="relative bg-canvas-2 section-pad">
         <div className="shell grid-12 gap-y-8">
           <div className="col-span-4 sm:col-span-8 lg:col-span-8">
-            <p className="t-label">
-              <span className="text-yellow-400">08.1 /</span> Business value
+            <p className="t-label text-ink">
+              <span className="text-blue-500">08.1 /</span> Business value
             </p>
-            <RevealLines id="bv-title" lines={["Infrastructure", "that delivers", "business value"]} className="t-xl mt-6" />
+            <RevealLines id="bv-title" lines={["Infrastructure", "that delivers", "business value"]} className="t-xl mt-5 text-ink" />
           </div>
           <div className="col-span-4 flex items-end sm:col-span-8 lg:col-span-3 lg:col-start-10 lg:justify-end">
             <ArrowLink href="/sustainability#business-value">Explore sustainability</ArrowLink>
@@ -104,13 +104,13 @@ export function BusinessValue({ benefits }: { benefits: Benefit[] }) {
 
         <ul className="shell no-scrollbar mt-16 flex snap-x snap-mandatory gap-0 overflow-x-auto lg:mt-24 lg:grid lg:grid-cols-5 lg:overflow-visible">
           {benefits.map((b, i) => (
-            <li key={b.id} className="group w-[78vw] shrink-0 snap-start border-l border-white/10 px-6 pb-4 first:border-l-0 first:pl-0 sm:w-[44vw] lg:w-auto lg:px-7 lg:first:pl-0">
+            <li key={b.id} className="group w-[78vw] shrink-0 snap-start border-l border-ink/10 px-6 pb-4 first:border-l-0 first:pl-0 sm:w-[44vw] lg:w-auto lg:px-7 lg:first:pl-0">
               <span className="t-micro text-steel-500">{String(i + 1).padStart(2, "0")}</span>
-              <svg data-bv viewBox="0 0 64 64" width="72" height="72" fill="none" stroke="rgb(243 239 230 / 0.85)" strokeWidth="1.5" className="icon-draw mt-6 text-paper" aria-hidden>
+              <svg data-bv viewBox="0 0 64 64" width="72" height="72" fill="none" stroke="var(--color-indigo-700)" strokeWidth="1.75" className="icon-draw mt-6 text-indigo-700" aria-hidden>
                 {DIAGRAMS[b.id]}
               </svg>
-              <h3 className="mt-8 font-display text-[clamp(1.25rem,1.7vw,1.65rem)] font-extrabold uppercase leading-[0.98] tracking-[-0.025em]">{b.title}</h3>
-              <p className="mt-4 text-[15px] leading-relaxed text-steel-300">{b.text}</p>
+              <h3 className="mt-7 font-display text-[clamp(1.125rem,1.35vw,1.375rem)] font-bold leading-[1.2] text-ink">{b.title}</h3>
+              <p className="mt-3 text-[0.9375rem] leading-relaxed text-steel-700">{b.text}</p>
             </li>
           ))}
         </ul>

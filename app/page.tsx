@@ -1,4 +1,4 @@
-import { getHomepage, getSettings } from "@/lib/content";
+import { getHomepage, getPartners, getSettings } from "@/lib/content";
 import { Hero } from "@/components/hero/Hero";
 import { ScaleIndex } from "@/components/stats/ScaleIndex";
 import { MasterPlan } from "@/components/master-plan/MasterPlan";
@@ -30,7 +30,7 @@ export default function HomePage() {
       <HubOpener />
       <SpecDrawing glance={home.glance} />
       <ConnectivityMap destinations={home.destinations} />
-      <GatiShaktiBand data={home.gatiShakti} />
+      <GatiShaktiBand data={home.gatiShakti} partners={getPartners()} />
       <Sustainability data={home.sustainability} />
       <BusinessValue benefits={home.benefits} />
       <SiteTourPreview data={home.siteTour} />

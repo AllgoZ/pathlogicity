@@ -8,24 +8,24 @@ const base =
   "group relative inline-flex items-center justify-center gap-3 overflow-hidden whitespace-nowrap font-sans text-[0.8125rem] font-semibold uppercase tracking-[0.06em] transition-colors duration-300 ease-[var(--ease-out-expo)] h-[52px] lg:h-14 px-6 lg:px-7";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-yellow-400 text-navy-950",
-  "outline-light": "border border-paper/40 text-paper hover:border-paper hover:bg-paper hover:text-navy-950",
-  "outline-dark": "border border-navy-950/30 text-navy-950 hover:border-navy-950 hover:bg-navy-950 hover:text-paper",
-  "outline-yellow": "border border-yellow-400/70 text-yellow-400 hover:bg-yellow-400 hover:text-navy-950",
+  primary: "bg-yellow-400 text-ink",
+  "outline-light": "border border-paper/50 text-paper hover:border-paper hover:bg-paper hover:text-ink",
+  "outline-dark": "border border-ink/25 text-ink hover:border-indigo-700 hover:bg-indigo-700 hover:text-paper",
+  "outline-yellow": "border border-yellow-400 text-ink hover:bg-yellow-400",
 };
 
 function Inner({ children, variant, arrow }: { children: ReactNode; variant: Variant; arrow: boolean }) {
   return (
     <>
       {variant === "primary" ? (
-        // Navy wipe sweeps under the label on hover
+        // Brand-indigo wipe sweeps under the label on hover
         <span
           aria-hidden
-          className="absolute inset-0 origin-left scale-x-0 bg-navy-950 transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-x-100"
+          className="absolute inset-0 origin-left scale-x-0 bg-indigo-700 transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-x-100"
         />
       ) : null}
       <span
-        className={`relative z-10 inline-flex items-center gap-3 ${variant === "primary" ? "transition-colors duration-300 group-hover:text-yellow-400" : ""}`}
+        className={`relative z-10 inline-flex items-center gap-3 ${variant === "primary" ? "transition-colors duration-300 group-hover:text-paper" : ""}`}
       >
         {children}
         {arrow ? <Icon name="arrow-right" size={18} className="arrow-nudge" /> : null}
@@ -66,12 +66,13 @@ export function Button({ variant = "primary", arrow = true, className = "", chil
 export function ArrowLink({
   href,
   children,
-  tone = "light",
+  tone = "dark",
   className = "",
   ...rest
 }: Omit<ComponentProps<typeof Link>, "className"> & { tone?: "light" | "dark" | "yellow"; className?: string }) {
-  const color = tone === "dark" ? "text-navy-950" : tone === "yellow" ? "text-yellow-400" : "text-paper";
-  const line = tone === "dark" ? "bg-navy-950" : "bg-yellow-400";
+  // tone = the TEXT colour family: "dark" for light surfaces (default), "light" on photos / the indigo footer
+  const color = tone === "dark" ? "text-indigo-700" : tone === "yellow" ? "text-yellow-400" : "text-paper";
+  const line = "bg-yellow-400";
   return (
     <Link
       href={href}

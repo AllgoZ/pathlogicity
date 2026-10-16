@@ -262,7 +262,7 @@ What exists: M1–M12 (see ARCHITECTURE §7). What is wrong:
 | **R4-3 Official plan + Constra viewer** | `ZoneHotspots`, zone mapping, status viewer modes | Every zone reachable by hover, tap and keyboard; no zone shown without client-confirmed mapping |
 | **R4-4 Missing sections** ✅ 2026-10-16 (see HANDOVER) | Amenities, Gati Shakti network, Path Group timeline, business-value tidy | Every Concept Note homepage item present |
 | **R4-5 Motion pass** ✅ 2026-10-16 (route spine, reveals, hover lift; see HANDOVER) | Route linking sections, reveals, hover feedback, tuning | No pin on the page; reduced motion verified; no CLS |
-| **R4-6 Inner pages + forms** | The six pages; form endpoint | Every nav item has a real page |
+| **R4-6 Inner pages + forms** ✅ 2026-10-16 (destination webhook still to be named by the client) | The six pages; form endpoint | Every nav item has a real page |
 | **R4-7 QA** | Cross-browser, real devices, Lighthouse, screenshots in `docs/redesign/r4/` | Scores at or above round 3 (desktop 96 / mobile ~70, target mobile 80+) |
 
 Suggested order: R4-1 → R4-2 (these answer the immediate complaints) → R4-3 → R4-4 → R4-5 → R4-6 → R4-7.

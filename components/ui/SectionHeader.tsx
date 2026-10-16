@@ -32,7 +32,7 @@ export function SectionHeader({
   return (
     <header className={className}>
       <p className={`t-label flex items-center gap-3 ${tone === "light" ? "text-ink" : "text-paper"}`}>
-        <span className={`shrink-0 whitespace-nowrap ${tone === "light" ? "text-indigo-700" : "text-yellow-400"}`}>{index} /</span>
+        <span data-idx className={`shrink-0 whitespace-nowrap ${tone === "light" ? "text-indigo-700" : "text-yellow-400"}`}>{index} /</span>
         <span>{chapter}</span>
       </p>
       <RevealLines

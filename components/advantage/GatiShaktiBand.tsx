@@ -16,7 +16,7 @@ export function GatiShaktiBand({ data, partners }: { data: Homepage["gatiShakti"
         <div className="grid-12 gap-y-6">
           <div className="col-span-4 sm:col-span-8 lg:col-span-7">
             <p className="t-label text-ink">
-              <span className="text-indigo-700">07.1 /</span> PM Gati Shakti
+              <span data-idx className="text-indigo-700">07.1 /</span> PM Gati Shakti
             </p>
             <RevealLines id="gs-title" lines={data.headline} className="t-xl mt-5 text-ink" />
           </div>

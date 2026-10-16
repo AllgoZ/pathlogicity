@@ -30,5 +30,6 @@ export const getHomepage = () => ({
 });
 
 export const getEnquiry = () => home.enquiry;
+export const getBlogs = () => home.blogs;
 
 export type Homepage = ReturnType<typeof getHomepage>;

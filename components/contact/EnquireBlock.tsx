@@ -22,7 +22,7 @@ export function EnquireBlock({ content, settings }: { content: Content; settings
       <div className="shell relative grid-12 gap-y-16">
         <div className="col-span-4 sm:col-span-8 lg:col-span-5">
           <p className="t-label flex items-center gap-3 text-ink">
-            <span className="text-indigo-700">11 /</span> Enquire
+            <span data-idx className="text-indigo-700">11 /</span> Enquire
           </p>
           <RevealLines
             id="enquire-title"
@@ -99,7 +99,7 @@ export function EnquireBlock({ content, settings }: { content: Content; settings
         <div className="col-span-4 sm:col-span-8 lg:col-span-6 lg:col-start-7">
           <div className="relative border border-ink/10 bg-paper p-6 shadow-[0_24px_60px_-30px_rgb(26_28_70/0.3)] sm:p-10 lg:p-12">
             <span aria-hidden className="absolute -top-px left-0 h-[3px] w-24 bg-yellow-400" />
-            <EnquiryForm industries={content.industries} />
+            <EnquiryForm industries={content.industries} contact={{ phone: settings.phone, email: settings.email }} />
           </div>
         </div>
       </div>

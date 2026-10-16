@@ -120,6 +120,14 @@
   button {
     cursor: pointer;
   }
+  /* in-page anchors land below the fixed nav */
+  [id] {
+    scroll-margin-top: 96px;
+  }
+  /* inner pages show a page header, so the homepage chapter numbers ("05 /") are hidden there */
+  body:has([data-inner]) [data-idx] {
+    display: none;
+  }
 }
 
 /* Lenis */

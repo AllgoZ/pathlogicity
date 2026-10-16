@@ -43,7 +43,7 @@ export function SiteTourPreview({ data }: { data: Homepage["siteTour"] }) {
           <div className="flex items-start justify-between gap-6">
             <div>
               <p className="t-label text-ink">
-                <span className="text-indigo-700">09 /</span> {data.kicker}
+                <span data-idx className="text-indigo-700">09 /</span> {data.kicker}
               </p>
               <RevealLines id="tour-title" lines={[data.title]} className="t-xl mt-5 text-ink" />
               <p className="t-body-l mt-4 max-w-[34ch] text-steel-700">A 3D site tour of the hub — explore every zone from above.</p>

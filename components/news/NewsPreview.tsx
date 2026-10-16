@@ -16,7 +16,7 @@ const TABS: { id: NewsType; label: string }[] = [
 ];
 
 /** §10 — Path Logicity in the news. CMS-driven; designed to stay rich when sparse. */
-export function NewsPreview({ items }: { items: NewsItem[] }) {
+export function NewsPreview({ items, standalone = false }: { items: NewsItem[]; standalone?: boolean }) {
   const [tab, setTab] = useState<NewsType>("update");
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const list = items.filter((i) => i.type === tab);
@@ -37,14 +37,12 @@ export function NewsPreview({ items }: { items: NewsItem[] }) {
         <div className="grid-12 gap-y-6">
           <div className="col-span-4 sm:col-span-8 lg:col-span-8">
             <p className="t-label text-ink">
-              <span className="text-indigo-700">10 /</span> Newsroom
+              <span data-idx className="text-indigo-700">10 /</span> Newsroom
             </p>
             <RevealLines id="news-title" lines={["Path Logicity", "in the *news*"]} className="t-xl mt-5 text-ink" />
           </div>
           <div className="col-span-4 flex items-end sm:col-span-8 lg:col-span-3 lg:col-start-10 lg:justify-end">
-            <ArrowLink href="/news">
-              View all
-            </ArrowLink>
+            {standalone ? null : <ArrowLink href="/news">View all</ArrowLink>}
           </div>
         </div>
 

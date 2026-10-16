@@ -67,7 +67,8 @@ site/
 │  ├─ globals.css         @theme tokens · utilities (type, card, grain, glow, pinwheel-stripe, img-grade)
 │  │                      · keyframes (preloader, hero window, marquee, view transition, reveals)
 │  ├─ icon.svg            Favicon
-│  └─ [chapter]/page.tsx  Holding template for inner pages (static params, dynamicParams=false)
+│  ├─ path-group/ logicity-advantage/ sustainability/ site-tour/ news/ blogs/   Inner pages (page.tsx each)
+│  └─ api/enquiry/route.ts   POST: validate + forward the enquiry to ENQUIRY_WEBHOOK_URL
 │
 ├─ components/
 │  ├─ navigation/   Nav (+ MobileMenu), MobileActionBar, JourneyRail, Logo,
@@ -127,8 +128,11 @@ site/
   Next.js navigations are transitions, so the old page lifts away and the new one wipes up over a
   midnight curtain (CSS in `globals.css`). This is off under reduced motion.
 - **Inner pages** (`/path-group`, `/logicity-advantage`, `/sustainability`, `/site-tour`, `/news`,
-  `/blogs`) use the holding template [`app/[chapter]/page.tsx`](../app/%5Bchapter%5D/page.tsx).
-  `dynamicParams = false` returns a 404 for anything else.
+  `/blogs`) are real pages (round 4): a `layout/PageHero` (the one `h1`, intro, "On this page") plus the
+  same section components the homepage uses, wrapped in `<div data-inner>` so homepage chapter numbers
+  are hidden. Anything else is a 404.
+- **Enquiry:** `components/contact/EnquiryForm` → `POST /api/enquiry` (`lib/enquiry.ts` holds the shared
+  rules) → JSON to `ENQUIRY_WEBHOOK_URL`. Not set: dev logs and succeeds; production returns 503.
 - **Sub-sections are anchors** (e.g. `/logicity-advantage#amenities`), so they are shareable.
 - **All pages are statically generated.** CMS content will later arrive through ISR or on-demand
   revalidation.

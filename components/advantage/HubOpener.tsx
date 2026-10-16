@@ -83,7 +83,7 @@ export function HubOpener() {
 
       <div className="shell absolute inset-x-0 top-14 lg:top-20">
         <p className="t-label text-ink">
-          <span className="text-indigo-700">06 /</span> The Logicity Advantage
+          <span data-idx className="text-indigo-700">06 /</span> The Logicity Advantage
         </p>
       </div>
       <div className="shell relative w-full text-center">

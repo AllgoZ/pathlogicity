@@ -49,7 +49,7 @@ export function Sustainability({ data }: { data: Homepage["sustainability"] }) {
       <div className="shell grid-12 gap-y-10">
         <div className="col-span-4 sm:col-span-8 lg:col-span-8">
           <p className="t-label flex items-center gap-3">
-            <span className="text-green-700">08 /</span> Sustainability · ESG
+            <span data-idx className="text-green-700">08 /</span> Sustainability · ESG
           </p>
           <RevealLines id="sus-title" lines={data.headline} lineClassNames={["", "[--accent-color:var(--color-green-700)]"]} className="t-l mt-5 text-ink" />
         </div>

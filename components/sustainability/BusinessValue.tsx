@@ -93,7 +93,7 @@ export function BusinessValue({ benefits }: { benefits: Benefit[] }) {
         <div className="shell grid-12 gap-y-8">
           <div className="col-span-4 sm:col-span-8 lg:col-span-8">
             <p className="t-label text-ink">
-              <span className="text-indigo-700">08.1 /</span> Business value
+              <span data-idx className="text-indigo-700">08.1 /</span> Business value
             </p>
             <RevealLines id="bv-title" lines={["Infrastructure", "that delivers", "*business value*"]} className="t-xl mt-5 text-ink" />
           </div>

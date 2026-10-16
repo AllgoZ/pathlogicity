@@ -9,6 +9,7 @@ import type {
   Benefit,
   Destination,
   Amenity,
+  BlogPost,
   EvolutionStep,
   GalleryItem,
   Initiative,
@@ -397,6 +398,9 @@ export const news: NewsItem[] = [
     placeholder: false,
   },
 ];
+
+/** Blog posts. Empty until the client publishes real articles — never invent any. */
+export const blogs: BlogPost[] = [];
 
 export const enquiry = {
   headline: ["Let's build", "your", "*logistics*", "advantage"],

@@ -93,7 +93,7 @@ export function SpecDrawing({ glance }: { glance: Homepage["glance"] }) {
       <div className="shell grid-12 gap-y-8">
         <div className="col-span-4 sm:col-span-8 lg:col-span-6">
           <p className="t-label text-ink">
-            <span className="text-indigo-700">06.1 /</span> Project at a glance
+            <span data-idx className="text-indigo-700">06.1 /</span> Project at a glance
           </p>
           <h3 className="t-l mt-5 text-ink">
             Scale,

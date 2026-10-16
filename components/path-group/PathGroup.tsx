@@ -6,12 +6,12 @@ import { Reveal, RevealLines } from "@/components/ui/Reveal";
 import { EvolutionLine } from "./EvolutionLine";
 
 /** §05 — PATH Group: editorial, legacy-led chapter. Photography with a glass metrics strip; the story in serif. */
-export function PathGroup({ data }: { data: Homepage["pathGroup"] }) {
+export function PathGroup({ data, standalone = false }: { data: Homepage["pathGroup"]; standalone?: boolean }) {
   return (
     <section id="path-group" data-stage="believe" aria-labelledby="pg-title" className="relative bg-stone section-pad">
       <div className="shell">
         <p className="t-label flex items-center gap-3 text-ink">
-          <span className="text-indigo-700">05 /</span> PATH Group
+          <span data-idx className="text-indigo-700">05 /</span> PATH Group
         </p>
         <h2 id="pg-title" className="mt-5">
           <RevealLines as="span" lines={[data.headline.from]} className="t-l block font-normal text-steel-500 [&_[data-line]]:font-normal" />
@@ -20,7 +20,7 @@ export function PathGroup({ data }: { data: Homepage["pathGroup"] }) {
       </div>
 
       {/* Infrastructure photography with the group's numbers on a glass strip */}
-      <div className="shell mt-12 lg:mt-16">
+      <div id="highlight" className="shell mt-12 lg:mt-16">
         <div className="relative overflow-hidden rounded-[2px] shadow-[var(--shadow-card)]">
           <AssetSlot slot={data.photo.slot} spec={data.photo.spec} ratio="21/9" id="05" variant={3} className="min-h-[260px] w-full lg:min-h-[520px]" label={data.photo.alt} src={data.photo.src} focus="center" sizes="(min-width: 1600px) 1600px, 100vw" />
           <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-2/3 bg-gradient-to-t from-ink/55 via-ink/10 to-transparent lg:block" />
@@ -37,7 +37,7 @@ export function PathGroup({ data }: { data: Homepage["pathGroup"] }) {
         </div>
       </div>
 
-      <div className="shell mt-16 grid-12 gap-y-10 lg:mt-24">
+      <div id="about" className="shell mt-16 grid-12 gap-y-10 lg:mt-24">
         <Reveal className="col-span-4 sm:col-span-8 lg:col-span-8">
           <p className="t-label text-indigo-700">About PATH</p>
           <blockquote className="mt-5 text-[clamp(1.5rem,2.3vw,2.125rem)] font-semibold leading-[1.3] tracking-[-0.015em] text-ink">
@@ -61,9 +61,11 @@ export function PathGroup({ data }: { data: Homepage["pathGroup"] }) {
 
       <div className="shell mt-16 lg:mt-24">
         <EvolutionLine steps={data.evolution} />
-        <div className="mt-12 flex justify-end">
-          <ArrowLink href="/path-group">Know more about PATH</ArrowLink>
-        </div>
+        {standalone ? null : (
+          <div className="mt-12 flex justify-end">
+            <ArrowLink href="/path-group">Know more about PATH</ArrowLink>
+          </div>
+        )}
       </div>
     </section>
   );

@@ -15,7 +15,7 @@ export function Amenities({ items }: { items: Amenity[] }) {
       <div className="shell grid-12 items-end gap-y-6">
         <div className="col-span-4 sm:col-span-8 lg:col-span-8">
           <p className="t-label text-ink">
-            <span className="text-indigo-700">06.2 /</span> Amenities
+            <span data-idx className="text-indigo-700">06.2 /</span> Amenities
           </p>
           <RevealLines id="amenities-title" lines={["Everything your", "business needs.", "*And more.*"]} className="t-xl mt-5 text-ink" />
         </div>

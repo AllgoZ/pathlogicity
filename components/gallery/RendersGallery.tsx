@@ -16,7 +16,7 @@ export function RendersGallery({ items }: { items: GalleryItem[] }) {
       <div className="shell grid-12 items-end gap-y-6">
         <div className="col-span-4 sm:col-span-6 lg:col-span-7">
           <p className="t-label text-ink">
-            <span className="text-indigo-700">05.5 /</span> The park
+            <span data-idx className="text-indigo-700">05.5 /</span> The park
           </p>
           <RevealLines id="renders-title" lines={["The park,", "*in renders.*"]} className="t-xl mt-5 text-ink" />
         </div>

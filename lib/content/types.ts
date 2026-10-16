@@ -171,6 +171,18 @@ export interface Partner {
   height: number;
 }
 
+/** A blog article. CMS-ready: the site never invents posts, so an empty list renders the designed empty state. */
+export interface BlogPost {
+  id: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  date: string;
+  readMinutes: number | null;
+  href: string;
+  image: MediaAsset;
+}
+
 /** An amenity panel (Concept Note: Logicity Advantage → Amenities). `image` stays null until a real site photograph is supplied. */
 export interface Amenity {
   id: string;

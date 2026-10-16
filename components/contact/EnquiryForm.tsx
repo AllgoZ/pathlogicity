@@ -1,44 +1,21 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { validateEnquiry as validate, type EnquiryErrors, type EnquiryValues, type Intent } from "@/lib/enquiry";
 import { Icon } from "@/components/ui/Icon";
 import { Magnetic } from "@/components/ui/Magnetic";
 
-type Intent = "lease" | "visit";
-type Values = {
-  name: string;
-  company: string;
-  email: string;
-  phone: string;
-  industry: string;
-  requirement: string;
-  visitDate: string;
-  consent: boolean;
-  website: string; // honeypot
-};
-type Errors = Partial<Record<keyof Values, string>>;
+type Values = EnquiryValues;
+type Errors = EnquiryErrors;
 
 const EMPTY: Values = { name: "", company: "", email: "", phone: "", industry: "", requirement: "", visitDate: "", consent: false, website: "" };
 
-function validate(v: Values, intent: Intent): Errors {
-  const e: Errors = {};
-  if (!v.name.trim()) e.name = "Please enter your name.";
-  if (!v.company.trim()) e.company = "Please enter your company.";
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.email.trim())) e.email = "Please enter a valid work email.";
-  const digits = v.phone.replace(/\D/g, "");
-  if (digits.length < 8 || digits.length > 15) e.phone = "Please enter a valid phone number.";
-  if (!v.industry) e.industry = "Please select your industry.";
-  if (v.requirement.trim().length < 5) e.requirement = "Tell us briefly what you need.";
-  if (intent === "visit" && !v.visitDate) e.visitDate = "Please choose a preferred date.";
-  if (!v.consent) e.consent = "Please confirm we may contact you.";
-  return e;
-}
-
-export function EnquiryForm({ industries }: { industries: string[] }) {
+export function EnquiryForm({ industries, contact }: { industries: string[]; contact?: { phone: string | null; email: string | null } }) {
   const [intent, setIntent] = useState<Intent>("lease");
   const [v, setV] = useState<Values>(EMPTY);
   const [errors, setErrors] = useState<Errors>({});
-  const [state, setState] = useState<"idle" | "sending" | "done">("idle");
+  const [state, setState] = useState<"idle" | "sending" | "done" | "failed">("idle");
+  const [delivered, setDelivered] = useState(true);
   const form = useRef<HTMLFormElement>(null);
   const uid = useId();
 
@@ -73,9 +50,24 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
       return;
     }
     setState("sending");
-    // TODO: connect to CRM / email endpoint (decision pending — docs/UI-PLAN.md §12).
-    await new Promise((r) => setTimeout(r, 900));
-    setState("done");
+    try {
+      const res = await fetch("/api/enquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...v, intent }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; delivered?: boolean; fields?: Errors };
+      if (res.status === 422 && data.fields) {
+        setErrors(data.fields);
+        setState("idle");
+        return;
+      }
+      if (!res.ok || !data.ok) throw new Error("enquiry failed");
+      setDelivered(data.delivered !== false);
+      setState("done");
+    } catch {
+      setState("failed");
+    }
   };
 
   if (state === "done") {
@@ -88,9 +80,10 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
           <p className="t-label text-green-700">{intent === "visit" ? "Site visit request received" : "Enquiry received"}</p>
         </div>
         <p className="t-l mt-8 max-w-[14ch] text-ink">Thank you, {v.name.split(" ")[0]}.</p>
-        <p className="t-micro mt-6 max-w-[46ch] normal-case tracking-[0.03em] text-steel-500">
-          [ Next-steps copy to be supplied by the leasing team ] · Demo build — this submission was not sent anywhere.
-        </p>
+        <p className="mt-6 max-w-[46ch] text-steel-700">Our leasing team will review your {intent === "visit" ? "site visit request" : "enquiry"} and be in touch.</p>
+        {delivered ? null : (
+          <p className="slot-annotation t-micro mt-4 max-w-[46ch] text-steel-500">[ Development build — ENQUIRY_WEBHOOK_URL is not set, so this was logged on the server and not delivered ]</p>
+        )}
         <button type="button" onClick={() => { setV(EMPTY); setState("idle"); }} className="t-label mt-10 self-start text-indigo-700 underline-offset-4 hover:underline">
           Send another enquiry
         </button>
@@ -203,6 +196,30 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
         </label>
         {errors.consent ? <ErrorText id={errId("consent")}>{errors.consent}</ErrorText> : null}
       </div>
+
+      {state === "failed" ? (
+        <p role="alert" className="mt-7 border-l-[3px] border-[#c62828] bg-paper px-4 py-3 text-[0.9375rem] text-ink">
+          We couldn&apos;t send your enquiry just now. Please try again
+          {contact?.phone || contact?.email ? (
+            <>
+              , or reach the leasing team directly
+              {contact?.phone ? (
+                <>
+                  {" "}
+                  on <a href={`tel:${contact.phone.replace(/[^\d+]/g, "")}`} className="font-semibold text-indigo-700 underline underline-offset-2">{contact.phone}</a>
+                </>
+              ) : null}
+              {contact?.email ? (
+                <>
+                  {contact?.phone ? " or " : " at "}
+                  <a href={`mailto:${contact.email}`} className="font-semibold text-indigo-700 underline underline-offset-2">{contact.email}</a>
+                </>
+              ) : null}
+            </>
+          ) : null}
+          .
+        </p>
+      ) : null}
 
       {/* The route arrives at the destination: the submit button */}
       <div className="mt-10 flex items-center gap-0">

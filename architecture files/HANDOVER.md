@@ -2,7 +2,7 @@
 
 > Living status document. **Update the "Status" and "Change log" sections whenever work lands**
 > (newest first). How the system works is in [`ARCHITECTURE.md`](./ARCHITECTURE.md).
-> **Last updated: 2026-10-16**
+> **Last updated: 2026-10-16** — `main` is at `c8c4086`.
 
 ---
 
@@ -10,14 +10,15 @@
 
 | Item | State |
 |---|---|
-| Homepage | Round 4 **R4-1 to R4-7 done** (QA: `docs/redesign/QA-REPORT-R4.md`) (light theme, Open Sans only, new hero, free-scrolling gallery, interactive official master plan). Remaining: real-device pass, mobile performance (~70), client confirmations (§4), and the parked Constra section. Plan: `docs/REDESIGN-PLAN-R4.md`. **Constra section is parked for later by decision** |
-| Inner pages | **Built (round 4):** `/path-group`, `/logicity-advantage`, `/sustainability`, `/site-tour`, `/news`, `/blogs`, composed from the homepage sections plus `layout/PageHero`. Blogs shows a designed empty state until real posts exist |
-| Branch | `client-round-2` (cut from `main`) |
-| Commits | `af81901` client round 2 → then *Premium redesign: Phases 1–4* (both pushed to `origin/client-round-2`; see `git log`) |
-| Uncommitted | Round 4 R4-1/R4-2 changes (not committed yet) |
-| Pull request | Not opened yet. The GitHub CLI isn't installed on this machine, so open it from https://github.com/AllgoZ/pathlogicity/pull/new/client-round-2 |
-| Quality | Typecheck clean · build passes · Lighthouse desktop 98/100/100/100 · mobile ~70 (57–72)/100/100/100 · CLS 0 · no pins · Chromium, Firefox, WebKit clean |
-| Browsers | Edge, Firefox and WebKit (Safari engine) checked headless. No physical-device pass yet |
+| Homepage | **Round 4 complete and live on `main`**: light theme, Open Sans only, no opening animation, interactive official master plan (used in §03, §06.1 and §09), Amenities, Gati Shakti location map, route spine, mobile polish. Plan and audit: `docs/REDESIGN-PLAN-R4.md` |
+| Inner pages | **Built:** `/path-group`, `/logicity-advantage`, `/sustainability`, `/site-tour`, `/news`, `/blogs` (each a `PageHero` plus the homepage sections). Blogs shows a designed empty state until real posts exist |
+| Enquiry form | Wired to `POST /api/enquiry`. **Needs `ENQUIRY_WEBHOOK_URL`** (e.g. in Vercel) or production shows a call/email fallback instead of sending |
+| Parked by decision | **Constra** project-status content (the viewer is built; the footage is not on the site) |
+| Branch | `main` = `origin/main` = `c8c4086`. Also pushed: `client-round-2`, `mobile-polish`, `hero-line-mobile` (all fully merged — safe to delete) |
+| Pull request | PR #1 (round 2) was merged earlier. Round 4 went to `main` by fast-forward/merge, with no PR |
+| Uncommitted | Nothing, apart from these two docs while they are being updated |
+| Quality | Typecheck clean · build passes · Lighthouse desktop **98**/100/100/100 · mobile **~70** (57–72)/100/100/100 · CLS 0 · Chromium, Firefox and WebKit clean · no overflow 320–1920px |
+| Browsers | Edge, Firefox, WebKit (Safari engine) checked headless. **No physical-device pass yet** |
 
 ---
 
@@ -31,12 +32,12 @@ npm run start        # serve the build (the .claude/launch.json "prod" config us
 npm run typecheck
 ```
 
-- Add **`?annotations=on`** to any URL to see every placeholder slot and missing-content marker.
-  They are hidden from visitors by default.
-- The **preloader** plays once per browser session on desktop. To see it again, clear
-  `sessionStorage['pl-intro']` or open a new private window.
-- ⚠️ This is **Next.js 16.4**. Read `node_modules/next/dist/docs/` before touching Next APIs
-  (see `AGENTS.md`).
+- Add **`?annotations=on`** to any URL to see every placeholder slot and missing-content marker. They are
+  hidden from visitors by default.
+- Copy `.env.example` to `.env.local` and set **`ENQUIRY_WEBHOOK_URL`** to test delivery. Unset in dev, the
+  API logs the enquiry and answers success (the form shows a review-only "not delivered" note).
+- There is **no preloader any more** — nothing plays on load.
+- ⚠️ This is **Next.js 16.4**. Read `node_modules/next/dist/docs/` before touching Next APIs (see `AGENTS.md`).
 
 ---
 
@@ -45,70 +46,95 @@ npm run typecheck
 | Need to change… | Go to |
 |---|---|
 | Any fact, copy, image or link | `content/home.ts` only. Components read it through `lib/content/index.ts` |
-| A headline accent word | Wrap it in `*asterisks*` in the content string (rendered by `lib/accent.tsx`) |
+| A headline accent word | Wrap it in `*asterisks*` in the content string (rendered by `lib/accent.tsx`, colour only) |
 | Colours, type scale, utilities | `app/globals.css` (`@theme` + `@utility`) |
-| Make a section dark | `bg-midnight on-dark grain` + `data-surface="dark"` on the section |
-| Motion for a section | `useMotion(ref, mm => mm.add(MQ.motion, …))`, which is lazy and reduced-motion safe |
-| Official plan zones | `scripts/generate-plan-zones.py` (re-run after any new plan drawing; mapping of legend colours → zones is in `ZONES`) |
-| Map routes / pins | `components/connectivity-map/mapGeometry.ts` (pixel space of `public/client/345.webp`, 1320×1232) |
+| Hero image / copy / reticle label | `hero` in `content/home.ts` (`video.poster` is `/client/hero-main.webp`; set `video.src` for a film) |
+| Hero route (desktop) and phone line | `components/hero/Hero.tsx` (`HERO_ROUTE`, `MOBILE_ROUTE`, `MOBILE_PIN`) |
+| The page-wide route line | `components/navigation/RouteSpine.tsx` |
+| Motion for a section | `useMotion(ref, mm => mm.add(MQ.motion, …))`, lazy and reduced-motion safe |
+| Official plan zones | `scripts/generate-plan-zones.py` — re-run after any new plan drawing (`pip install numpy opencv-python-headless pillow`); the legend colour → zone mapping is `ZONES`; output is `master-plan/officialZones.ts` (do not hand-edit) |
+| Figures' places on the plan (§06.1) | `ANCHORS` in `components/advantage/SpecDrawing.tsx` (image pixel space 2774×1583) |
+| Zone zoom levels / tour order (§09) | `ZOOM` and `TOUR` in `components/site-tour/SiteTourPreview.tsx` |
+| Map routes / pins (§07 and §07.1) | `components/connectivity-map/mapGeometry.ts` (pixel space of `public/client/345.webp`, 1320×1232); label placement in `PLACE` in `advantage/GatiShaktiMap.tsx` |
+| Amenities and their photos | `amenities` in `content/home.ts`; files and licences in `public/client/amenities/` (+ `CREDITS.md`) |
+| Blog posts | `blogs` in `content/home.ts` (empty today — never invent posts) |
 | Partner logos | `partners` in `content/home.ts` + files in `public/client/partners/` |
 | Constra footage | Put files in `public/constra/` and point `milestones[].media.src` at them (MP4/WebM play inline) |
-| Design rationale | `docs/REDESIGN-PLAN.md` (round 3) · `docs/CLIENT-CHANGES-PLAN.md` (round 2) · `docs/UI-PLAN.md` (original spec) |
-| QA results and how to re-run | `docs/redesign/QA-REPORT.md` · screenshots in `docs/redesign/phase-1…4/` |
+| Enquiry rules / destination | `lib/enquiry.ts` (shared validation) · `app/api/enquiry/route.ts` · `ENQUIRY_WEBHOOK_URL` |
+| Phone-only behaviour | `providers/MobileMotion.tsx` (reveals) · `ui/ImageViewer.tsx` · `ui/Rail.tsx` · `Nav.tsx` (menu) · `MobileActionBar.tsx` · see `docs/PLAN-MOBILE.md` |
+| Design rationale | `docs/REDESIGN-PLAN-R4.md` (current) · `docs/PLAN-*.md` (features) · `docs/CLIENT-CHANGES-PLAN.md` (round 2) · `docs/UI-PLAN.md` (original spec) |
+| QA results and how to re-run | `docs/redesign/QA-REPORT-R4.md` · screenshots in `docs/redesign/r4/` |
+
+**Unused leftovers** (safe to delete): `PlanSvg.tsx`, `planGeometry.ts`, `MmlpNetwork.tsx`, `SurveyGrid.tsx`;
+`public/client/hero-gate.webp`, `main2.webp`, `logo-lockup-indigo.webp`.
 
 ---
 
 ## 4. Waiting on the client
 
-These items are blocked on content. Each one is a single `content/home.ts` edit or file drop
-unless noted.
+These items are blocked on content or a decision. Each is usually a single `content/home.ts` edit or file
+drop.
 
 | # | Item | Where it goes |
 |---|---|---|
-| 1 | **Constra collaterals:** timelapse MP4s or progress photos, with a date for each milestone. Milestone 03 currently shows a labelled stock image | `public/constra/` → `milestones` |
-| 2 | **Confirm IGBC Platinum Pre-Certification.** Their site lists *GRIHA* | `sustainability.certification` |
-| 3 | High-resolution, transparent **wordmark** (the current PNG is 109×42) | `public/client/logo-text*.png` |
-| 4 | **Commercial** zone image (the solar stock photo was removed); **Yards** and **Green** zone images | `zones[].media.src` |
-| 5 | Leasing contact name, WhatsApp number, brochure PDF | `settings` |
-| 6 | YouTube and X links | `settings.socials` |
-| 7 | Privacy notice and terms pages; consent wording for the form | Footer + `EnquiryForm` |
-| 8 | Milestone dates (01, 03), "last updated" date, two news dates | `milestones`, `statusLastUpdated`, `news` |
-| 9 | Verified site coordinates (needed for the hero HUD and directions) | `settings.coordinates` |
-| 10 | Sustainability initiative details / metrics | `sustainability.initiatives[]` |
-| 11 | Hero drone video and the Logicity360 3D tour embed | `hero.video.src`, `siteTour` |
-| 12 | The PATH Group aerial (`image-1729245444632.webp`, taken from the client's site) appears to be a non-PATH warehouse park. Ask for a real PATH project photo | `pathGroup.photo` |
+| 1 | **Enquiry destination** — where leads should go (CRM, email relay, automation webhook) | `ENQUIRY_WEBHOOK_URL` in the host environment |
+| 2 | **Constra collaterals** — timelapse / drone / progress photos with dates (parked). Milestone 03 shows a labelled stock image. The Constra project holds ~12 edited comparison and aerial MP4s per capture round; confirm which may be published | `public/constra/` → `milestones` |
+| 3 | **Confirm the official-plan zone mapping** — we read the legend as: Warehousing = warehouse + transit warehouse; Rail Terminal = railway terminal; Dry Port/ICD = CFS shed; Commercial = commercial area; Yards = open warehouse + surface parking; Roads; Green. A wrong mapping would mislabel the drawing | `ZONES` in `scripts/generate-plan-zones.py` |
+| 4 | **PATH Group figures** — the concept note says 30+ years / 18 states / 70+ locations / ~6,100+ workforce; the live site says 27 / 17+ / 70+ / ~5,000. We show the live-site values | `pathGroup.metrics` |
+| 5 | **Confirm IGBC Platinum Pre-Certification** (their site lists *GRIHA*) | `sustainability.certification` |
+| 6 | **Real site photographs for the amenities** (five cards use illustrative stock) and for the **Commercial / Yards / Green** zones | `amenities[].image`, `zones[].media.src` |
+| 7 | Leasing contact name, **WhatsApp number**, **brochure PDF** | `settings` |
+| 8 | YouTube and X links | `settings.socials` |
+| 9 | Privacy notice and terms pages; consent wording for the form | Footer + `EnquiryForm` |
+| 10 | Milestone dates (01, 03), "last updated" date, two news dates, and **years for the PATH Group timeline** | `milestones`, `statusLastUpdated`, `news`, `pathGroup.evolution[].year` |
+| 11 | Verified site coordinates (hero HUD, directions) | `settings.coordinates` |
+| 12 | Sustainability initiative details / metrics | `sustainability.initiatives[]` |
+| 13 | Hero **drone video** (the hero is an illustrative render) and the Logicity360 3D tour embed. A higher-resolution original of the hero render (currently 1462px wide) would look sharper on large screens | `hero.video.src`, `siteTour` |
+| 14 | A real PATH project photo — the current PATH Group aerial appears to be a non-PATH warehouse park | `pathGroup.photo` |
+| 15 | High-resolution, transparent **wordmark** (the current PNG is 109×42) | `public/client/logo-text*.png` |
+| 16 | **Approve the copy we wrote**: the hero location line, the inner-page intros, the enquiry confirmation text, the blog empty state | `content/home.ts`, `EnquiryForm`, `layout/PageHero` usages |
+| 17 | The footer address is PATH's Indore registered office — confirm what should show | `settings.address` |
 
 ---
-
-**Added 2026-10-16 (round 4):** real site photographs for the seven amenities (Truck Facilities and Green & Open Spaces use client renders; the other five use illustrative stock for now); legend → zone mapping on the official plan; Path Group years for the timeline; the dates and figures conflict on Path Group numbers.
 
 ## 5. Open engineering work
 
 | Priority | Item | Notes |
 |---|---|---|
-| High | **Name the enquiry destination** (client decision D4) | The form now posts to `/api/enquiry`, which validates and forwards JSON to `ENQUIRY_WEBHOOK_URL` (see `.env.example`). Without it production answers 503 and the form shows a call/email fallback. Done-state copy is ours ("Our leasing team will review your enquiry and be in touch") — client to approve |
-| High | **Open the PR** `client-round-2` → `main` | See §1 |
-| Medium | **Mobile performance** ~70 → 85+ | Convert animation-only below-the-fold sections to server components with CSS reveals; dynamic-import the GSAP scenes for the map, gallery and site tour. See QA-REPORT "Remaining" |
-| Medium | **Real-device pass** | Physical iPhone (Safari) + mid-range Android; check pins, the gallery swipe and the marquee |
-| Medium | Inner page templates | Follow homepage sign-off (UI-PLAN §6) |
+| High | **Set `ENQUIRY_WEBHOOK_URL`** in production once the client names a destination | Until then the live form shows the call/email fallback |
+| Medium | **Mobile performance** ~70 → 85+ | Convert animation-only below-the-fold sections to server components with CSS reveals; dynamic-import the GSAP scenes for the maps, plan and site tour. The Advantage page is the heaviest (63–66). See QA-REPORT-R4 "Remaining" |
+| Medium | **Real-device pass** | Physical iPhone (Safari) + mid-range Android: plan pan, image viewer swipe, rail focus, the route spine in the margin, the phone hero line, the Gati Shakti map taps |
+| Medium | **Constra section** | Parked. Build the viewer modes (timelapse / before-after / drone) once the client confirms which files may be published (`docs/REDESIGN-PLAN-R4.md` §3.4) |
+| Low | Delete the unused leftovers listed in §3 | |
 | Low | CMS integration | Swap the getters in `lib/content/index.ts`; models in `lib/content/types.ts` mirror the schema |
-| Low | Google Maps "directions" link | Needs verified coordinates (client item 9) |
+| Low | Google Maps "directions" link | Needs verified coordinates (client item 11) |
+| Low | Lighthouse for inner pages beyond `/logicity-advantage` and `/blogs` | They reuse the same components |
 
 ---
 
 ## 6. Known quirks
 
-- **Strict-mode double effects (dev only):** the preloader uses a reverting `gsap.context`, so it
-  is safe. Keep that pattern for any one-shot intro.
-- **Page-transition wipe:** implemented with React `<ViewTransition>`. Navigation works, but the
-  visual wipe wasn't captured in headless tests. Confirm it in a real Chromium browser.
-- **Renders:** the client's renders have strong yellow and green casts. CSS grades and an indigo
-  wash compensate; the hero grade is baked into `public/client/hero-gate.webp`. If the source
-  render changes, regenerate it (the grade values are in the QA notes and REDESIGN-PLAN).
-- **One-off 404** seen once in testing, and not reproducible on reruns. It was likely a dev-server
-  chunk request.
-- **Local tooling:** Playwright's Firefox and WebKit (~600 MB) are installed in
-  `%LOCALAPPDATA%\ms-playwright` and were used for cross-browser QA. Lighthouse runs via `npx`.
+- **Hero pin on desktop:** the hero holds for 140% of a viewport so the route can draw down into §02. This is
+  the only pinned scene; phones and reduced motion have none. The nav turns solid after the hero.
+- **Route spine:** it is measured from real section tops and re-measured on resize and shortly after load
+  (lazy sections). If a section is added or reordered, it adapts; it starts at `#explore` (§03) and ends at
+  `#enquire`.
+- **Page-transition wipe:** implemented with React `<ViewTransition>`. Navigation works, but the visual wipe
+  was never captured in headless tests. Confirm it in a real Chromium browser.
+- **Official-plan zones** are traced by colour. If the client supplies a new drawing, re-run the script and
+  re-check each zone (the QA overlay approach is described in `docs/PLAN-OFFICIAL-MAP-REUSE.md`).
+- **§09 camera:** on desktop the map responds to clicks and the chips, **not hover** — the camera moves, so a
+  hover target would chase the cursor.
+- **Gati Shakti map and §07 share route geometry.** Routes are schematic traces of the roads on the client's
+  map, not survey-accurate; the map says "not to scale". No map of India is drawn on purpose.
+- **Stock imagery** is always labelled "Illustrative" and credited (`public/client/amenities/CREDITS.md`,
+  `public/construction/CREDITS.md`). The repair photo is **CC BY 2.0 and must keep its credit**.
+- **Renders:** the client's renders have strong yellow and green casts; `img-grade` and washes compensate.
+- **Dev-only noise:** the Next dev badge appears in screenshots; `reactStrictMode` double-runs effects (all
+  scenes use reverting contexts, so this is safe).
+- **Local tooling:** Playwright (Chromium, Firefox, WebKit) is installed in `%LOCALAPPDATA%\ms-playwright`
+  and was used for QA; Lighthouse runs via `npx` with `CHROME_PATH` pointing at a Playwright Chromium.
+  The Unsplash site blocks scripted access, so stock images were sourced through the Openverse API.
 
 ---
 
@@ -116,24 +142,18 @@ unless noted.
 
 | Date | Change |
 |---|---|
-| 2026-10-16 | **Amenity images.** The five amenity cards without a photo (Food & Retail, EV Charging, Fuel Station, Vehicle Repair & Service, ATMs & Essential Services) now show open-licensed stock photos in `public/client/amenities/` (four CC0 from rawpixel; the repair photo is CC BY 2.0 by Shixart1985 and is credited on its card). All are labelled "Illustrative", logo-free and listed in `public/client/amenities/CREDITS.md`. Replace them with real site photographs when the client supplies them (same filenames, or change `src` in `content/home.ts` → `amenities`) |
-| 2026-10-16 | **§07.1 PM Gati Shakti now uses the §07 location map.** New `advantage/GatiShaktiMap` replaces the schematic MMLP network: the client's `345.webp` with the same traced routes (`connectivity-map/mapGeometry`), Path Logicity as the pulsing hub, and seven points (NH 648, STRR, NH 48, Dodbele, Kempegowda Airport, Mangalore and Chennai ports) with mode-styled routes drawing out from the site, per-point label placement (no overlaps), distances only where the client supplied them, a legend, hover/focus/tap emphasis. `GatiShaktiBand` takes `destinations`. `MmlpNetwork` is now unused. Plan: `docs/PLAN-GATI-SHAKTI-MAP.md` |
-| 2026-10-16 | **Mobile hero line (branch `hero-line-mobile`).** On phones/tablets the hero route no longer crosses the text: the desktop curve is hidden below `lg` and a separate short line runs inside the clear window of the render (a flex spacer between the headline and the location bar), sweeping across the ship to the right edge with a gold site marker that pops in as the line passes. Draws once on load (0.5s delay, 2.2s); under reduced motion it is drawn fully with the marker shown. Desktop frames pixel-identical (80 at 1440/1024) |
-| 2026-10-16 | **Mobile action bar + menu.** The "Enquire leasing now" bar now hides while the hamburger menu is open (Nav flags `<html data-menu-open>`; the bar watches it) and as you scroll down, returning on scroll up. The mobile menu is quieter: smaller medium-weight labels, hairline dividers, a small "Menu" label, lighter sub-links and a slimmer CTA. Phones only (`lg:hidden` components); desktop untouched |
-| 2026-10-16 | **Mobile polish (branch `mobile-polish`, desktop untouched — 80 viewport frames at 1440/1024 are pixel-identical).** Phones: tighter section spacing, a top-to-bottom hero wash so the render shows, a pannable master plan that glides to the chosen zone, a full-screen swipeable viewer for the renders (new `ui/ImageViewer`), current-card focus on the renders/amenities rails, scroll-in reveals for milestones/initiatives/figures/footer links (new `providers/MobileMotion`), the business-value row aligned to the page margin, and no oversized name tag in §09. All gated to `max-lg` / `max-sm` or phone-only JS. Plan: `docs/PLAN-MOBILE.md` |
-| 2026-10-16 | **One official map in §03, §06.1 and §09.** New `master-plan/OfficialPlanMap` (+ `useZoneTour`) renders the client's official plan with the traced zones. §06.1 "Project at a glance" now anchors each figure to a real place on it (leader lines kept; figures light up in turn after the lines draw; hover works both ways). §09 "Inside Logicity" shows it under a slow camera that glides onto the chosen zone and tours all six zones on first view (chips, click/tap on the map, keyboard). Tours pause off-screen, stop on first interaction and are off under reduced motion. §03 is unchanged; `PlanSvg` is now unused by these two sections. Plan: `docs/PLAN-OFFICIAL-MAP-REUSE.md` |
-| 2026-10-16 | **Hero matched to the approved reference (pathlogicity.vercel.app).** Full-bleed render under a porcelain wash, location/intro/actions on a bottom bar, site reticle; on desktop the hero pins (140%), the headline lifts, and the blue route (gold comet) draws across the image and down into §02, where the incoming route (restored in `ScaleIndex`) carries it on. Our current type scale kept. `RouteSpine` now starts at §03; the nav turns solid after the pinned hero again. This supersedes the earlier "no pins" note for the hero only. Opening animations stay off; no "Pause film" until there is a film (a small "Illustrative render" label sits there instead) |
-| 2026-10-16 | **Hero + counter tweak.** Hero image is full-bleed behind the copy with a porcelain wash (stacked on phones); the hero route is gold and shares the page spine's x and head rule, so it flows straight into §02. The odometer (`Counter`, opt-in `spins`) whirls through several 0–9 turns per digit and decelerates onto the value; used for the 400 acres only |
-| 2026-10-16 | **Round 4, R4-7 (QA).** Lighthouse, three engines, eight widths, reduced motion and keyboard all checked on the production build; accessibility back to 100 after fixing the Rail list semantics and a heading level; hero image uses `preload` + `fetchPriority`. Report and 31 screenshots in `docs/redesign/` |
-| 2026-10-16 | **Round 4, R4-6.** The six inner pages replace the holding template (anchors from the nav work; chapter numbers hidden via `body:has([data-inner])`). Enquiry form wired to `POST /api/enquiry` (shared validation in `lib/enquiry.ts`, honeypot, size cap, JSON forward to `ENQUIRY_WEBHOOK_URL`, 503 + visible fallback when unset in production; tested with a local webhook). Blogs content model + empty state |
-| 2026-10-16 | **Round 4, R4-5 (motion pass).** New `navigation/RouteSpine`: one thin route line in the left margin that leaves the hero, passes a node at every section and ends at the enquiry block; gold draws down it on scroll (full and static under reduced motion). Hero route no longer exits the hero and the old Scale incoming route is gone (the spine replaces both). Image reveals gain a gold leading edge; headline letter-spacing settle removed; `.lift` hover for partner tiles. No pins anywhere |
-| 2026-10-16 | **Round 4, R4-4.** New **Amenities** section (§06.2: seven amenities in a free-scrolling rail; photo only where the client supplied one, otherwise a branded icon tile). **PM Gati Shakti** now has the six "growth story" points and "The impact" statement verbatim from the concept note, plus a schematic MMLP network (35 nodes, Bengaluru as the largest) in place of a map. **PATH Group** timeline gained client-worded captions and year slots (null until dates arrive). No map of India is drawn on purpose: national boundary depiction is legally sensitive and we have no approved outline |
-| 2026-10-16 | **Round 4, R4-3.** The official master plan is now the interactive layer: zones traced from the drawing by `scripts/generate-plan-zones.py` into `master-plan/officialZones.ts`; schematic and toggle removed. Legend → zone mapping needs client confirmation |
-| 2026-10-16 | **Round 4, R4-1 + R4-2.** White/light page throughout (midnight retired; footer is the only dark surface, ~5% of scroll); **Open Sans only** (Plus Jakarta and Instrument Serif removed; accent words are colour, not italics); new type scale and sentence-case labels; new light split hero on `main.webp` with no opening animation (preloader, hero window, word rise, hero pin removed); renders gallery is now a native `Rail` (no pin, drag/arrows/keys); hub opener, Gati Shakti, site tour and PATH Group strip recoloured light; nav turns solid after 24px. Page length 27 → 21 viewports, zero pinned sections. Constra left for later |
-| 2026-10-15 | **Committed and pushed** the premium redesign (Phases 1–4) and docs to `client-round-2` |
-| 2026-10-15 | **Phase 4 QA.** Lighthouse fixes: lazy motion set-up, threshold-only scroll hooks, baked hero grade, composited hero reveal, desktop-only preloader, Lenis off on touch, cached route lengths, smaller assets. Accessibility 97 → 100, desktop performance 83 → 96, mobile ~56 → ~70. Docs: QA-REPORT, ARCHITECTURE, HANDOVER |
-| 2026-10-15 | **Phase 3 motion.** M1–M12: preloader, hero window, surface morph, image reveals, gallery pin, magnetic CTAs, odometers, map establishing shot, logo marquee, hub showpiece, text polish, view transitions |
-| 2026-10-15 | **Phase 2 sections.** Midnight hero on the gate render; renders gallery; midnight hub, Gati Shakti and site tour; restyled light sections |
-| 2026-10-15 | **Phase 1 foundations.** Porcelain/stone/midnight tokens; Jakarta + Instrument Serif + Open Sans; gold-only accent; hidden placeholders; image grade and swaps; midnight footer |
-| 2026-10-15 | **Client round 2** (commit `af81901`, branch `client-round-2`, pushed): light theme, fonts, location map, partner and IGBC logos, Constra-ready status, contact details |
-| 2026-10-12 | **Client round 1** (commit `9a4fc49`, `main`): brand recolour, real logo, imagery and verified facts |
+| 2026-10-16 | **Docs brought up to date** (this file and `ARCHITECTURE.md`) |
+| 2026-10-16 | **Amenity images** (`c8c4086`): the five amenity cards without a photo now show open-licensed stock in `public/client/amenities/` — four CC0 (rawpixel), the repair photo CC BY 2.0 by Shixart1985 (credited on its card). "Illustrative", logo-free, sources in `CREDITS.md` |
+| 2026-10-16 | **§07.1 PM Gati Shakti on the location map** (`8c72d53`): new `advantage/GatiShaktiMap` replaces the abstract network with the client's `345.webp` and the §07 traced routes — Path Logicity as the pulsing hub, seven points (NH 648, STRR, NH 48, Dodbele, Kempegowda Airport, Mangalore and Chennai ports), mode-styled routes drawing out from the site, per-point label placement, distances only where supplied, legend, hover/focus/tap. Plan: `docs/PLAN-GATI-SHAKTI-MAP.md` |
+| 2026-10-16 | **Mobile hero line** (`02d4ee7`): on phones/tablets the hero route no longer crosses text; a separate short line runs in the clear window of the render with a gold site marker. Desktop unchanged |
+| 2026-10-16 | **Footer** (`f032959`): deep ink (`#111233`) with a soft gold glow instead of bright indigo |
+| 2026-10-16 | **Mobile polish** (`39f4095`): tighter section spacing; top-to-bottom hero wash; pannable master plan that glides to the chosen zone; full-screen swipeable image viewer (`ui/ImageViewer`); rail focus effect; scroll-in reveals (`providers/MobileMotion`); business-value row aligned to the margin; no oversized tag in §09; quieter hamburger menu; the Enquire bar hides while the menu is open and on scroll down. Desktop verified pixel-identical (80 frames at 1440/1024). Plan: `docs/PLAN-MOBILE.md` |
+| 2026-10-16 | **Hero + counter + official map reuse** (`576387d`): hero matched to the approved reference (full-bleed render, bottom bar, reticle, pinned route into §02); odometer `spins` for the 400 acres; the official plan is now the map in §06.1 (figures anchored to real places, leader lines kept, tour, two-way hover) and §09 (gliding camera, zone tour, chips/click/keyboard) via `master-plan/OfficialPlanMap`. Plan: `docs/PLAN-OFFICIAL-MAP-REUSE.md` |
+| 2026-10-16 | **R4-7 QA** (`c585ece`): Lighthouse, three engines, eight widths, reduced motion, keyboard; accessibility back to 100 after fixing Rail list semantics and a heading level; hero image uses `preload` + `fetchPriority`. Report and 31 screenshots in `docs/redesign/` |
+| 2026-10-16 | **R4-6 inner pages + enquiry** (`a269828`): the six inner pages replace the holding template; enquiry form wired to `/api/enquiry` (shared validation, honeypot, size cap, webhook forward, 503 + fallback when unset); Blogs model and empty state |
+| 2026-10-16 | **R4-3 to R4-5** (`2510f33`): interactive official plan (`scripts/generate-plan-zones.py` → `officialZones.ts`); new Amenities section; Gati Shakti points + "The impact"; PATH Group timeline captions; `RouteSpine`; gold leading edge on image reveals; `.lift` hover |
+| 2026-10-16 | **R4-1 + R4-2** (`02d22dd`): white/light page (midnight retired, footer the only dark surface), **Open Sans only**, new type scale and sentence-case labels, new hero on `main.webp`, preloader and intro animations removed, renders gallery as a native `Rail` (no pin), hub opener / Gati Shakti / site tour / PATH Group strip recoloured light |
+| 2026-10-16 | **Audit and plan** (`docs/REDESIGN-PLAN-R4.md`): confirmed the gallery pin locked ~5 screens of scroll; set the light/one-font direction after the client's V2 feedback; Constra parked |
+| 2026-10-15 | **Round 3 premium redesign** (`93f402e`): quiet-luxury system with midnight sections, motion M1–M12, QA — largely superseded by round 4 |
+| 2026-10-15 | **Client round 2** (`af81901`, merged via PR #1): light theme, Open Sans, location map, partner and IGBC logos, Constra-ready status, contact details |
+| 2026-10-12 | **Client round 1** (`9a4fc49`): brand recolour, real logo, imagery and verified facts |

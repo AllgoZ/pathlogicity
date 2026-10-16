@@ -56,7 +56,7 @@ export function SiteTourPreview({ data }: { data: Homepage["siteTour"] }) {
         {/* the official plan under a slow-moving camera (drift paused under reduced motion via the global rule) */}
         <div aria-hidden className="absolute inset-0 flex items-center justify-center [perspective:1800px]">
           <div
-            className="w-[190%] max-w-[1700px] [--tx:0%] [--ty:0%] [--z:1] [transform:translate(var(--tx),var(--ty))_scale(var(--z))] [transform-origin:50%_50%] transition-transform duration-[1600ms] ease-[var(--ease-out-expo)] sm:w-[130%] lg:w-[92%] lg:[--tx:9%] lg:[--ty:-12%] lg:[--z:0.7]"
+            className="w-[190%] max-w-[1700px] max-lg:[&_.map-tag]:hidden [--tx:0%] [--ty:0%] [--z:1] [transform:translate(var(--tx),var(--ty))_scale(var(--z))] [transform-origin:50%_50%] transition-transform duration-[1600ms] ease-[var(--ease-out-expo)] sm:w-[130%] lg:w-[92%] lg:[--tx:9%] lg:[--ty:-12%] lg:[--z:0.7]"
             style={camera}
           >
             <div style={{ animation: "tour-drift 26s ease-in-out infinite alternate" }}>

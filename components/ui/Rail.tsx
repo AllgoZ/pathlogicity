@@ -40,6 +40,7 @@ export function Rail({
     items.forEach((it, i) => {
       if (it.offsetLeft - pad - el.scrollLeft < el.clientWidth * 0.35) index = i;
     });
+    items.forEach((it, i) => it.toggleAttribute("data-dim", i !== index));
     setAt((s) => {
       const next = { start: el.scrollLeft < 4, end: el.scrollLeft >= max - 4, index };
       return s.start === next.start && s.end === next.end && s.index === next.index ? s : next;
@@ -118,7 +119,7 @@ export function Rail({
             go(-1);
           }
         }}
-        className={`no-scrollbar flex snap-x snap-mandatory overflow-x-auto scroll-pl-[var(--margin)] px-[var(--margin)] pb-2 [-webkit-overflow-scrolling:touch] focus-visible:outline-offset-[-3px] lg:cursor-grab ${trackClassName}`}
+        className={`rail no-scrollbar flex snap-x snap-mandatory overflow-x-auto scroll-pl-[var(--margin)] px-[var(--margin)] pb-2 [-webkit-overflow-scrolling:touch] focus-visible:outline-offset-[-3px] lg:cursor-grab ${trackClassName}`}
       >
         {children}
       </ul>

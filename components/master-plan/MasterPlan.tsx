@@ -24,6 +24,8 @@ const PAINT_ORDER = ["green", "roads", "yards", "warehousing", "rail", "commerci
 export function MasterPlan({ zones }: { zones: Zone[] }) {
   const section = useRef<HTMLElement>(null);
   const planWrap = useRef<HTMLDivElement>(null);
+  const panner = useRef<HTMLDivElement>(null);
+  const [panned, setPanned] = useState(false);
   const [active, setActive] = useState<string | null>(null);
   const [hover, setHover] = useState<string | null>(null);
   const touched = useRef(false);
@@ -65,6 +67,14 @@ export function MasterPlan({ zones }: { zones: Zone[] }) {
       timers.forEach(clearTimeout);
     };
   }, [zones]);
+
+  // Phones / tablets: the drawing is wider than the card and pans sideways; glide it to the lit zone.
+  useEffect(() => {
+    const el = panner.current;
+    if (!el || !shown || !window.matchMedia("(max-width: 1023.98px)").matches) return;
+    const target = (officialZones[shown].anchor[0] / W) * el.scrollWidth - el.clientWidth / 2;
+    el.scrollTo({ left: Math.max(0, target), behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  }, [shown]);
 
   const interact = () => {
     touched.current = true;
@@ -135,7 +145,8 @@ export function MasterPlan({ zones }: { zones: Zone[] }) {
         <div className="col-span-4 sm:col-span-8 lg:col-span-9">
           <div ref={planWrap} className="card relative overflow-hidden">
             <figure onMouseLeave={() => setHover(null)}>
-              <div className="relative">
+              <div ref={panner} onScroll={() => !panned && setPanned(true)} className="no-scrollbar max-lg:overflow-x-auto">
+              <div className="relative max-lg:w-[185%]">
               <Image
                 src={PLAN_SRC}
                 alt="Official Path Logicity master plan: warehouses, surface parking, commercial areas, open warehouses, CFS shed, utilities, transit warehouse and the railway terminal, with access from the STRR / NH 648 trumpet"
@@ -204,6 +215,16 @@ export function MasterPlan({ zones }: { zones: Zone[] }) {
                 </div>
               ) : null}
               </div>
+              </div>
+              {/* phones / tablets: a one-time hint that the drawing pans */}
+              <p
+                aria-hidden
+                className={`t-micro pointer-events-none absolute left-3 top-3 z-20 flex items-center gap-2 bg-ink/85 px-3 py-1.5 text-paper transition-opacity duration-500 lg:hidden ${panned ? "opacity-0" : "opacity-100"}`}
+              >
+                <Icon name="arrow-right" size={12} className="rotate-180" />
+                Drag to pan
+                <Icon name="arrow-right" size={12} />
+              </p>
 
               <figcaption className="t-micro flex flex-wrap items-center justify-between gap-x-6 gap-y-1 border-t border-ink/10 px-4 py-3 text-steel-500">
                 <span>Official master plan · Path Logicity, Dobbaspet</span>

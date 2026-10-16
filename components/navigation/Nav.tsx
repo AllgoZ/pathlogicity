@@ -38,6 +38,8 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
     if (menu) window.__lenis?.stop();
     else window.__lenis?.start();
     document.documentElement.style.overflow = menu ? "hidden" : "";
+    document.documentElement.toggleAttribute("data-menu-open", menu); // lets the mobile action bar step aside
+    return () => document.documentElement.removeAttribute("data-menu-open");
   }, [menu]);
 
   useEffect(() => {
@@ -209,18 +211,19 @@ function MobileMenu({ open, items, settings, onClose }: { open: boolean; items: 
       data-lenis-prevent
     >
       <div aria-hidden className="dot-field-light pointer-events-none absolute inset-0 opacity-60" />
-      <nav aria-label="Mobile" className="relative flex-1 overflow-y-auto px-[var(--margin)] pb-8 pt-24">
-        <ol className="border-t border-ink/10">
+      <nav aria-label="Mobile" className="relative flex-1 overflow-y-auto px-[var(--margin)] pb-6 pt-[88px]">
+        <p className="t-micro mb-3 text-steel-500">Menu</p>
+        <ol className="border-t border-ink/[0.09]">
           {items.map((item, i) => (
             <li
               key={item.label}
-              className="border-b border-ink/10"
+              className="border-b border-ink/[0.09]"
               style={{ transition: "opacity .6s, transform .8s var(--ease-out-expo)", transitionDelay: open ? `${120 + i * 50}ms` : "0ms", opacity: open ? 1 : 0, transform: open ? "none" : "translateY(24px)" }}
             >
               <div className="flex items-center justify-between">
-                <Link ref={i === 0 ? first : undefined} href={item.href} onClick={onClose} className="flex flex-1 items-baseline gap-4 py-4">
-                  <span className="t-micro text-indigo-700">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="font-display text-[clamp(1.5rem,6.5vw,2.25rem)] font-semibold leading-tight tracking-[-0.02em] text-ink">{item.label}</span>
+                <Link ref={i === 0 ? first : undefined} href={item.href} onClick={onClose} className="flex flex-1 items-baseline gap-4 py-3.5">
+                  <span className="t-micro tnum w-5 text-indigo-700/70">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="text-[1.0625rem] font-medium leading-tight tracking-[-0.005em] text-ink">{item.label}</span>
                 </Link>
                 {item.children ? (
                   <button
@@ -228,18 +231,18 @@ function MobileMenu({ open, items, settings, onClose }: { open: boolean; items: 
                     aria-expanded={expanded === i}
                     aria-label={`${item.label} sections`}
                     onClick={() => setExpanded(expanded === i ? null : i)}
-                    className="flex h-12 w-12 items-center justify-center text-ink"
+                    className="flex h-11 w-11 items-center justify-center text-ink/70"
                   >
-                    <Icon name="plus" size={20} className={`transition-transform duration-300 ${expanded === i ? "rotate-45" : ""}`} />
+                    <Icon name="plus" size={16} className={`transition-transform duration-300 ${expanded === i ? "rotate-45" : ""}`} />
                   </button>
                 ) : null}
               </div>
               {item.children ? (
                 <div className={`grid transition-[grid-template-rows] duration-500 ease-[var(--ease-out-expo)] ${expanded === i ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
-                  <ul className="overflow-hidden pl-9">
+                  <ul className="overflow-hidden pl-9 [&_li:last-child]:pb-1">
                     {item.children.map((c) => (
                       <li key={c.href}>
-                        <Link href={c.href} onClick={onClose} className="block py-3 text-[0.9375rem] font-semibold text-steel-700">
+                        <Link href={c.href} onClick={onClose} className="block py-2.5 text-[0.875rem] text-steel-700 transition-colors active:text-indigo-700">
                           {c.label}
                         </Link>
                       </li>
@@ -253,8 +256,8 @@ function MobileMenu({ open, items, settings, onClose }: { open: boolean; items: 
         </ol>
       </nav>
       <div className="relative border-t border-ink/10 px-[var(--margin)] pb-[max(20px,env(safe-area-inset-bottom))] pt-5">
-        <Link href="#enquire" onClick={onClose} className="flex h-[52px] w-full items-center justify-center gap-3 bg-yellow-400 text-[0.875rem] font-bold uppercase tracking-[0.05em] text-ink">
-          Enquire leasing now <Icon name="arrow-right" size={18} />
+        <Link href="#enquire" onClick={onClose} className="flex h-12 w-full items-center justify-center gap-3 bg-yellow-400 text-[0.8125rem] font-semibold uppercase tracking-[0.06em] text-ink">
+          Enquire leasing now <Icon name="arrow-right" size={16} />
         </Link>
         <div className="mt-4 flex items-center justify-between">
           <div className="flex gap-2">

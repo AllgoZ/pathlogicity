@@ -1,7 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import type { GalleryItem } from "@/lib/content/types";
+import { Icon } from "@/components/ui/Icon";
+import { ImageViewer } from "@/components/ui/ImageViewer";
 import { Rail } from "@/components/ui/Rail";
 import { Reveal, RevealLines } from "@/components/ui/Reveal";
 
@@ -11,6 +14,11 @@ import { Reveal, RevealLines } from "@/components/ui/Reveal";
  * arrows or ←/→ move it; scrolling the page past it always works.
  */
 export function RendersGallery({ items }: { items: GalleryItem[] }) {
+  // phones / tablets: tap a render to open it full-screen
+  const [open, setOpen] = useState<number | null>(null);
+  const openIfSmall = (i: number) => {
+    if (window.matchMedia("(max-width: 1023.98px)").matches) setOpen(i);
+  };
   return (
     <section id="renders" data-stage="believe" aria-labelledby="renders-title" className="relative overflow-hidden bg-stone py-[clamp(88px,12vh,144px)]">
       <div className="shell grid-12 items-end gap-y-6">
@@ -30,7 +38,7 @@ export function RendersGallery({ items }: { items: GalleryItem[] }) {
         {items.map((it, i) => (
           <li key={it.id} className="group w-[84vw] shrink-0 snap-start sm:w-[62vw] lg:w-[min(52vw,820px)]">
             <figure>
-              <div className={`relative aspect-[16/10] overflow-hidden rounded-[2px] shadow-[var(--shadow-card)] ${it.fit === "contain" ? "bg-paper" : "bg-paper-3"}`}>
+              <div onClick={() => openIfSmall(i)} className={`relative aspect-[16/10] overflow-hidden rounded-[2px] shadow-[var(--shadow-card)] ${it.fit === "contain" ? "bg-paper" : "bg-paper-3"}`}>
                 <Image
                   src={it.media.src as string}
                   alt={it.media.alt}
@@ -39,6 +47,17 @@ export function RendersGallery({ items }: { items: GalleryItem[] }) {
                   draggable={false}
                   className={`${it.fit === "contain" ? "object-contain p-4" : "img-grade object-cover"} transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] group-hover:scale-[1.04]`}
                 />
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpen(i);
+                  }}
+                  aria-label={`View ${it.title} full screen`}
+                  className="absolute bottom-3 right-3 flex h-11 w-11 items-center justify-center bg-paper/90 text-ink shadow-md backdrop-blur-sm transition-colors active:bg-yellow-400 lg:hidden"
+                >
+                  <Icon name="expand" size={18} />
+                </button>
               </div>
               <figcaption className="mt-5 flex items-baseline gap-5">
                 <span className="t-micro tnum text-indigo-700">{String(i + 1).padStart(2, "0")}</span>
@@ -52,6 +71,14 @@ export function RendersGallery({ items }: { items: GalleryItem[] }) {
         ))}
         <li aria-hidden className="w-px shrink-0 sm:w-[var(--margin)]" />
       </Rail>
+      {open !== null ? (
+        <ImageViewer
+          items={items.map((it) => ({ src: it.media.src as string, alt: it.media.alt, title: it.title, caption: it.caption, fit: it.fit }))}
+          index={open}
+          onIndex={setOpen}
+          onClose={() => setOpen(null)}
+        />
+      ) : null}
     </section>
   );
 }

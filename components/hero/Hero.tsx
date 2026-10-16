@@ -108,8 +108,10 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
         </div>
 
         {/* Porcelain wash — strongest behind the headline on the left, easing off to the right; clear under the nav and at the foot */}
-        <div aria-hidden className="absolute inset-0 bg-gradient-to-r from-porcelain via-porcelain/80 to-transparent sm:via-porcelain/70 lg:via-porcelain/55 lg:to-porcelain/0" />
-        <div aria-hidden className="absolute inset-x-0 bottom-0 h-[46%] bg-gradient-to-t from-porcelain via-porcelain/85 to-transparent" />
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-r from-porcelain via-porcelain/80 to-transparent max-sm:hidden sm:via-porcelain/70 lg:via-porcelain/55 lg:to-porcelain/0" />
+        {/* phones: pale behind the headline, the render clear through the middle, pale behind the location bar */}
+        <div aria-hidden className="absolute inset-0 bg-[linear-gradient(to_bottom,rgb(249_250_253/0.9)_0%,rgb(249_250_253/0.72)_30%,rgb(249_250_253/0.18)_42%,transparent_50%)] sm:hidden" />
+        <div aria-hidden className="absolute inset-x-0 bottom-0 h-[46%] bg-gradient-to-t from-porcelain via-porcelain/85 to-transparent max-sm:h-[58%] max-sm:via-porcelain/95" />
         <div aria-hidden className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-porcelain/80 to-transparent" />
         <div ref={cover} aria-hidden className="absolute inset-0 z-[15] bg-porcelain opacity-0" />
 

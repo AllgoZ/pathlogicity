@@ -167,6 +167,10 @@ html.lenis body {
 }
 @utility section-pad {
   padding-block: clamp(112px, 15vh, 208px);
+  /* phones: open each section sooner */
+  @media (width < 40rem) {
+    padding-block: clamp(72px, 10vh, 104px);
+  }
 }
 @utility card {
   background: var(--color-paper);
@@ -470,6 +474,20 @@ html:not([data-annotations="on"]) .slot-annotation {
   }
   to {
     transform: perspective(1600px) rotateX(58deg) rotateZ(14deg);
+  }
+}
+
+/* Mobile / tablet rails (renders, amenities): the current card is full strength, its neighbours ease back.
+   Rail.tsx marks the non-current items with data-dim; desktop (>= lg) is untouched. */
+@media (width < 64rem) {
+  .rail > li {
+    transition:
+      opacity 0.55s var(--ease-out-expo),
+      transform 0.7s var(--ease-out-expo);
+  }
+  .rail > li[data-dim] {
+    opacity: 0.55;
+    transform: scale(0.965);
   }
 }
 

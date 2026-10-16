@@ -9,6 +9,7 @@ import { RouteSpine } from "@/components/navigation/RouteSpine";
 import { MobileActionBar } from "@/components/navigation/MobileActionBar";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import { SurfaceMorph } from "@/components/providers/SurfaceMorph";
+import { MobileMotion } from "@/components/providers/MobileMotion";
 import { EnquireBlock } from "@/components/contact/EnquireBlock";
 import { Footer } from "@/components/footer/Footer";
 
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <SmoothScroll />
         <SurfaceMorph />
+        <MobileMotion />
         <Nav items={getNavigation()} settings={settings} />
         {/* M12 — route changes: old page lifts away, new page wipes up over a light curtain */}
         <ViewTransition default="page-wipe">

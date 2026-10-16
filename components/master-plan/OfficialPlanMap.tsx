@@ -134,7 +134,7 @@ export function OfficialPlanMap({
             <span className="absolute inset-0 rounded-full bg-yellow-400 animate-pulse-soft" />
             <span className="relative h-3 w-3 rounded-full border-2 border-paper bg-yellow-400 shadow" />
           </span>
-          <span className={`t-micro absolute top-1/2 -translate-y-1/2 whitespace-nowrap bg-ink px-2.5 py-1 text-paper shadow-lg ${ax > W * 0.62 ? "right-4" : "left-4"}`}>{tag}</span>
+          <span className={`map-tag t-micro absolute top-1/2 -translate-y-1/2 whitespace-nowrap bg-ink px-2.5 py-1 text-paper shadow-lg ${ax > W * 0.62 ? "right-4" : "left-4"}`}>{tag}</span>
         </span>
       ) : null}
     </div>

@@ -102,7 +102,7 @@ export function BusinessValue({ benefits }: { benefits: Benefit[] }) {
           </div>
         </div>
 
-        <ul className="shell no-scrollbar mt-16 flex snap-x snap-mandatory gap-0 overflow-x-auto lg:mt-24 lg:grid lg:grid-cols-5 lg:overflow-visible">
+        <ul className="shell no-scrollbar mt-16 flex scroll-pl-[var(--margin)] snap-x snap-mandatory gap-0 overflow-x-auto lg:mt-24 lg:grid lg:grid-cols-5 lg:overflow-visible">
           {benefits.map((b, i) => (
             <li key={b.id} className="group w-[78vw] shrink-0 snap-start border-l border-ink/10 px-6 pb-4 first:border-l-0 first:pl-0 sm:w-[44vw] lg:w-auto lg:px-7 lg:first:pl-0">
               <span className="t-micro text-steel-500">{String(i + 1).padStart(2, "0")}</span>

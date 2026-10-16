@@ -5,13 +5,25 @@ import { useEffect, useState } from "react";
 import { telHref } from "@/lib/content";
 import type { SiteSettings } from "@/lib/content/types";
 import { Icon } from "@/components/ui/Icon";
-import { useHeroThreshold, useScrolledPast } from "./useHeroThreshold";
+import { useHeroThreshold, useHideOnScroll, useScrolledPast } from "./useHeroThreshold";
 
-/** Thumb-reach conversion bar on mobile, after the hero, hidden while the form is visible. */
+/** Thumb-reach conversion bar on mobile, after the hero. Steps aside while the form is visible, while the menu is open, and as you scroll down (it returns on scroll up). */
 export function MobileActionBar({ settings }: { settings: SiteSettings }) {
   const threshold = useHeroThreshold();
   const pastHero = useScrolledPast(threshold);
   const [formVisible, setFormVisible] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const scrollingDown = useHideOnScroll(threshold, false);
+
+  // the nav flags <html data-menu-open> while the hamburger menu is open
+  useEffect(() => {
+    const html = document.documentElement;
+    const read = () => setMenuOpen(html.hasAttribute("data-menu-open"));
+    read();
+    const mo = new MutationObserver(read);
+    mo.observe(html, { attributes: true, attributeFilter: ["data-menu-open"] });
+    return () => mo.disconnect();
+  }, []);
 
   useEffect(() => {
     const el = document.getElementById("enquire");
@@ -21,7 +33,7 @@ export function MobileActionBar({ settings }: { settings: SiteSettings }) {
     return () => io.disconnect();
   }, []);
 
-  const show = pastHero && !formVisible;
+  const show = pastHero && !formVisible && !menuOpen && !scrollingDown;
   const cell = "flex h-14 w-14 shrink-0 items-center justify-center border-l border-ink/10 text-indigo-700";
 
   return (

@@ -455,6 +455,15 @@ html:not([data-annotations="on"]) .slot-annotation {
     clip-path: inset(0 0 0 0);
   }
 }
+/* §09 camera drift: a slow breathing tilt over the official plan */
+@keyframes tour-drift {
+  from {
+    transform: rotateX(9deg) rotateZ(-1.2deg) scale(1);
+  }
+  to {
+    transform: rotateX(15deg) rotateZ(1.2deg) scale(1.035);
+  }
+}
 @keyframes orbit {
   from {
     transform: perspective(1600px) rotateX(58deg) rotateZ(-14deg);

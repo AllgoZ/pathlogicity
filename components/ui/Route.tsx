@@ -25,11 +25,13 @@ type Props = {
   keepHead?: boolean;
   className?: string;
   strokeWidth?: number;
+  /** "blue" draws the trail in the client blue (the hero route) */
+  trail?: "default" | "blue";
 };
 
 /** The signature device: a thin route line with a moving yellow "vehicle" head. */
 export const Route = forwardRef<RouteHandle, Props>(function Route(
-  { d, tone = "light", base = true, initial = 1, auto, scrubStart = "top 75%", scrubEnd = "bottom 40%", keepHead = true, className = "", strokeWidth = 1.5 },
+  { d, tone = "light", base = true, initial = 1, auto, scrubStart = "top 75%", scrubEnd = "bottom 40%", keepHead = true, className = "", strokeWidth = 1.5, trail: trailKind = "default" },
   ref,
 ) {
   const wrap = useRef<HTMLDivElement>(null);
@@ -88,7 +90,7 @@ export const Route = forwardRef<RouteHandle, Props>(function Route(
 
   // tone = the SURFACE the route sits on. Light (default): indigo hairline + blue trail.
   const dormant = tone === "light" ? "rgb(32 31 133 / 0.12)" : "rgb(255 255 255 / 0.16)";
-  const trailColor = tone === "light" ? "rgb(32 31 133 / 0.5)" : "rgb(255 255 255 / 0.6)";
+  const trailColor = trailKind === "blue" ? "rgb(0 102 177 / 0.6)" : tone === "light" ? "rgb(32 31 133 / 0.5)" : "rgb(255 255 255 / 0.6)";
 
   return (
     <div ref={wrap} aria-hidden className={`pointer-events-none absolute inset-0 ${className}`}>

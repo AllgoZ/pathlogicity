@@ -48,18 +48,18 @@ export function RouteSpine() {
     };
 
     const layout = () => {
-      const hero = document.getElementById("top");
+      const hero = document.getElementById("explore"); // the hero route and §02 incoming route carry the line down to here
       const end = document.getElementById("enquire");
       if (!hero || !end) {
         root.style.display = "none";
         return;
       }
       root.style.display = "";
-      y0 = docTop(hero) + hero.offsetHeight;
+      y0 = docTop(hero);
       h = Math.max(0, docTop(end) + 28 - y0);
       root.style.top = `${y0}px`;
       root.style.height = `${h}px`;
-      const secs = Array.from(document.querySelectorAll<HTMLElement>("#main > section")).filter((s) => s.id && s.id !== "top");
+      const secs = Array.from(document.querySelectorAll<HTMLElement>("#main > section")).filter((s) => s.id && s.id !== "top" && s.id !== "scale");
       tops = [0, ...secs.map((s) => docTop(s) - y0).filter((t) => t > 8 && t < h - 8), h];
       host.replaceChildren(
         ...tops.map((t, i) => {

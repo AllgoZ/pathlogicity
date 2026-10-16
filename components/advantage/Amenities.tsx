@@ -39,7 +39,7 @@ export function Amenities({ items }: { items: Amenity[] }) {
                       draggable={false}
                       className="img-grade object-cover transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] group-hover:scale-[1.05]"
                     />
-                    <span className="t-micro absolute bottom-3 left-3 bg-paper/90 px-2.5 py-1 text-steel-700">Illustrative</span>
+                    <span className="t-micro absolute bottom-3 left-3 max-w-[calc(100%-1.5rem)] bg-paper/90 px-2.5 py-1 text-steel-700">Illustrative{a.image.credit ? ` · ${a.image.credit}` : ""}</span>
                   </>
                 ) : (
                   <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-blue-50 to-paper">

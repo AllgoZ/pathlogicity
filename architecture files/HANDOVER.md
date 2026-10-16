@@ -80,7 +80,7 @@ unless noted.
 
 ---
 
-**Added 2026-10-16 (round 4):** real site photographs for the seven amenities (only Truck Facilities and Green & Open Spaces have client renders; the other five are icon tiles); legend → zone mapping on the official plan; Path Group years for the timeline; the dates and figures conflict on Path Group numbers.
+**Added 2026-10-16 (round 4):** real site photographs for the seven amenities (Truck Facilities and Green & Open Spaces use client renders; the other five use illustrative stock for now); legend → zone mapping on the official plan; Path Group years for the timeline; the dates and figures conflict on Path Group numbers.
 
 ## 5. Open engineering work
 
@@ -116,6 +116,7 @@ unless noted.
 
 | Date | Change |
 |---|---|
+| 2026-10-16 | **Amenity images.** The five amenity cards without a photo (Food & Retail, EV Charging, Fuel Station, Vehicle Repair & Service, ATMs & Essential Services) now show open-licensed stock photos in `public/client/amenities/` (four CC0 from rawpixel; the repair photo is CC BY 2.0 by Shixart1985 and is credited on its card). All are labelled "Illustrative", logo-free and listed in `public/client/amenities/CREDITS.md`. Replace them with real site photographs when the client supplies them (same filenames, or change `src` in `content/home.ts` → `amenities`) |
 | 2026-10-16 | **§07.1 PM Gati Shakti now uses the §07 location map.** New `advantage/GatiShaktiMap` replaces the schematic MMLP network: the client's `345.webp` with the same traced routes (`connectivity-map/mapGeometry`), Path Logicity as the pulsing hub, and seven points (NH 648, STRR, NH 48, Dodbele, Kempegowda Airport, Mangalore and Chennai ports) with mode-styled routes drawing out from the site, per-point label placement (no overlaps), distances only where the client supplied them, a legend, hover/focus/tap emphasis. `GatiShaktiBand` takes `destinations`. `MmlpNetwork` is now unused. Plan: `docs/PLAN-GATI-SHAKTI-MAP.md` |
 | 2026-10-16 | **Mobile hero line (branch `hero-line-mobile`).** On phones/tablets the hero route no longer crosses the text: the desktop curve is hidden below `lg` and a separate short line runs inside the clear window of the render (a flex spacer between the headline and the location bar), sweeping across the ship to the right edge with a gold site marker that pops in as the line passes. Draws once on load (0.5s delay, 2.2s); under reduced motion it is drawn fully with the marker shown. Desktop frames pixel-identical (80 at 1440/1024) |
 | 2026-10-16 | **Mobile action bar + menu.** The "Enquire leasing now" bar now hides while the hamburger menu is open (Nav flags `<html data-menu-open>`; the bar watches it) and as you scroll down, returning on scroll up. The mobile menu is quieter: smaller medium-weight labels, hairline dividers, a small "Menu" label, lighter sub-links and a slimmer CTA. Phones only (`lg:hidden` components); desktop untouched |

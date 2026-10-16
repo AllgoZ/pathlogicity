@@ -10,13 +10,13 @@
 
 | Item | State |
 |---|---|
-| Homepage | Round 4 **R4-1 to R4-6 done** (light theme, Open Sans only, new hero, free-scrolling gallery, interactive official master plan). Next: R4-7 QA (real devices, Lighthouse, screenshots). Constra section is parked for later. Plan: `docs/REDESIGN-PLAN-R4.md`. **Constra section is parked for later by decision** |
+| Homepage | Round 4 **R4-1 to R4-7 done** (QA: `docs/redesign/QA-REPORT-R4.md`) (light theme, Open Sans only, new hero, free-scrolling gallery, interactive official master plan). Remaining: real-device pass, mobile performance (~70), client confirmations (§4), and the parked Constra section. Plan: `docs/REDESIGN-PLAN-R4.md`. **Constra section is parked for later by decision** |
 | Inner pages | **Built (round 4):** `/path-group`, `/logicity-advantage`, `/sustainability`, `/site-tour`, `/news`, `/blogs`, composed from the homepage sections plus `layout/PageHero`. Blogs shows a designed empty state until real posts exist |
 | Branch | `client-round-2` (cut from `main`) |
 | Commits | `af81901` client round 2 → then *Premium redesign: Phases 1–4* (both pushed to `origin/client-round-2`; see `git log`) |
 | Uncommitted | Round 4 R4-1/R4-2 changes (not committed yet) |
 | Pull request | Not opened yet. The GitHub CLI isn't installed on this machine, so open it from https://github.com/AllgoZ/pathlogicity/pull/new/client-round-2 |
-| Quality | Typecheck clean · production build passes · Lighthouse desktop 96/100/100/100 · mobile ~70/100/100/100 · CLS 0 |
+| Quality | Typecheck clean · build passes · Lighthouse desktop 98/100/100/100 · mobile ~70 (57–72)/100/100/100 · CLS 0 · no pins · Chromium, Firefox, WebKit clean |
 | Browsers | Edge, Firefox and WebKit (Safari engine) checked headless. No physical-device pass yet |
 
 ---
@@ -116,6 +116,7 @@ unless noted.
 
 | Date | Change |
 |---|---|
+| 2026-10-16 | **Round 4, R4-7 (QA).** Lighthouse, three engines, eight widths, reduced motion and keyboard all checked on the production build; accessibility back to 100 after fixing the Rail list semantics and a heading level; hero image uses `preload` + `fetchPriority`. Report and 31 screenshots in `docs/redesign/` |
 | 2026-10-16 | **Round 4, R4-6.** The six inner pages replace the holding template (anchors from the nav work; chapter numbers hidden via `body:has([data-inner])`). Enquiry form wired to `POST /api/enquiry` (shared validation in `lib/enquiry.ts`, honeypot, size cap, JSON forward to `ENQUIRY_WEBHOOK_URL`, 503 + visible fallback when unset in production; tested with a local webhook). Blogs content model + empty state |
 | 2026-10-16 | **Round 4, R4-5 (motion pass).** New `navigation/RouteSpine`: one thin route line in the left margin that leaves the hero, passes a node at every section and ends at the enquiry block; gold draws down it on scroll (full and static under reduced motion). Hero route no longer exits the hero and the old Scale incoming route is gone (the spine replaces both). Image reveals gain a gold leading edge; headline letter-spacing settle removed; `.lift` hover for partner tiles. No pins anywhere |
 | 2026-10-16 | **Round 4, R4-4.** New **Amenities** section (§06.2: seven amenities in a free-scrolling rail; photo only where the client supplied one, otherwise a branded icon tile). **PM Gati Shakti** now has the six "growth story" points and "The impact" statement verbatim from the concept note, plus a schematic MMLP network (35 nodes, Bengaluru as the largest) in place of a map. **PATH Group** timeline gained client-worded captions and year slots (null until dates arrive). No map of India is drawn on purpose: national boundary depiction is legally sensitive and we have no approved outline |

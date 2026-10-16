@@ -94,7 +94,8 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
                   src={data.video.poster}
                   alt={data.video.alt}
                   fill
-                  priority
+                  preload
+                  fetchPriority="high"
                   sizes="(min-width: 1024px) 62vw, 100vw"
                   className="object-cover object-[30%_50%]"
                 />

@@ -100,11 +100,10 @@ export function Rail({
   };
 
   return (
-    <div className={className}>
+    <div role="region" aria-label={label} className={className}>
       <ul
         ref={scroller}
-        role="region"
-        aria-label={label}
+        role="list"
         tabIndex={0}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}

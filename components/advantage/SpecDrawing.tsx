@@ -95,11 +95,11 @@ export function SpecDrawing({ glance }: { glance: Homepage["glance"] }) {
           <p className="t-label text-ink">
             <span data-idx className="text-indigo-700">06.1 /</span> Project at a glance
           </p>
-          <h3 className="t-l mt-5 text-ink">
+          <h2 className="t-l mt-5 text-ink">
             Scale,
             <br />
             <em>specified.</em>
-          </h3>
+          </h2>
         </div>
         <p className="t-body-l col-span-4 self-end text-steel-700 sm:col-span-8 lg:col-span-4 lg:col-start-9">
           Every number below is part of one integrated plan — hover a figure to locate it.

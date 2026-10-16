@@ -300,8 +300,8 @@ Measured on the production build ([`docs/redesign/QA-REPORT.md`](../docs/redesig
 
 | | Score / metric |
 |---|---|
-| Lighthouse desktop | **96** perf · 100 accessibility · 100 best practices · 100 SEO · LCP 1.0s · CLS 0 |
-| Lighthouse mobile | **~70** perf (67–75 across runs) · 100 accessibility · 100 best practices · 100 SEO · CLS 0 |
+| Lighthouse desktop | **98** perf · 100 accessibility · 100 best practices · 100 SEO · LCP 1.0s · CLS 0 (round 4) |
+| Lighthouse mobile | **~70** perf (57–72 across runs) · 100 accessibility · 100 best practices · 100 SEO · CLS 0 |
 | Real paint (412px, 4× CPU) | FCP 256ms · LCP 624ms |
 
 Key decisions:

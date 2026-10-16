@@ -20,6 +20,7 @@ export const getHomepage = () => ({
   pathGroup: home.pathGroup,
   renders: home.renders,
   glance: home.glance,
+  amenities: home.amenities,
   destinations: home.destinations,
   gatiShakti: home.gatiShakti,
   sustainability: home.sustainability,

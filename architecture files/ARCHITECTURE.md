@@ -74,7 +74,7 @@ site/
 │  │                useHeroThreshold (useScrolledPast / useHideOnScroll)
 │  ├─ hero/         Hero — midnight cinematic hero on the entry-gate render, window reveal, word rise
 │  ├─ stats/        ScaleIndex — 400 odometer → 4 branching nodes with hover image previews
-│  ├─ master-plan/  MasterPlan (official drawing ⇄ interactive zones), PlanSvg (light/dark tone), planGeometry
+│  ├─ master-plan/  MasterPlan (the official drawing with traced, hoverable zones), officialZones (GENERATED), PlanSvg + planGeometry (schematic, now only the site-tour preview)
 │  ├─ project-status/ ProjectStatus — sticky Constra viewer (image or MP4) + milestone timeline
 │  ├─ path-group/   PathGroup (glass metrics strip, serif quote), EvolutionLine
 │  ├─ gallery/      RendersGallery — midnight, pinned horizontal scroll of client renders
@@ -219,14 +219,15 @@ creates a pin.
 | M1 | ~~Pinwheel preloader~~ **Removed in round 4** (no opening animation) | — |
 | M2 | ~~Hero window reveal and word rise~~ **Removed in round 4.** The hero is complete on first paint; only a scroll-linked route draw and 5% parallax remain | `hero/Hero` |
 | M3 | Surface morph: an entering light or dark section blends from the previous colour (`immediateRender:false`, completes before its text is readable) | `providers/SurfaceMorph` |
-| M4 | Image reveal: wipe up, settle from 1.2×, ±5% parallax | `ui/RevealMedia` (inside `AssetSlot`; `reveal={false}` opts out) |
+| M4 | Image reveal: wipe up behind a gold leading edge, settle from 1.2×, ±5% parallax | `ui/RevealMedia` (inside `AssetSlot`; `reveal={false}` opts out) |
 | M5 | ~~Pinned gallery~~ **Replaced in round 4** by a native scroll-snap `Rail` (drag, arrows, ←/→, progress); the page is never captured | `ui/Rail`, `gallery/RendersGallery` |
 | M6 | Magnetic CTAs (fine pointers only), via `display: contents` wrapper + `data-magnetic-inner` | `ui/Magnetic` |
 | M7 | Odometer digits (reels; final value stays in the DOM for SSR and screen readers) | `ui/Counter` |
 | M8 | Map establishing shot (site → region on scroll) + gold route traces; any click hands control to the user | `connectivity-map/ConnectivityMap` |
 | M9 | Partner logo marquee (pauses on hover; static under reduced motion) | `ui/PartnerLogos marquee` |
 | M10 | Hub showpiece: routes converge, the pinwheel spins in, gold pulse | `advantage/HubOpener` |
-| M11 | Headline letter-spacing settle; section intro paragraphs fade up | `ui/Reveal`, `ui/SectionHeader` |
+| M11 | Section intro paragraphs fade up (letter-spacing settle removed in round 4) | `ui/Reveal`, `ui/SectionHeader` |
+| M13 | Route spine: the page-wide margin line with section nodes, gold drawn by scroll (round 4) | `navigation/RouteSpine` |
 | M12 | Route transitions (`<ViewTransition>`) | `app/layout.tsx` + CSS |
 
 **Pinned scenes:** the hero (desktop, scrubbed exit) and the renders gallery (desktop). Each is
@@ -243,20 +244,21 @@ re-render only when a threshold is crossed, never per frame.
 |---|---|---|---|---|
 | 01 | Hero | `hero/Hero` | `hero`, `settings` | Midnight over the entry-gate render |
 | 02 | Scale | `stats/ScaleIndex` | `scale` | Porcelain |
-| 03 | Master plan | `master-plan/MasterPlan` | `zones` | Stone (official drawing by default) |
+| 03 | Master plan | `master-plan/MasterPlan` | `zones` | Stone (official drawing, interactive) |
 | 04 | Project status | `project-status/ProjectStatus` | `milestones`, `statusLastUpdated` | Porcelain |
 | 05 | PATH Group | `path-group/PathGroup` | `pathGroup` | Stone |
-| 05.5 | Renders gallery | `gallery/RendersGallery` | `renders` | **Midnight** |
-| 06 | Hub opener | `advantage/HubOpener` | — | **Midnight** |
+| 05.5 | Renders gallery | `gallery/RendersGallery` | `renders` | Stone |
+| 06 | Hub opener | `advantage/HubOpener` | — | Porcelain |
 | 06.1 | At a glance | `advantage/SpecDrawing` | `glance` | Stone |
+| 06.2 | Amenities | `advantage/Amenities` | `amenities` | White (cards on porcelain) |
 | 07 | Connectivity | `connectivity-map/ConnectivityMap` | `destinations` | Porcelain |
-| 07.1 | PM Gati Shakti + partners | `advantage/GatiShaktiBand` | `gatiShakti`, `partners` | **Midnight** |
+| 07.1 | PM Gati Shakti + partners | `advantage/GatiShaktiBand` (+ `MmlpNetwork`) | `gatiShakti`, `partners` | Stone |
 | 08 | Sustainability | `sustainability/Sustainability` | `sustainability` | Porcelain + green glow |
 | 08.1 | Business value | `sustainability/BusinessValue` | `benefits` | Stone |
-| 09 | Site tour | `site-tour/SiteTourPreview` | `siteTour` | **Midnight** |
+| 09 | Site tour | `site-tour/SiteTourPreview` | `siteTour` | Porcelain |
 | 10 | News | `news/NewsPreview` | `news` | Porcelain |
 | 11 | Enquire | `contact/EnquireBlock` | `enquiry`, `settings` | Stone |
-| 12 | Footer | `footer/Footer` | `navigation`, `settings`, partners | **Midnight** |
+| 12 | Footer | `footer/Footer` | `navigation`, `settings`, partners | **Deep indigo** |
 
 ---
 

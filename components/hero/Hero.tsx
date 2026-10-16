@@ -11,9 +11,9 @@ import { ArrowLink, ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Route, type RouteHandle } from "@/components/ui/Route";
 
-/** Route across the hero: starts at the location block, crosses the image seam, loops and exits down at x=6% into §02. */
+/** Route across the hero: starts at the location block, crosses the image seam and loops back. The page-wide RouteSpine takes over below the hero. */
 const HERO_ROUTE =
-  "M 38 66 C 46 66, 52 46, 62 40 C 74 33, 92 38, 90 54 C 88 72, 56 82, 30 86 C 14 88, 6 90, 6 94 L 6 102";
+  "M 38 66 C 46 66, 52 46, 62 40 C 74 33, 92 38, 90 54 C 88 72, 62 82, 44 80";
 
 /**
  * §01 — Hero. Light and image-led: the headline and location sit on porcelain, the

@@ -5,6 +5,7 @@ import "./globals.css";
 import { getEnquiry, getNavigation, getSettings } from "@/lib/content";
 import { Nav } from "@/components/navigation/Nav";
 import { JourneyRail } from "@/components/navigation/JourneyRail";
+import { RouteSpine } from "@/components/navigation/RouteSpine";
 import { MobileActionBar } from "@/components/navigation/MobileActionBar";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import { SurfaceMorph } from "@/components/providers/SurfaceMorph";
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </ViewTransition>
         <EnquireBlock content={getEnquiry()} settings={settings} />
         <Footer navigation={getNavigation()} settings={settings} />
+        <RouteSpine />
         <JourneyRail />
         <MobileActionBar settings={settings} />
       </body>

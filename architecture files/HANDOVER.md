@@ -10,7 +10,7 @@
 
 | Item | State |
 |---|---|
-| Homepage | Round 4 **R4-1 + R4-2 done** (light theme, Open Sans only, new hero, free-scrolling gallery). Next: R4-3 official-plan hotspots, R4-4 missing sections (Amenities, Gati Shakti map). Plan: `docs/REDESIGN-PLAN-R4.md`. **Constra section is parked for later by decision** |
+| Homepage | Round 4 **R4-1 to R4-5 done** (light theme, Open Sans only, new hero, free-scrolling gallery, interactive official master plan). Next: R4-6 inner pages and form, R4-7 QA. Plan: `docs/REDESIGN-PLAN-R4.md`. **Constra section is parked for later by decision** |
 | Inner pages | Holding templates only (`app/[chapter]/page.tsx`); full builds follow homepage sign-off |
 | Branch | `client-round-2` (cut from `main`) |
 | Commits | `af81901` client round 2 → then *Premium redesign: Phases 1–4* (both pushed to `origin/client-round-2`; see `git log`) |
@@ -49,6 +49,7 @@ npm run typecheck
 | Colours, type scale, utilities | `app/globals.css` (`@theme` + `@utility`) |
 | Make a section dark | `bg-midnight on-dark grain` + `data-surface="dark"` on the section |
 | Motion for a section | `useMotion(ref, mm => mm.add(MQ.motion, …))`, which is lazy and reduced-motion safe |
+| Official plan zones | `scripts/generate-plan-zones.py` (re-run after any new plan drawing; mapping of legend colours → zones is in `ZONES`) |
 | Map routes / pins | `components/connectivity-map/mapGeometry.ts` (pixel space of `public/client/345.webp`, 1320×1232) |
 | Partner logos | `partners` in `content/home.ts` + files in `public/client/partners/` |
 | Constra footage | Put files in `public/constra/` and point `milestones[].media.src` at them (MP4/WebM play inline) |
@@ -78,6 +79,8 @@ unless noted.
 | 12 | The PATH Group aerial (`image-1729245444632.webp`, taken from the client's site) appears to be a non-PATH warehouse park. Ask for a real PATH project photo | `pathGroup.photo` |
 
 ---
+
+**Added 2026-10-16 (round 4):** real site photographs for the seven amenities (only Truck Facilities and Green & Open Spaces have client renders; the other five are icon tiles); legend → zone mapping on the official plan; Path Group years for the timeline; the dates and figures conflict on Path Group numbers.
 
 ## 5. Open engineering work
 
@@ -113,6 +116,9 @@ unless noted.
 
 | Date | Change |
 |---|---|
+| 2026-10-16 | **Round 4, R4-5 (motion pass).** New `navigation/RouteSpine`: one thin route line in the left margin that leaves the hero, passes a node at every section and ends at the enquiry block; gold draws down it on scroll (full and static under reduced motion). Hero route no longer exits the hero and the old Scale incoming route is gone (the spine replaces both). Image reveals gain a gold leading edge; headline letter-spacing settle removed; `.lift` hover for partner tiles. No pins anywhere |
+| 2026-10-16 | **Round 4, R4-4.** New **Amenities** section (§06.2: seven amenities in a free-scrolling rail; photo only where the client supplied one, otherwise a branded icon tile). **PM Gati Shakti** now has the six "growth story" points and "The impact" statement verbatim from the concept note, plus a schematic MMLP network (35 nodes, Bengaluru as the largest) in place of a map. **PATH Group** timeline gained client-worded captions and year slots (null until dates arrive). No map of India is drawn on purpose: national boundary depiction is legally sensitive and we have no approved outline |
+| 2026-10-16 | **Round 4, R4-3.** The official master plan is now the interactive layer: zones traced from the drawing by `scripts/generate-plan-zones.py` into `master-plan/officialZones.ts`; schematic and toggle removed. Legend → zone mapping needs client confirmation |
 | 2026-10-16 | **Round 4, R4-1 + R4-2.** White/light page throughout (midnight retired; footer is the only dark surface, ~5% of scroll); **Open Sans only** (Plus Jakarta and Instrument Serif removed; accent words are colour, not italics); new type scale and sentence-case labels; new light split hero on `main.webp` with no opening animation (preloader, hero window, word rise, hero pin removed); renders gallery is now a native `Rail` (no pin, drag/arrows/keys); hub opener, Gati Shakti, site tour and PATH Group strip recoloured light; nav turns solid after 24px. Page length 27 → 21 viewports, zero pinned sections. Constra left for later |
 | 2026-10-15 | **Committed and pushed** the premium redesign (Phases 1–4) and docs to `client-round-2` |
 | 2026-10-15 | **Phase 4 QA.** Lighthouse fixes: lazy motion set-up, threshold-only scroll hooks, baked hero grade, composited hero reveal, desktop-only preloader, Lenis off on touch, cached route lengths, smaller assets. Accessibility 97 → 100, desktop performance 83 → 96, mobile ~56 → ~70. Docs: QA-REPORT, ARCHITECTURE, HANDOVER |

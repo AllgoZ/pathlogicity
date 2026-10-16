@@ -9,7 +9,6 @@ import { useMotion } from "@/lib/motion/hooks";
 import { boxIn, curve, useLinks } from "@/lib/motion/useLinks";
 import { Counter } from "@/components/ui/Counter";
 import { Icon } from "@/components/ui/Icon";
-import { Route } from "@/components/ui/Route";
 import { RevealLines } from "@/components/ui/Reveal";
 
 /**
@@ -67,13 +66,8 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
   }, [paths.length]);
 
   return (
-    <section ref={section} id="scale" data-stage="discover" aria-labelledby="scale-title" className="relative overflow-hidden bg-porcelain pb-[clamp(88px,12vh,160px)]">
-      {/* Route arriving from the hero, x = 6% */}
-      <div className="relative mb-6 h-[clamp(96px,16vh,200px)]">
-        <Route d="M 6 0 L 6 100" auto="scrub" scrubStart="top bottom" scrubEnd="bottom 45%" base={false} />
-      </div>
-
-      <div ref={grid} className="shell relative grid-12 gap-y-14">
+    <section ref={section} id="scale" data-stage="discover" aria-labelledby="scale-title" className="relative bg-porcelain pb-[clamp(88px,12vh,160px)]">
+      <div ref={grid} className="shell relative grid-12 gap-y-14 pt-[clamp(88px,13vh,168px)]">
         {/* branch network (desktop) */}
         {w ? (
           <svg aria-hidden width={w} height={h} className="pointer-events-none absolute left-0 top-0 hidden lg:block" fill="none">

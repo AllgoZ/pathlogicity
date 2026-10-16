@@ -3,6 +3,7 @@ import type { Partner } from "@/lib/content/types";
 import { ArrowLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Metric } from "@/components/ui/Metric";
+import { MmlpNetwork } from "./MmlpNetwork";
 import { PartnerLogos } from "@/components/ui/PartnerLogos";
 import { Reveal, RevealLines } from "@/components/ui/Reveal";
 
@@ -22,18 +23,23 @@ export function GatiShaktiBand({ data, partners }: { data: Homepage["gatiShakti"
           <p className="t-body-l col-span-4 self-end text-steel-700 sm:col-span-8 lg:col-span-4 lg:col-start-9">{data.tagline}</p>
         </div>
 
-        {/* National programme, in numbers (pathlogicity.com) — brand-colour numerals */}
-        <Reveal className="mt-16 grid grid-cols-1 gap-y-10 border-t border-ink/10 pt-10 sm:grid-cols-3 lg:mt-20 lg:pt-14">
-          {data.facts.map((f, i) => (
-            <div key={f.unit} className="sm:pr-8">
-              <Metric data={f} size="l" valueClassName={i === 0 ? "text-indigo-700" : "text-blue-500"} />
+        {/* National programme in numbers (pathlogicity.com) beside the network it describes */}
+        <div className="mt-16 grid items-center gap-12 border-t border-ink/10 pt-10 lg:mt-20 lg:grid-cols-12 lg:gap-16 lg:pt-14">
+          <Reveal className="grid gap-10 lg:col-span-5">
+            {data.facts.map((f, i) => (
+              <Metric key={f.unit} data={f} size="l" valueClassName={i === 0 ? "text-indigo-700" : "text-blue-500"} />
+            ))}
+            <div className="border-l-[3px] border-yellow-400 pl-5">
+              <p className="text-[clamp(1.125rem,1.4vw,1.375rem)] font-semibold leading-snug text-ink">{data.mmlp}</p>
+              <ArrowLink href="/logicity-advantage#pm-gati-shakti" className="mt-2">
+                PM Gati Shakti
+              </ArrowLink>
             </div>
-          ))}
-          <div className="flex flex-col justify-between gap-6 sm:border-l sm:border-ink/10 sm:pl-8">
-            <p className="text-[clamp(1.125rem,1.4vw,1.375rem)] font-semibold leading-snug text-ink">{data.mmlp}</p>
-            <ArrowLink href="/logicity-advantage#pm-gati-shakti">PM Gati Shakti</ArrowLink>
+          </Reveal>
+          <div className="lg:col-span-7">
+            <MmlpNetwork hubLabel="Bengaluru" />
           </div>
-        </Reveal>
+        </div>
 
         {/* ROAD + RAIL + WAREHOUSING + COMMERCIAL + ICD = ONE ECOSYSTEM */}
         <Reveal className="mt-16 flex flex-wrap items-stretch gap-px bg-ink/10 shadow-[var(--shadow-card)] lg:mt-20 lg:flex-nowrap" stagger={0.08}>
@@ -53,13 +59,20 @@ export function GatiShaktiBand({ data, partners }: { data: Homepage["gatiShakti"
           </div>
         </Reveal>
 
-        <Reveal as="ol" className="mt-14 grid gap-x-[var(--gutter)] lg:grid-cols-3">
+        {/* Contributing to India's growth story */}
+        <p className="t-label mt-16 text-ink lg:mt-20">Contributing to India&apos;s growth story</p>
+        <Reveal as="ol" className="mt-4 grid gap-x-[var(--gutter)] sm:grid-cols-2 lg:grid-cols-3">
           {data.points.map((p, i) => (
             <li key={p} className="flex gap-4 border-t border-ink/10 py-5">
               <span className="t-micro tnum pt-1 text-indigo-700">{String(i + 1).padStart(2, "0")}</span>
               <p className="text-[1rem] leading-relaxed text-steel-700">{p}</p>
             </li>
           ))}
+        </Reveal>
+
+        <Reveal className="mt-10 border-l-[3px] border-yellow-400 pl-6 lg:mt-14 lg:max-w-[62ch]">
+          <p className="t-label text-indigo-700">The impact</p>
+          <p className="mt-2 text-[clamp(1.25rem,1.9vw,1.75rem)] font-semibold leading-snug tracking-[-0.01em] text-ink">{data.impact}</p>
         </Reveal>
 
         {/* Authorities + certification — the logos from the client's site */}

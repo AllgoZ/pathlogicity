@@ -2,10 +2,11 @@
 
 import { useRef } from "react";
 import { gsap, MQ } from "@/lib/motion/gsap";
+import type { EvolutionStep } from "@/lib/content/types";
 import { useMotion } from "@/lib/motion/hooks";
 
 /** PATH LEGACY → INFRASTRUCTURE → LOGISTICS → PATH LOGICITY, drawn as one route. */
-export function EvolutionLine({ steps }: { steps: string[] }) {
+export function EvolutionLine({ steps }: { steps: EvolutionStep[] }) {
   const ref = useRef<HTMLOListElement>(null);
   useMotion(ref, (mm) => {
     mm.add(MQ.motion, () => {
@@ -30,7 +31,7 @@ export function EvolutionLine({ steps }: { steps: string[] }) {
       {steps.map((s, i) => {
         const last = i === steps.length - 1;
         return (
-          <li key={s} data-evo-step className="relative pl-10 lg:pl-0 lg:pr-8">
+          <li key={s.label} data-evo-step className="relative pl-10 lg:pl-0 lg:pr-8">
             {last ? (
               <span aria-hidden className="absolute left-0 top-0 block h-[15px] w-[15px] lg:left-0">
                 {/* brand-coloured ring: the destination */}
@@ -43,8 +44,10 @@ export function EvolutionLine({ steps }: { steps: string[] }) {
             ) : (
               <span aria-hidden className="absolute left-0 top-0 block h-[15px] w-[15px] rounded-full border-2 border-indigo-700 bg-paper" />
             )}
-            <p className="t-micro text-steel-500 lg:mt-8">{String(i + 1).padStart(2, "0")}</p>
-            <p className={`mt-2 font-display font-semibold leading-[1.1] tracking-[-0.02em] ${last ? "text-[clamp(1.5rem,2.1vw,2.125rem)] text-indigo-700" : "text-[clamp(1.125rem,1.5vw,1.5rem)] text-ink"}`}>{s}</p>
+            {/* the year, once the client supplies it; the step number until then */}
+            <p className="t-micro tnum text-steel-500 lg:mt-8">{s.year ?? String(i + 1).padStart(2, "0")}</p>
+            <p className={`mt-2 font-display font-bold leading-[1.1] tracking-[-0.02em] ${last ? "text-[clamp(1.5rem,2.1vw,2.125rem)] text-indigo-700" : "text-[clamp(1.125rem,1.5vw,1.5rem)] text-ink"}`}>{s.label}</p>
+            <p className="mt-3 max-w-[28ch] text-[0.9375rem] leading-snug text-steel-700">{s.text}</p>
           </li>
         );
       })}

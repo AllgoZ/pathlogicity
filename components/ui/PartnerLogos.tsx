@@ -23,7 +23,7 @@ export function PartnerLogos({
 }) {
   const item = (p: Partner, hidden = false) => (
     <li key={`${p.id}${hidden ? "-dup" : ""}`} aria-hidden={hidden || undefined} className={`flex flex-col ${marquee ? (compact ? "w-[180px] shrink-0" : "w-[280px] shrink-0 lg:w-[320px]") : ""}`}>
-      <span className={`flex items-center justify-center rounded-[2px] bg-paper ${compact ? "h-16 px-4" : "h-28 px-6 lg:h-32"} ${tone === "light" ? "shadow-[var(--shadow-card)]" : ""}`}>
+      <span className={`lift flex items-center justify-center rounded-[2px] bg-paper ${compact ? "h-16 px-4" : "h-28 px-6 lg:h-32"} ${tone === "light" ? "shadow-[var(--shadow-card)]" : ""}`}>
         <Image
           src={p.logo}
           alt={hidden ? "" : p.name}

@@ -171,6 +171,22 @@ export interface Partner {
   height: number;
 }
 
+/** An amenity panel (Concept Note: Logicity Advantage → Amenities). `image` stays null until a real site photograph is supplied. */
+export interface Amenity {
+  id: string;
+  icon: IconName;
+  title: string;
+  text: string;
+  image: MediaAsset | null;
+}
+
+/** A step on the PATH legacy → Logicity timeline. `year` stays null until the client supplies dates. */
+export interface EvolutionStep {
+  label: string;
+  text: string;
+  year: string | null;
+}
+
 /** A card in the renders gallery */
 export interface GalleryItem {
   id: string;

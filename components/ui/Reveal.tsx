@@ -27,11 +27,9 @@ export function RevealLines({
     mm.add(MQ.motion, () => {
       gsap.from(ref.current!.querySelectorAll("[data-line]"), {
         yPercent: 108,
-        letterSpacing: "0.02em",
-        duration: 1.2,
+        duration: 1.1,
         stagger: 0.08,
         ease: "expo.out",
-        clearProps: "letterSpacing",
         scrollTrigger: { trigger: ref.current, start: "top 85%", once: true },
       });
     });

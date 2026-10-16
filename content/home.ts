@@ -8,6 +8,8 @@
 import type {
   Benefit,
   Destination,
+  Amenity,
+  EvolutionStep,
   GalleryItem,
   Initiative,
   MediaAsset,
@@ -231,7 +233,13 @@ export const pathGroup = {
   story:
     "With nearly three decades of experience in building India's infrastructure, PATH has evolved from developing critical infrastructure to creating integrated logistics ecosystems for the future.",
   sectors: ["Infrastructure", "Highways", "Logistics"],
-  evolution: ["PATH Legacy", "Infrastructure", "Logistics", "PATH Logicity"],
+  /** Captions are the client's own words (concept note / hero); years stay null until supplied. */
+  evolution: [
+    { label: "PATH Legacy", text: "Nearly three decades of experience in building India's infrastructure", year: null },
+    { label: "Infrastructure", text: "Developing critical infrastructure", year: null },
+    { label: "Logistics", text: "Creating integrated logistics ecosystems for the future", year: null },
+    { label: "PATH Logicity", text: "India's largest multimodal logistics hub", year: null },
+  ] satisfies EvolutionStep[],
   photo: {
     slot: "PATH Group Photography",
     spec: "Real PATH infrastructure project · 21:9 · ≥2560px wide",
@@ -262,6 +270,32 @@ export const renders: GalleryItem[] = [
   { id: "plan", title: "The master plan", caption: "Official layout of the park", media: render("/client/image-1731136566206.webp", "Official Path Logicity master plan"), fit: "contain" },
 ];
 
+/**
+ * Amenities — copy from the concept note. Photography: only the client's own imagery is used
+ * (the truck render and the green-belt render); the rest wait for real site photographs.
+ */
+export const amenities: Amenity[] = [
+  {
+    id: "truck",
+    icon: "truck",
+    title: "Truck Facilities",
+    text: "Thoughtfully designed spaces that prioritize driver comfort, safety and well-being.",
+    image: { slot: "Truck Facilities", spec: "Site photograph · 4:5", src: "/client/image-1731136096535.webp", alt: "Illustration of a line of freight trucks at Path Logicity" },
+  },
+  { id: "food", icon: "food", title: "Food & Retail", text: "A vibrant mix of conveniences that bring everyday essentials closer to the workforce.", image: null },
+  { id: "ev", icon: "ev", title: "EV Charging", text: "Infrastructure built to power the next generation of mobility.", image: null },
+  { id: "fuel", icon: "fuel", title: "Fuel Station", text: "Reliable fuel access designed to keep business moving without pause.", image: null },
+  { id: "repair", icon: "wrench", title: "Vehicle Repair & Service", text: "Comprehensive support facilities that minimize downtime and maximize productivity.", image: null },
+  { id: "atm", icon: "atm", title: "ATMs & Essential Services", text: "Essential conveniences seamlessly integrated into the logistics ecosystem.", image: null },
+  {
+    id: "green",
+    icon: "green",
+    title: "Green & Open Spaces",
+    text: "Designed to bring nature into the logistics ecosystem, fostering well-being, balance and sustainable growth.",
+    image: { slot: "Green & Open Spaces", spec: "Site photograph · 4:5", src: "/client/image-1729245154858.webp", alt: "Render of warehouses with rooftop solar and green belts" },
+  },
+];
+
 export const destinations: Destination[] = [
   { id: "nh648", name: "NH 648", subtitle: "Adjacent · towards Devanahalli", mode: "road", kind: "corridor", level: "region", distanceKm: null, durationText: null, note: null },
   { id: "nh48", name: "NH 48", subtitle: "Multi-lane · via Nelamangala to Bengaluru", mode: "road", kind: "corridor", level: "region", distanceKm: null, durationText: null, note: null },
@@ -283,11 +317,16 @@ export const gatiShakti = {
     { label: "Commercial", icon: "commercial" },
     { label: "ICD", icon: "container" },
   ] as const,
+  /** "Contributing to India's Growth Story" — the six points from the concept note */
   points: [
     "Strengthening multimodal connectivity through integrated infrastructure",
     "Supporting the PM Gati Shakti vision of seamless logistics movement",
+    "Enhancing supply chain efficiency and reducing transit bottlenecks",
     "Enabling faster movement of goods across key economic corridors",
+    "Creating infrastructure that supports industrial growth and investment",
+    "Contributing towards a more connected, competitive and future-ready India",
   ],
+  impact: "A logistics ecosystem designed not just for businesses, but for the future of India's economic growth and infrastructure development.",
   mmlp: "Bengaluru is the largest amongst the MMLPs being built currently.",
   /** pathlogicity.com — "The Future of Indian Logistics is here" */
   facts: [

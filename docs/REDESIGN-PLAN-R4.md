@@ -169,7 +169,9 @@ What exists: M1–M12 (see ARCHITECTURE §7). What is wrong:
 - **Nav:** transparent over the hero, solid on scroll (Concept Note), dark ink text over the light panel.
 - **Asset risk:** 1462 px source. Ask the client for the original; until then cap the displayed width and check on a 1920 screen.
 
-### 3.3 Master plan (03) — official plan, interactive
+### 3.3 Master plan (03) — official plan, interactive  ✅ built 2026-10-16 (R4-3)
+
+> **Done:** the schematic and view toggle are gone. `scripts/generate-plan-zones.py` traces the 7 zones from the official drawing by colour into `components/master-plan/officialZones.ts`; `MasterPlan` overlays them (hover/tap washes out the rest, redraws the zone outline, drops a name tag), with a first-view tour through the zones and the zone list as the keyboard control. The legend → zone mapping below is **still unconfirmed by the client**; edit `ZONES` in the script and re-run if it differs. The route-comet-to-zone idea was dropped (a line across the drawing would not follow the real roads).
 
 - The **official drawing is the interface**. Remove the schematic and the view toggle.
 - Build `ZoneHotspots`: an SVG overlay (viewBox = 2774×1583) with one region per zone. Regions are **traced from the drawing's own legend colours** (colour-key the image to get pixel-accurate masks), not hand-drawn guesses.
@@ -258,8 +260,8 @@ What exists: M1–M12 (see ARCHITECTURE §7). What is wrong:
 | **R4-1 Foundations** | Light tokens (midnight retired), Open Sans-only type scale, remove Plus Jakarta and the serif accent, label rules, `Rail` component | Dark share ≤ 10% of scroll length (footer only, plus at most one band); one typeface; no uppercase eyebrow on body blocks; Lighthouse a11y still 100 |
 | **R4-2 Hero + gallery** | New hero with `main.webp`; preloader and intro removed; gallery de-pinned | Hero fully visible at first paint; page reaches the next section after one normal scroll past the gallery; no clipped frame at 900 px and 700 px tall viewports; LCP ≤ 1.5 s desktop |
 | **R4-3 Official plan + Constra viewer** | `ZoneHotspots`, zone mapping, status viewer modes | Every zone reachable by hover, tap and keyboard; no zone shown without client-confirmed mapping |
-| **R4-4 Missing sections** | Amenities, Gati Shakti network, Path Group timeline, business-value tidy | Every Concept Note homepage item present |
-| **R4-5 Motion pass** | Route linking sections, reveals, hover feedback, tuning | No pin on the page; reduced motion verified; no CLS |
+| **R4-4 Missing sections** ✅ 2026-10-16 (see HANDOVER) | Amenities, Gati Shakti network, Path Group timeline, business-value tidy | Every Concept Note homepage item present |
+| **R4-5 Motion pass** ✅ 2026-10-16 (route spine, reveals, hover lift; see HANDOVER) | Route linking sections, reveals, hover feedback, tuning | No pin on the page; reduced motion verified; no CLS |
 | **R4-6 Inner pages + forms** | The six pages; form endpoint | Every nav item has a real page |
 | **R4-7 QA** | Cross-browser, real devices, Lighthouse, screenshots in `docs/redesign/r4/` | Scores at or above round 3 (desktop 96 / mobile ~70, target mobile 80+) |
 

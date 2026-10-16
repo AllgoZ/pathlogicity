@@ -17,11 +17,11 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
   const [menu, setMenu] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const solid = useScrolledPast(threshold);
+  const solid = useScrolledPast(24); // the hero is light, so the bar turns solid as soon as content starts to slide under it
   // Hide on fast downward scroll after the hero; reveal on any upward scroll.
   const hidden = useHideOnScroll(threshold + 240, menu || open !== null);
-  // over the midnight hero (home only, before the bar turns solid) the nav switches to light text
-  const onImage = pathname === "/" && !solid && !menu;
+  // the hero is light, so the nav keeps dark text everywhere (kept as a flag in case a page gets a photo-led hero)
+  const onImage = false;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {

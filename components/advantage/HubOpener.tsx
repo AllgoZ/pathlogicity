@@ -56,8 +56,8 @@ export function HubOpener() {
   });
 
   return (
-    <section ref={ref} id="advantage" data-surface="dark" data-stage="understand" aria-labelledby="advantage-title" className="on-dark grain relative flex min-h-[82svh] items-center overflow-hidden bg-midnight text-paper lg:min-h-[104vh]">
-      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(38%_42%_at_50%_50%,rgb(231_172_0/0.16),transparent_70%),radial-gradient(70%_60%_at_100%_100%,rgb(32_31_133/0.6),transparent_70%)]" />
+    <section ref={ref} id="advantage" data-stage="understand" aria-labelledby="advantage-title" className="relative flex min-h-[78svh] items-center overflow-hidden bg-porcelain text-ink lg:min-h-[92vh]">
+      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(38%_42%_at_50%_50%,rgb(231_172_0/0.16),transparent_70%),radial-gradient(70%_60%_at_100%_100%,rgb(32_31_133/0.08),transparent_70%)]" />
       <svg aria-hidden className="absolute inset-0 h-full w-full" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" fill="none">
         {ROUTES.map((r, i) => (
           <path
@@ -66,28 +66,28 @@ export function HubOpener() {
             d={r.d}
             pathLength={1}
             strokeDasharray="1 1"
-            stroke={r.tone === "y" ? "var(--color-yellow-400)" : r.tone === "g" ? "rgb(120 196 90 / 0.7)" : r.tone === "b" ? "rgb(127 178 224 / 0.65)" : "rgb(255 255 255 / 0.16)"}
+            stroke={r.tone === "y" ? "var(--color-yellow-400)" : r.tone === "g" ? "rgb(68 158 53 / 0.75)" : r.tone === "b" ? "rgb(0 102 177 / 0.7)" : "rgb(32 31 133 / 0.2)"}
             strokeWidth={r.tone === "p" ? 1 : 1.6}
             className={i >= 12 ? "max-lg:hidden" : ""}
           />
         ))}
         <g data-hub-node>
           {/* the hub is the client's own pinwheel mark */}
-          <circle cx={CX} cy={CY} r="44" fill="var(--color-midnight)" stroke="var(--color-yellow-400)" strokeOpacity="0.5" />
-          <circle cx={CX} cy={CY} r="58" stroke="rgb(255 255 255 / 0.12)" strokeDasharray="2 6" />
+          <circle cx={CX} cy={CY} r="44" fill="var(--color-paper)" stroke="var(--color-yellow-400)" strokeWidth="1.5" />
+          <circle cx={CX} cy={CY} r="58" stroke="rgb(32 31 133 / 0.25)" strokeDasharray="2 6" />
           <image data-hub-mark href="/client/logo-mark-160.png" x={CX - 22} y={CY - 25.4} width="44" height="50.8" />
           <circle data-hub-pulse cx={CX} cy={CY} r="44" stroke="var(--color-yellow-400)" strokeWidth="1.5" opacity="0" />
         </g>
       </svg>
-      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_0%,transparent_34%,rgb(13_14_53/0.88)_84%)]" />
+      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_0%,transparent_34%,rgb(249_250_253/0.92)_84%)]" />
 
       <div className="shell absolute inset-x-0 top-14 lg:top-20">
-        <p className="t-label text-paper">
-          <span className="text-yellow-400">06 /</span> The Logicity Advantage
+        <p className="t-label text-ink">
+          <span className="text-indigo-700">06 /</span> The Logicity Advantage
         </p>
       </div>
       <div className="shell relative w-full text-center">
-        <h2 id="advantage-title" className="t-xl text-paper">
+        <h2 id="advantage-title" className="t-xl text-ink">
           <span data-hub-type className="block">One hub.</span>
           <span aria-hidden className="block h-[clamp(90px,16vh,170px)]" />
           <span data-hub-type className="block">

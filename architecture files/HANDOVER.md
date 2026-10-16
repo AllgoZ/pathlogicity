@@ -2,7 +2,7 @@
 
 > Living status document. **Update the "Status" and "Change log" sections whenever work lands**
 > (newest first). How the system works is in [`ARCHITECTURE.md`](./ARCHITECTURE.md).
-> **Last updated: 2026-10-15**
+> **Last updated: 2026-10-16**
 
 ---
 
@@ -10,11 +10,11 @@
 
 | Item | State |
 |---|---|
-| Homepage | **Feature-complete for review**: premium redesign Phases 1–4 done (design, motion, QA) |
+| Homepage | Round 4 **R4-1 + R4-2 done** (light theme, Open Sans only, new hero, free-scrolling gallery). Next: R4-3 official-plan hotspots, R4-4 missing sections (Amenities, Gati Shakti map). Plan: `docs/REDESIGN-PLAN-R4.md`. **Constra section is parked for later by decision** |
 | Inner pages | Holding templates only (`app/[chapter]/page.tsx`); full builds follow homepage sign-off |
 | Branch | `client-round-2` (cut from `main`) |
 | Commits | `af81901` client round 2 → then *Premium redesign: Phases 1–4* (both pushed to `origin/client-round-2`; see `git log`) |
-| Uncommitted | Nothing, as of the redesign commit |
+| Uncommitted | Round 4 R4-1/R4-2 changes (not committed yet) |
 | Pull request | Not opened yet. The GitHub CLI isn't installed on this machine, so open it from https://github.com/AllgoZ/pathlogicity/pull/new/client-round-2 |
 | Quality | Typecheck clean · production build passes · Lighthouse desktop 96/100/100/100 · mobile ~70/100/100/100 · CLS 0 |
 | Browsers | Edge, Firefox and WebKit (Safari engine) checked headless. No physical-device pass yet |
@@ -113,6 +113,7 @@ unless noted.
 
 | Date | Change |
 |---|---|
+| 2026-10-16 | **Round 4, R4-1 + R4-2.** White/light page throughout (midnight retired; footer is the only dark surface, ~5% of scroll); **Open Sans only** (Plus Jakarta and Instrument Serif removed; accent words are colour, not italics); new type scale and sentence-case labels; new light split hero on `main.webp` with no opening animation (preloader, hero window, word rise, hero pin removed); renders gallery is now a native `Rail` (no pin, drag/arrows/keys); hub opener, Gati Shakti, site tour and PATH Group strip recoloured light; nav turns solid after 24px. Page length 27 → 21 viewports, zero pinned sections. Constra left for later |
 | 2026-10-15 | **Committed and pushed** the premium redesign (Phases 1–4) and docs to `client-round-2` |
 | 2026-10-15 | **Phase 4 QA.** Lighthouse fixes: lazy motion set-up, threshold-only scroll hooks, baked hero grade, composited hero reveal, desktop-only preloader, Lenis off on touch, cached route lengths, smaller assets. Accessibility 97 → 100, desktop performance 83 → 96, mobile ~56 → ~70. Docs: QA-REPORT, ARCHITECTURE, HANDOVER |
 | 2026-10-15 | **Phase 3 motion.** M1–M12: preloader, hero window, surface morph, image reveals, gallery pin, magnetic CTAs, odometers, map establishing shot, logo marquee, hub showpiece, text polish, view transitions |

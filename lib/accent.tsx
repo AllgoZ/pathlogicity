@@ -2,7 +2,7 @@ import { Fragment, type ReactNode } from "react";
 
 /**
  * Accent words in headlines: `"India's *multimodal* hub"` → India's <em>multimodal</em> hub.
- * <em> in headings renders in Instrument Serif italic (see globals.css). Content
+ * <em> in headings renders in the accent colour, same typeface (see globals.css). Content
  * stays plain strings, so the CMS can carry the same `*…*` convention.
  */
 export function accent(text: ReactNode): ReactNode {

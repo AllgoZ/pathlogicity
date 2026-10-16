@@ -1,9 +1,9 @@
 # Path Logicity — Architecture
 
 > Technical architecture of the Path Logicity marketing site.
-> **Last updated: 2026-10-15** (premium redesign, Phases 1–4).
+> **Last updated: 2026-10-16** (round 4: light theme, Open Sans only, new hero, free-scrolling gallery; see `docs/REDESIGN-PLAN-R4.md`).
 > Design sources, in order of precedence:
-> 1. [`docs/REDESIGN-PLAN.md`](../docs/REDESIGN-PLAN.md) — current visual system and motion (round 3)
+> 1. [`docs/REDESIGN-PLAN-R4.md`](../docs/REDESIGN-PLAN-R4.md) — current direction (round 4, light theme). Where it is silent, round 3 ([`docs/REDESIGN-PLAN.md`](../docs/REDESIGN-PLAN.md)) still describes the system
 > 2. [`docs/CLIENT-CHANGES-PLAN.md`](../docs/CLIENT-CHANGES-PLAN.md) — client round 2
 > 3. [`docs/UI-PLAN.md`](../docs/UI-PLAN.md) — original spec: structure, content, accessibility
 >
@@ -21,13 +21,12 @@ long scrolling homepage of 13 chapters, plus holding templates for the inner pag
 button. Each section draws, bends, branches or ends it, so the page behaves like the hub it
 describes.
 
-**Visual direction — "quiet luxury, brand-led"** (round 3):
-- Neutral **porcelain/stone** light sections alternate with **midnight** (deep brand indigo)
-  anchor sections, at roughly 70/30 light to dark.
-- **Gold** is the one accent. The client's four-colour pinwheel appears as a 2px signature stripe
-  and in data and legends only.
-- Display type is Plus Jakarta Sans, with **Instrument Serif italic** accent words. Body text is
-  Open Sans, the client's brand font.
+**Visual direction — light and brand-coloured** (round 4; the round 3 notes below are partly superseded: midnight sections and the serif accent are gone):
+- **Porcelain/stone** (white with a faint brand tint) light sections throughout. The only deep-indigo
+  surface is the footer (about 5% of scroll length).
+- **Gold** is the action accent; **indigo** (headings, numerals), **blue** and **green** carry roles.
+  The client's pinwheel appears as a 3px signature stripe and in data and legends.
+- **One typeface: Open Sans**, the client's brand font. Accent words are colour, not italics.
 
 **Fact-safety.** Only client-supplied facts appear as claims. Every unverified fact (coordinates,
 dates, ESG metrics, news) is `null` in the content layer and renders a review-only placeholder.
@@ -47,7 +46,7 @@ fabricated.
 | Scroll scenes | **GSAP 3 + ScrollTrigger** | Route draws, pins, odometers, camera tweens, reveals |
 | Smooth scroll | **Lenis** | Mouse and trackpad only; off on touch devices and under reduced motion |
 | Micro-interactions | CSS keyframes + GSAP `quickTo` | No second animation library |
-| Fonts | `next/font/google` | **Plus Jakarta Sans** (display) · **Instrument Serif** italic (accents, not preloaded) · **Open Sans** (body) |
+| Fonts | `next/font/google` | **Open Sans only** (round 4; `--font-display` and `--font-serif` alias it) |
 | Images | `next/image` | AVIF/WebP ([`next.config.ts`](../next.config.ts)) |
 
 Scripts: `dev` · `build` · `start` · `typecheck` (`tsc --noEmit`). Preview configs live in
@@ -61,7 +60,7 @@ production build on port 3100.
 ```
 site/
 ├─ app/
-│  ├─ layout.tsx          Fonts · head scripts (annotations, preloader) · Preloader · SmoothScroll ·
+│  ├─ layout.tsx          Font · head script (annotations) · SmoothScroll ·
 │  │                      SurfaceMorph · Nav · <ViewTransition> main · EnquireBlock · Footer ·
 │  │                      JourneyRail · MobileActionBar
 │  ├─ page.tsx            Homepage — composes the section components (server component)
@@ -185,10 +184,9 @@ Components ──props──> lib/content/index.ts ──reads──> content/ho
 ### 6.3 Surfaces and utilities
 - `shell` (max 1600px), `grid-12` (4 → 8 → 12 columns), `section-pad` (generous), `card` (white,
   2px radius, soft shadow).
-- **Midnight sections:** `bg-midnight` + `on-dark` (gold focus ring, gold accent words) +
-  `grain` (2% film noise) + `glow-brand` (gold and indigo radial glows) + `data-surface="dark"`
-  (for SurfaceMorph). Currently these are the renders gallery, hub opener, Gati Shakti, site tour
-  and footer. The hero is midnight over photography.
+- **Dark surface (footer only):** `bg-indigo-700` + `on-dark` (gold focus ring, gold accent words) +
+  `grain` + `glow-brand` + `data-surface="dark"` (for SurfaceMorph). The hero (porcelain panel and a
+  diagonal image panel) and every other section are light.
 - `pinwheel-stripe` (2px, four colours): under the solid nav, at the top of Gati Shakti and the
   footer, and in the preloader.
 - `img-grade` (one colour grade for every photo). The hero grade is baked into
@@ -218,11 +216,11 @@ creates a pin.
 
 | ID | Motion | Where |
 |---|---|---|
-| M1 | Pinwheel preloader. Once per session, **desktop only**, set before paint by a head script (`html[data-preload]`); the hero intro waits under it; CSS failsafe | `providers/Preloader` |
-| M2 | Hero window reveal (transform-only, composited) + word-by-word rise; accent word arrives last | `hero/Hero` + CSS |
+| M1 | ~~Pinwheel preloader~~ **Removed in round 4** (no opening animation) | — |
+| M2 | ~~Hero window reveal and word rise~~ **Removed in round 4.** The hero is complete on first paint; only a scroll-linked route draw and 5% parallax remain | `hero/Hero` |
 | M3 | Surface morph: an entering light or dark section blends from the previous colour (`immediateRender:false`, completes before its text is readable) | `providers/SurfaceMorph` |
 | M4 | Image reveal: wipe up, settle from 1.2×, ±5% parallax | `ui/RevealMedia` (inside `AssetSlot`; `reveal={false}` opts out) |
-| M5 | Pinned horizontal renders gallery with gold progress (desktop); native swipe on mobile | `gallery/RendersGallery` |
+| M5 | ~~Pinned gallery~~ **Replaced in round 4** by a native scroll-snap `Rail` (drag, arrows, ←/→, progress); the page is never captured | `ui/Rail`, `gallery/RendersGallery` |
 | M6 | Magnetic CTAs (fine pointers only), via `display: contents` wrapper + `data-magnetic-inner` | `ui/Magnetic` |
 | M7 | Odometer digits (reels; final value stays in the DOM for SSR and screen readers) | `ui/Counter` |
 | M8 | Map establishing shot (site → region on scroll) + gold route traces; any click hands control to the user | `connectivity-map/ConnectivityMap` |

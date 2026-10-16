@@ -19,7 +19,7 @@ type Props = {
   /** Render as a nested <svg> with intrinsic size (for use inside a transformed parent) */
   nested?: boolean;
   /** the SURFACE the plan sits on: light sections (default) or midnight */
-  tone?: "light" | "dark";
+  tone?: "light" | "dark" | "tour";
   className?: string;
 };
 
@@ -38,6 +38,25 @@ const PALETTE = {
     greenOn: "rgb(68 158 53 / 0.7)",
     stroke: "rgb(26 28 70 / 0.32)",
     detail: "rgb(26 28 70 / 0.2)",
+    gateFill: "var(--color-paper)",
+    gateStroke: "var(--color-ink)",
+    gateMark: "var(--color-indigo-700)",
+  },
+  /** the Logicity360 preview: the light palette with stronger zone fills and strokes so the showpiece reads on white */
+  tour: {
+    hatch: "rgb(26 28 70 / 0.1)",
+    grid: "rgb(26 28 70 / 0.08)",
+    rail: "rgb(32 31 133 / 0.5)",
+    boundary: "rgb(26 28 70 / 0.5)",
+    roadBase: "rgb(26 28 70 / 0.14)",
+    roadDash: "rgb(26 28 70 / 0.4)",
+    roadDashOn: "rgb(180 132 0)",
+    zone: "rgb(32 31 133 / 0.16)",
+    zoneOn: "rgb(32 31 133 / 0.85)",
+    green: "rgb(68 158 53 / 0.35)",
+    greenOn: "rgb(68 158 53 / 0.75)",
+    stroke: "rgb(26 28 70 / 0.5)",
+    detail: "rgb(26 28 70 / 0.3)",
     gateFill: "var(--color-paper)",
     gateStroke: "var(--color-ink)",
     gateMark: "var(--color-indigo-700)",

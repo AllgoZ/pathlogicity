@@ -14,8 +14,8 @@ export function Footer({ navigation, settings }: { navigation: NavItem[]; settin
   const link = "text-[0.9375rem] text-paper/80 transition-colors hover:text-paper";
 
   return (
-    <footer data-surface="dark" className="on-dark grain glow-brand overflow-hidden bg-midnight pt-16 text-paper lg:pt-24">
-      <div aria-hidden className="pinwheel-stripe absolute inset-x-0 top-0 h-[2px]" />
+    <footer data-surface="dark" className="on-dark grain glow-brand relative overflow-hidden bg-indigo-700 pt-16 text-paper lg:pt-24">
+      <div aria-hidden className="pinwheel-stripe absolute inset-x-0 top-0 h-[3px]" />
       <div className="shell grid-12 gap-y-12">
         <div className="col-span-4 sm:col-span-8 lg:col-span-3">
           <Logo tone="light" />

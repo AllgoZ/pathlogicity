@@ -23,14 +23,14 @@ export function PathGroup({ data }: { data: Homepage["pathGroup"] }) {
       <div className="shell mt-12 lg:mt-16">
         <div className="relative overflow-hidden rounded-[2px] shadow-[var(--shadow-card)]">
           <AssetSlot slot={data.photo.slot} spec={data.photo.spec} ratio="21/9" id="05" variant={3} className="min-h-[260px] w-full lg:min-h-[520px]" label={data.photo.alt} src={data.photo.src} focus="center" sizes="(min-width: 1600px) 1600px, 100vw" />
-          <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-2/3 bg-gradient-to-t from-midnight/80 via-midnight/30 to-transparent lg:block" />
+          <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-2/3 bg-gradient-to-t from-ink/55 via-ink/10 to-transparent lg:block" />
           <Reveal
-            className="on-dark grid grid-cols-2 bg-midnight text-paper lg:absolute lg:inset-x-6 lg:bottom-6 lg:grid-cols-4 lg:rounded-[2px] lg:border lg:border-white/15 lg:bg-midnight/45 lg:backdrop-blur-xl"
+            className="grid grid-cols-2 bg-paper text-ink lg:absolute lg:inset-x-6 lg:bottom-6 lg:grid-cols-4 lg:rounded-[2px] lg:bg-paper/92 lg:shadow-[var(--shadow-card)] lg:backdrop-blur-xl"
             stagger={0.1}
           >
             {data.metrics.map((m, i) => (
-              <div key={m.unit} className={`px-5 py-7 lg:px-8 lg:py-8 ${i % 2 === 1 ? "border-l border-white/10" : ""} ${i > 1 ? "border-t border-white/10 lg:border-t-0" : ""} ${i === 2 ? "lg:border-l" : ""}`}>
-                <Metric data={m} size="l" tone="dark" />
+              <div key={m.unit} className={`px-5 py-7 lg:px-8 lg:py-8 ${i % 2 === 1 ? "border-l border-ink/10" : ""} ${i > 1 ? "border-t border-ink/10 lg:border-t-0" : ""} ${i === 2 ? "lg:border-l" : ""}`}>
+                <Metric data={m} size="l" valueClassName="text-indigo-700" />
               </div>
             ))}
           </Reveal>
@@ -39,18 +39,18 @@ export function PathGroup({ data }: { data: Homepage["pathGroup"] }) {
 
       <div className="shell mt-16 grid-12 gap-y-10 lg:mt-24">
         <Reveal className="col-span-4 sm:col-span-8 lg:col-span-8">
-          <p className="t-micro text-indigo-700">About PATH</p>
-          <blockquote className="mt-5 font-serif text-[clamp(1.625rem,2.7vw,2.625rem)] italic leading-[1.25] tracking-[-0.01em] text-ink">
+          <p className="t-label text-indigo-700">About PATH</p>
+          <blockquote className="mt-5 text-[clamp(1.5rem,2.3vw,2.125rem)] font-semibold leading-[1.3] tracking-[-0.015em] text-ink">
             <span aria-hidden className="text-yellow-400">“</span>
             {data.story}
             <span aria-hidden className="text-yellow-400">”</span>
           </blockquote>
         </Reveal>
         <Reveal className="col-span-4 self-end sm:col-span-8 lg:col-span-3 lg:col-start-10">
-          <p className="t-micro text-steel-500">Experience across</p>
+          <p className="t-label text-steel-700">Experience across</p>
           <ul className="mt-4 border-t border-ink/15">
             {data.sectors.map((s) => (
-              <li key={s} className="flex items-center justify-between border-b border-ink/15 py-4 font-display text-[1.0625rem] font-semibold text-ink">
+              <li key={s} className="flex items-center justify-between border-b border-ink/15 py-4 text-[1.0625rem] font-semibold text-ink">
                 {s}
                 <span aria-hidden className="h-1.5 w-1.5 rotate-45 bg-yellow-400" />
               </li>

@@ -4,9 +4,9 @@ import { Counter } from "./Counter";
 type Size = "xxl" | "xl" | "l" | "m";
 const sizes: Record<Size, string> = {
   xxl: "t-xxl",
-  xl: "font-display font-medium tracking-[-0.05em] leading-[0.9] text-[clamp(3.25rem,6.5vw,6.5rem)]",
-  l: "font-display font-medium tracking-[-0.045em] leading-[0.95] text-[clamp(2.5rem,4.2vw,4.25rem)]",
-  m: "font-display font-medium tracking-[-0.04em] leading-none text-[clamp(2rem,2.8vw,2.875rem)]",
+  xl: "font-display font-bold tracking-[-0.05em] leading-[0.9] text-[clamp(3.25rem,6.5vw,6.5rem)]",
+  l: "font-display font-bold tracking-[-0.045em] leading-[0.95] text-[clamp(2.5rem,4.2vw,4.25rem)]",
+  m: "font-display font-bold tracking-[-0.04em] leading-none text-[clamp(2rem,2.8vw,2.875rem)]",
 };
 
 

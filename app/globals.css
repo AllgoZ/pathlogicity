@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   PATH LOGICITY — design tokens · premium redesign (round 3 · 2026-10-15)
-   "Quiet luxury, brand-led" — see docs/REDESIGN-PLAN.md.
-   Neutral porcelain/stone surfaces + selective MIDNIGHT (deep brand indigo)
-   anchor sections. GOLD is the one accent. The pinwheel (gold · green · blue ·
-   orange) appears as a signature stripe and in data/legends only.
+   PATH LOGICITY — design tokens · round 4 (2026-10-16)
+   White/light throughout with brand colours (client "Changes V2") — see
+   docs/REDESIGN-PLAN-R4.md. One typeface: Open Sans. Porcelain/stone are
+   faint brand tints; the only deep-indigo surface is the footer. Gold is the
+   action accent; indigo, blue and green carry roles (headings, links, data).
    ========================================================================== */
 
 @theme {
-  /* Light surfaces — neutral (not blue-grey), so the page no longer reads washed out */
-  --color-porcelain: #f8f8f5; /* base section background */
-  --color-stone: #efeeea; /* alternate section background */
+  /* Light surfaces — white with a faint brand-blue tint */
+  --color-porcelain: #f9fafd; /* base section background */
+  --color-stone: #eff2f9; /* alternate section background */
   --color-paper: #ffffff; /* cards, panels, tiles — and white text on dark */
   --color-paper-2: #f4f4f1; /* tinted fills inside cards */
   --color-paper-3: #e9e8e3;
@@ -56,9 +56,9 @@
   --color-green-700: #2f7a24;
   --color-green-50: #edf6ea;
 
-  /* Plus Jakarta Sans (display) · Instrument Serif italic (accent words) · Open Sans (body — client brand font) */
-  --font-display: var(--font-jakarta), "Plus Jakarta Sans", Helvetica, Arial, sans-serif;
-  --font-serif: var(--font-instrument), "Instrument Serif", Georgia, serif;
+  /* Open Sans only (the client's brand font). display/serif alias it so older utility names keep working. */
+  --font-display: var(--font-open-sans), "Open Sans", Helvetica, Arial, sans-serif;
+  --font-serif: var(--font-open-sans), "Open Sans", Helvetica, Arial, sans-serif;
   --font-sans: var(--font-open-sans), "Open Sans", Helvetica, Arial, sans-serif;
   --font-mono: var(--font-open-sans), "Open Sans", Helvetica, Arial, sans-serif;
 
@@ -166,83 +166,77 @@ html.lenis body {
 }
 
 /* --------------------------------------------------------------------------
-   Typography — Plus Jakarta Sans display at 500–600 (not 800), tight tracking,
-   generous size; Instrument Serif italic for 1–2 accent words (`*word*` in
-   content → <em>); Open Sans body at 17px / 1.7.
+   Typography — Open Sans only. Headlines at 700 with slightly tight tracking;
+   accent words (`*word*` in content → <em>) are weight + colour, not a second
+   typeface. Scale (desktop): hero ≤ 4rem · titles ≤ 3rem · sub-titles ≤ 1.75rem
+   · body 17–19px · labels 14px sentence case (no tracked all-caps eyebrows).
    -------------------------------------------------------------------------- */
 @utility t-hero {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(2.5rem, 10.5vw, 3.5rem);
-  line-height: 1.02;
-  letter-spacing: -0.04em;
-  word-spacing: 0.06em;
+  font-weight: 700;
+  font-size: clamp(2.25rem, 9.5vw, 2.875rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
   @media (width >= 40rem) {
-    font-size: clamp(3rem, min(6.2vw, 10.5vh), 6rem);
-    line-height: 1;
+    font-size: clamp(2.75rem, min(4.6vw, 8vh), 4rem);
+    line-height: 1.06;
   }
 }
 @utility t-xxl {
   font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(5.5rem, 26vw, 9.5rem);
-  line-height: 0.88;
-  letter-spacing: -0.06em;
+  font-weight: 700;
+  font-size: clamp(4.5rem, 22vw, 7rem);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
   font-variant-numeric: tabular-nums;
   @media (width >= 64rem) {
-    font-size: clamp(7rem, 14vw, 13rem);
+    font-size: clamp(6rem, 11vw, 10rem);
   }
 }
 @utility t-xl {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(2.25rem, 4.8vw, 4.75rem);
-  line-height: 1.04;
-  letter-spacing: -0.035em;
-  word-spacing: 0.05em;
+  font-weight: 700;
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.028em;
 }
 @utility t-l {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(1.875rem, 3.4vw, 3.375rem);
-  line-height: 1.08;
-  letter-spacing: -0.03em;
-  word-spacing: 0.04em;
+  font-weight: 700;
+  font-size: clamp(1.625rem, 2.6vw, 2.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.024em;
 }
 @utility t-m {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(1.375rem, 2vw, 2rem);
-  line-height: 1.18;
-  letter-spacing: -0.02em;
-  word-spacing: 0.03em;
+  font-weight: 700;
+  font-size: clamp(1.25rem, 1.7vw, 1.625rem);
+  line-height: 1.22;
+  letter-spacing: -0.016em;
 }
 @utility t-s {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(1.0625rem, 1.2vw, 1.25rem);
+  font-weight: 700;
+  font-size: clamp(1.0625rem, 1.2vw, 1.1875rem);
   line-height: 1.35;
-  letter-spacing: -0.01em;
-  word-spacing: 0.02em;
+  letter-spacing: -0.008em;
 }
 @utility t-body-l {
-  font-size: clamp(1.0625rem, 1.2vw, 1.21875rem);
+  font-size: clamp(1.0625rem, 1.2vw, 1.1875rem);
   line-height: 1.7;
 }
 @utility t-label {
   font-family: var(--font-sans);
-  font-size: 0.75rem;
-  line-height: 1.4;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
   font-weight: 600;
 }
 @utility t-micro {
   font-family: var(--font-sans);
-  font-size: 0.75rem;
-  line-height: 1.4;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
   font-weight: 600;
 }
 @utility no-scrollbar {
@@ -255,14 +249,12 @@ html.lenis body {
   font-variant-numeric: tabular-nums;
 }
 
-/* Accent words — Instrument Serif italic. Colour follows --accent-color so a
-   section can recolour it (green in sustainability, gold on midnight). */
+/* Accent words — same typeface, brand colour. Colour follows --accent-color so a
+   section can recolour it (green in sustainability, gold on the indigo footer). */
 :where(h1, h2, h3, h4, p, span, blockquote) em,
 em.accent {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 400;
-  letter-spacing: -0.01em;
+  font-style: normal;
+  font-weight: inherit;
   color: var(--accent-color, var(--color-indigo-700));
 }
 .on-dark {
@@ -312,34 +304,9 @@ em.accent {
   filter: contrast(1.06) saturate(0.9) brightness(1.01);
 }
 
-/* M1 — preloader: shown only while html[data-preload] is set (head script); the
-   hero intro waits underneath. Failsafe: the overlay hides itself after 4s. */
-.preloader {
-  display: none;
-}
-html[data-preload] .preloader {
-  display: flex;
-  animation: preloader-failsafe 0.01s 4s forwards;
-}
-html[data-preload] .preloader [data-petal],
-html[data-preload] .preloader [data-wordmark] {
-  opacity: 0;
-}
-html[data-preload] .intro-rise,
-html[data-preload] .intro-fade,
-html[data-preload] .hero-reveal,
-html[data-preload] .hero-reveal-inner {
-  animation-play-state: paused;
-}
-@keyframes preloader-failsafe {
-  to {
-    visibility: hidden;
-  }
-}
-
 /* M12 — route transition (React <ViewTransition default="page-wipe">) */
 ::view-transition-image-pair(.page-wipe) {
-  background: var(--color-midnight);
+  background: var(--color-porcelain);
 }
 ::view-transition-old(.page-wipe) {
   animation: vt-out 420ms var(--ease-route) both;
@@ -380,32 +347,6 @@ html[data-preload] .hero-reveal-inner {
 .marquee:hover .marquee-track,
 .marquee:focus-within .marquee-track {
   animation-play-state: paused;
-}
-
-/* M2 — hero media opens from a centred window while settling from 1.18×.
-   Transform-only (composited): the outer frame scales up from 0.6 and clips;
-   the inner image counter-scales so it reads as one image settling. */
-@keyframes hero-window {
-  from {
-    transform: scale(0.6);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-@keyframes hero-window-inner {
-  from {
-    transform: scale(1.97);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-.hero-reveal {
-  animation: hero-window 1.7s var(--ease-out-expo) both;
-}
-.hero-reveal-inner {
-  animation: hero-window-inner 1.7s var(--ease-out-expo) both;
 }
 
 /* Placeholder annotations + content slots are hidden for visitors; add
@@ -512,16 +453,6 @@ html:not([data-annotations="on"]) .slot-annotation {
   to {
     transform: perspective(1600px) rotateX(58deg) rotateZ(14deg);
   }
-}
-
-.intro-rise {
-  display: block;
-  animation: rise 1s var(--ease-out-expo) both;
-  animation-delay: var(--d, 0ms);
-}
-.intro-fade {
-  animation: fade-up 0.9s var(--ease-out-expo) both;
-  animation-delay: var(--d, 0ms);
 }
 
 /* Icons redraw on hover — purposeful "animated iconography" */

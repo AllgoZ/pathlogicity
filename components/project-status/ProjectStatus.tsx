@@ -171,7 +171,7 @@ export function ProjectStatus({ milestones, lastUpdated }: { milestones: Milesto
                   </span>
                   <div>
                     <p className={`t-micro ${s.text}`}>{s.label}</p>
-                    <p className={`mt-2 font-serif text-[clamp(2.75rem,4vw,4rem)] italic leading-none text-indigo-700 transition-opacity duration-500 ${on ? "opacity-100" : "opacity-60"}`} aria-hidden>
+                    <p className={`mt-2 text-[clamp(2.5rem,3.6vw,3.5rem)] font-bold leading-none tracking-[-0.03em] text-indigo-700 transition-opacity duration-500 ${on ? "opacity-100" : "opacity-60"}`} aria-hidden>
                       {String(i + 1).padStart(2, "0")}
                     </p>
                     <div className="mt-4 space-y-2.5">

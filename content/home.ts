@@ -88,9 +88,10 @@ export const hero = {
     slot: "Project Video",
     spec: "Drone aerial of site · 1920×1080 + 4:5 mobile · MP4/WebM · 12–20s loop · ≤6 MB",
     src: null,
-    // The client's entry-gate render (PATH Logicity sign) as the hero still until drone footage is supplied.
-    poster: "/client/hero-gate.webp", // gate render with the cool grade baked in (no live CSS filter)
-    alt: "Render of the Path Logicity entry gate, with trucks arriving on the approach road",
+    // The client's key visual (pathlogicity.com main.webp, 1462×825): road, rail, air and sea freight.
+    // An illustrative render, not footage of the site — labelled as such in the hero. Swap for drone footage when supplied.
+    poster: "/client/hero-main.webp",
+    alt: "Illustration of multimodal freight: a truck on the quay, a container ship, an aircraft overhead and a freight train beyond the water",
   } satisfies MediaAsset,
 };
 

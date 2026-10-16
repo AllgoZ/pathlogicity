@@ -1,8 +1,9 @@
+import Image from "next/image";
 import { telHref } from "@/lib/content";
 import type { IconName, SiteSettings } from "@/lib/content/types";
 import { Icon } from "@/components/ui/Icon";
+import { RevealMedia } from "@/components/ui/RevealMedia";
 import { RevealLines } from "@/components/ui/Reveal";
-import { SurveyGrid } from "@/components/ui/SurveyGrid";
 import { EnquiryForm } from "./EnquiryForm";
 
 type Content = { headline: string[]; copy: string[]; industries: string[] };
@@ -17,17 +18,15 @@ export function EnquireBlock({ content, settings }: { content: Content; settings
   ];
 
   return (
-    <section id="enquire" data-stage="enquire" aria-labelledby="enquire-title" className="relative overflow-hidden bg-canvas-2 section-pad">
-      <SurveyGrid />
+    <section id="enquire" data-stage="enquire" aria-labelledby="enquire-title" className="relative overflow-hidden bg-stone section-pad">
       <div className="shell relative grid-12 gap-y-16">
         <div className="col-span-4 sm:col-span-8 lg:col-span-5">
           <p className="t-label flex items-center gap-3 text-ink">
-            <span className="text-blue-500">11 /</span> Enquire
+            <span data-idx className="text-indigo-700">11 /</span> Enquire
           </p>
           <RevealLines
             id="enquire-title"
             lines={content.headline.map((l) => l)}
-            lineClassNames={["", "", "text-indigo-700", ""]}
             className="t-xl mt-5 text-ink"
           />
           <div className="t-body-l mt-6 max-w-[36ch] text-steel-700">
@@ -36,12 +35,26 @@ export function EnquireBlock({ content, settings }: { content: Content; settings
             ))}
           </div>
 
+          <div className="relative mt-10 aspect-[16/10] overflow-hidden rounded-[2px] shadow-[var(--shadow-card)]">
+            <RevealMedia>
+              <Image
+                src="/client/image-1720613648983.webp"
+                alt="Aerial render of Path Logicity with the rail terminal and warehousing"
+                fill
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                className="object-cover [filter:contrast(1.06)_saturate(0.8)]"
+              />
+            </RevealMedia>
+            <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-midnight/60 via-transparent to-transparent" />
+            <p className="t-micro absolute bottom-4 left-4 text-paper/85">Dobbaspet · Bengaluru</p>
+          </div>
+
           <ul className="mt-10 border-t border-ink/10">
             {actions.map((a) => (
-              <li key={a.label} className="border-b border-ink/10">
+              <li key={a.label} className={`border-b border-ink/10 ${a.href ? "" : "slot-annotation"}`}>
                 {a.href ? (
                   <a href={a.href} className="group flex min-h-16 items-center gap-4 py-3 text-ink">
-                    <Icon name={a.icon} size={22} draw className="text-blue-500" />
+                    <Icon name={a.icon} size={22} draw className="text-indigo-700" />
                     <span>
                       <span className="t-micro block text-steel-500">{a.label}</span>
                       {a.value ? <span className="mt-0.5 block text-[1rem] font-bold">{a.value}</span> : null}
@@ -50,7 +63,7 @@ export function EnquireBlock({ content, settings }: { content: Content; settings
                   </a>
                 ) : (
                   <div className="flex h-16 items-center gap-4 text-ink/60">
-                    <Icon name={a.icon} size={22} className="text-blue-500/60" />
+                    <Icon name={a.icon} size={22} className="text-indigo-700/60" />
                     <span className="t-micro">{a.label}</span>
                     <span className="t-micro ml-auto text-steel-500">To be supplied</span>
                   </div>
@@ -75,7 +88,7 @@ export function EnquireBlock({ content, settings }: { content: Content; settings
                   <Icon name={s.icon} size={17} />
                 </a>
               ) : (
-                <span key={s.label} role="img" aria-label={`${s.label} (link to be supplied)`} className="flex h-11 w-11 items-center justify-center border border-ink/10 text-ink/35">
+                <span key={s.label} role="img" aria-label={`${s.label} (link to be supplied)`} className="slot-annotation flex h-11 w-11 items-center justify-center border border-ink/10 text-ink/35">
                   <Icon name={s.icon} size={17} />
                 </span>
               ),
@@ -86,7 +99,7 @@ export function EnquireBlock({ content, settings }: { content: Content; settings
         <div className="col-span-4 sm:col-span-8 lg:col-span-6 lg:col-start-7">
           <div className="relative border border-ink/10 bg-paper p-6 shadow-[0_24px_60px_-30px_rgb(26_28_70/0.3)] sm:p-10 lg:p-12">
             <span aria-hidden className="absolute -top-px left-0 h-[3px] w-24 bg-yellow-400" />
-            <EnquiryForm industries={content.industries} />
+            <EnquiryForm industries={content.industries} contact={{ phone: settings.phone, email: settings.email }} />
           </div>
         </div>
       </div>

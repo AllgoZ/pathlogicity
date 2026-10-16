@@ -12,10 +12,11 @@ declare global {
 
 const NAV_OFFSET = -64;
 
-/** Smooth scroll (disabled under reduced motion) + in-page anchor handling. */
+/** Smooth scroll (disabled under reduced motion and on touch) + in-page anchor handling. */
 export function SmoothScroll() {
   useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Lenis only for mouse/trackpad: touch scrolling is native-smooth, and skipping it saves a per-frame loop on phones
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce), (pointer: coarse)").matches;
     let lenis: Lenis | undefined;
     const tick = (time: number) => lenis?.raf(time * 1000);
 

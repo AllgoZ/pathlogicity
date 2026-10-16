@@ -1,43 +1,21 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { validateEnquiry as validate, type EnquiryErrors, type EnquiryValues, type Intent } from "@/lib/enquiry";
 import { Icon } from "@/components/ui/Icon";
+import { Magnetic } from "@/components/ui/Magnetic";
 
-type Intent = "lease" | "visit";
-type Values = {
-  name: string;
-  company: string;
-  email: string;
-  phone: string;
-  industry: string;
-  requirement: string;
-  visitDate: string;
-  consent: boolean;
-  website: string; // honeypot
-};
-type Errors = Partial<Record<keyof Values, string>>;
+type Values = EnquiryValues;
+type Errors = EnquiryErrors;
 
 const EMPTY: Values = { name: "", company: "", email: "", phone: "", industry: "", requirement: "", visitDate: "", consent: false, website: "" };
 
-function validate(v: Values, intent: Intent): Errors {
-  const e: Errors = {};
-  if (!v.name.trim()) e.name = "Please enter your name.";
-  if (!v.company.trim()) e.company = "Please enter your company.";
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.email.trim())) e.email = "Please enter a valid work email.";
-  const digits = v.phone.replace(/\D/g, "");
-  if (digits.length < 8 || digits.length > 15) e.phone = "Please enter a valid phone number.";
-  if (!v.industry) e.industry = "Please select your industry.";
-  if (v.requirement.trim().length < 5) e.requirement = "Tell us briefly what you need.";
-  if (intent === "visit" && !v.visitDate) e.visitDate = "Please choose a preferred date.";
-  if (!v.consent) e.consent = "Please confirm we may contact you.";
-  return e;
-}
-
-export function EnquiryForm({ industries }: { industries: string[] }) {
+export function EnquiryForm({ industries, contact }: { industries: string[]; contact?: { phone: string | null; email: string | null } }) {
   const [intent, setIntent] = useState<Intent>("lease");
   const [v, setV] = useState<Values>(EMPTY);
   const [errors, setErrors] = useState<Errors>({});
-  const [state, setState] = useState<"idle" | "sending" | "done">("idle");
+  const [state, setState] = useState<"idle" | "sending" | "done" | "failed">("idle");
+  const [delivered, setDelivered] = useState(true);
   const form = useRef<HTMLFormElement>(null);
   const uid = useId();
 
@@ -72,9 +50,24 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
       return;
     }
     setState("sending");
-    // TODO: connect to CRM / email endpoint (decision pending — docs/UI-PLAN.md §12).
-    await new Promise((r) => setTimeout(r, 900));
-    setState("done");
+    try {
+      const res = await fetch("/api/enquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...v, intent }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; delivered?: boolean; fields?: Errors };
+      if (res.status === 422 && data.fields) {
+        setErrors(data.fields);
+        setState("idle");
+        return;
+      }
+      if (!res.ok || !data.ok) throw new Error("enquiry failed");
+      setDelivered(data.delivered !== false);
+      setState("done");
+    } catch {
+      setState("failed");
+    }
   };
 
   if (state === "done") {
@@ -87,9 +80,10 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
           <p className="t-label text-green-700">{intent === "visit" ? "Site visit request received" : "Enquiry received"}</p>
         </div>
         <p className="t-l mt-8 max-w-[14ch] text-ink">Thank you, {v.name.split(" ")[0]}.</p>
-        <p className="t-micro mt-6 max-w-[46ch] normal-case tracking-[0.03em] text-steel-500">
-          [ Next-steps copy to be supplied by the leasing team ] · Demo build — this submission was not sent anywhere.
-        </p>
+        <p className="mt-6 max-w-[46ch] text-steel-700">Our leasing team will review your {intent === "visit" ? "site visit request" : "enquiry"} and be in touch.</p>
+        {delivered ? null : (
+          <p className="slot-annotation t-micro mt-4 max-w-[46ch] text-steel-500">[ Development build — ENQUIRY_WEBHOOK_URL is not set, so this was logged on the server and not delivered ]</p>
+        )}
         <button type="button" onClick={() => { setV(EMPTY); setState("idle"); }} className="t-label mt-10 self-start text-indigo-700 underline-offset-4 hover:underline">
           Send another enquiry
         </button>
@@ -104,7 +98,7 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
       {/* Intent toggle — one form, both brief CTAs */}
       <fieldset>
         <legend className="t-micro mb-3 text-steel-500">I want to</legend>
-        <div className="relative grid grid-cols-2 border border-ink/15 bg-canvas p-1">
+        <div className="relative grid grid-cols-2 border border-ink/15 bg-porcelain p-1">
           <span
             aria-hidden
             className="absolute bottom-1 top-1 w-[calc(50%-4px)] bg-indigo-700 transition-transform duration-500 ease-[var(--ease-out-expo)]"
@@ -114,7 +108,7 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
             <label key={k} className="relative z-10 cursor-pointer">
               <input type="radio" name="intent" value={k} checked={intent === k} onChange={() => setIntent(k)} className="peer sr-only" />
               <span
-                className={`flex h-11 items-center justify-center text-[0.875rem] font-bold transition-colors duration-300 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-blue-500 ${
+                className={`flex h-11 items-center justify-center text-[0.875rem] font-bold transition-colors duration-300 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-indigo-700 ${
                   intent === k ? "text-paper" : "text-steel-700"
                 }`}
               >
@@ -156,7 +150,7 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
             <label key={ind} className="cursor-pointer">
               <input type="radio" name="industry" value={ind} checked={v.industry === ind} onChange={() => set("industry", ind)} className="peer sr-only" />
               <span
-                className={`flex h-11 items-center border px-4 text-[0.875rem] font-semibold transition-colors duration-200 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-blue-500 ${
+                className={`flex h-11 items-center border px-4 text-[0.875rem] font-semibold transition-colors duration-200 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-indigo-700 ${
                   v.industry === ind ? "border-yellow-400 bg-yellow-400 text-ink" : "border-ink/15 text-ink/80 hover:border-ink/40"
                 }`}
               >
@@ -192,34 +186,60 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
       <div className="mt-7">
         <label className="flex cursor-pointer items-start gap-3">
           <input type="checkbox" name="consent" checked={v.consent} onChange={(e) => set("consent", e.target.checked)} aria-invalid={!!errors.consent} aria-describedby={errors.consent ? errId("consent") : undefined} className="peer sr-only" />
-          <span aria-hidden className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center border transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-blue-500 ${v.consent ? "border-yellow-400 bg-yellow-400 text-ink" : "border-ink/30 bg-paper"}`}>
+          <span aria-hidden className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center border transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-indigo-700 ${v.consent ? "border-yellow-400 bg-yellow-400 text-ink" : "border-ink/30 bg-paper"}`}>
             {v.consent ? <Icon name="check" size={14} strokeWidth={2} /> : null}
           </span>
           <span className="text-sm leading-relaxed text-steel-700">
             I agree to be contacted by the Path Logicity leasing team about this enquiry.{" "}
-            <span className="t-micro text-steel-500">[ Privacy notice link & consent wording — client legal ]</span>
+            <span className="slot-annotation t-micro text-steel-500">[ Privacy notice link & consent wording — client legal ]</span>
           </span>
         </label>
         {errors.consent ? <ErrorText id={errId("consent")}>{errors.consent}</ErrorText> : null}
       </div>
 
+      {state === "failed" ? (
+        <p role="alert" className="mt-7 border-l-[3px] border-[#c62828] bg-paper px-4 py-3 text-[0.9375rem] text-ink">
+          We couldn&apos;t send your enquiry just now. Please try again
+          {contact?.phone || contact?.email ? (
+            <>
+              , or reach the leasing team directly
+              {contact?.phone ? (
+                <>
+                  {" "}
+                  on <a href={`tel:${contact.phone.replace(/[^\d+]/g, "")}`} className="font-semibold text-indigo-700 underline underline-offset-2">{contact.phone}</a>
+                </>
+              ) : null}
+              {contact?.email ? (
+                <>
+                  {contact?.phone ? " or " : " at "}
+                  <a href={`mailto:${contact.email}`} className="font-semibold text-indigo-700 underline underline-offset-2">{contact.email}</a>
+                </>
+              ) : null}
+            </>
+          ) : null}
+          .
+        </p>
+      ) : null}
+
       {/* The route arrives at the destination: the submit button */}
       <div className="mt-10 flex items-center gap-0">
         <span aria-hidden className="relative hidden h-px flex-1 bg-ink/15 sm:block">
-          <span className="route-arrive absolute inset-y-0 left-0 w-full origin-left bg-gradient-to-r from-transparent via-blue-500/50 to-yellow-400" />
+          <span className="route-arrive absolute inset-y-0 left-0 w-full origin-left bg-gradient-to-r from-transparent via-indigo-700/40 to-yellow-400" />
           <span className="absolute -right-[3px] -top-[3px] h-1.5 w-1.5 rounded-full bg-yellow-400 shadow-[0_0_0_6px_rgb(231_172_0/0.16)]" />
         </span>
+        <Magnetic>
         <button
           type="submit"
           disabled={state === "sending"}
           className="group relative inline-flex h-14 w-full items-center justify-center gap-3 overflow-hidden bg-yellow-400 px-7 text-[0.875rem] font-bold uppercase tracking-[0.05em] text-ink disabled:opacity-70 sm:w-auto"
         >
           <span aria-hidden className="absolute inset-0 origin-left scale-x-0 bg-indigo-700 transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-x-100" />
-          <span className="relative z-10 inline-flex items-center gap-3 transition-colors duration-300 group-hover:text-paper">
+          <span data-magnetic-inner className="relative z-10 inline-flex items-center gap-3 transition-colors duration-300 group-hover:text-paper">
             {state === "sending" ? "Sending…" : intent === "visit" ? "Plan a site visit" : "Submit lease enquiry"}
             <Icon name="arrow-right" size={18} className="arrow-nudge" />
           </span>
         </button>
+        </Magnetic>
       </div>
       <p className="sr-only" aria-live="polite">
         {state === "sending" ? "Sending your enquiry" : ""}
@@ -229,7 +249,7 @@ export function EnquiryForm({ industries }: { industries: string[] }) {
 }
 
 const inputCls =
-  "block h-11 w-full border-0 border-b border-ink/25 bg-transparent px-0 text-[1.0625rem] text-ink outline-none transition-colors duration-300 focus:border-blue-500 aria-[invalid=true]:border-[#c62828] focus-visible:outline-none";
+  "block h-11 w-full border-0 border-b border-ink/25 bg-transparent px-0 text-[1.0625rem] text-ink outline-none transition-colors duration-300 focus:border-indigo-700 aria-[invalid=true]:border-[#c62828] focus-visible:outline-none";
 
 function Field({ label, name, id, error, children }: { label: string; name: string; id: string; error?: string; children: ReactNode }) {
   return (

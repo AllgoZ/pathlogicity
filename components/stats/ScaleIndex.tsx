@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import type { Homepage } from "@/lib/content";
@@ -66,7 +67,7 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
   }, [paths.length]);
 
   return (
-    <section ref={section} id="scale" data-stage="discover" aria-labelledby="scale-title" className="relative overflow-hidden bg-canvas pb-[clamp(88px,12vh,160px)]">
+    <section ref={section} id="scale" data-stage="discover" aria-labelledby="scale-title" className="relative bg-porcelain pb-[clamp(88px,12vh,160px)]">
       {/* Route arriving from the hero, x = 6% */}
       <div className="relative mb-6 h-[clamp(96px,16vh,200px)]">
         <Route d="M 6 0 L 6 100" auto="scrub" scrubStart="top bottom" scrubEnd="bottom 45%" base={false} />
@@ -86,7 +87,7 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
                   strokeDasharray="1 1"
                   strokeWidth={1.5}
                   className="transition-[stroke,opacity] duration-300"
-                  stroke={active === data.nodes[i].id ? "var(--color-yellow-400)" : "rgb(0 102 177 / 0.45)"}
+                  stroke={active === data.nodes[i].id ? "var(--color-yellow-400)" : "rgb(32 31 133 / 0.3)"}
                   opacity={active && active !== data.nodes[i].id ? 0.25 : 1}
                 />
               </g>
@@ -96,11 +97,11 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
 
         <div className="col-span-4 sm:col-span-8 lg:col-span-6">
           <p className="t-label flex items-center gap-3">
-            <span className="text-blue-500">02 /</span> Scale
+            <span data-idx className="text-indigo-700">02 /</span> Scale
           </p>
           <div ref={num} className="mt-8 flex w-fit items-start">
             <div className="t-xxl relative text-indigo-700">
-              <Counter value={data.metric.value} duration={1.8} />
+              <Counter value={data.metric.value} duration={2.4} spins={2} />
             </div>
             <p className="t-label ml-3 mt-[0.4em] text-green-700 [writing-mode:vertical-rl] lg:ml-4">{data.metric.unit}</p>
           </div>
@@ -128,6 +129,16 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
                 onBlur={() => setActive(null)}
                 className="group relative flex items-start gap-5 py-6 pl-6 lg:gap-6 lg:py-8 lg:pl-0"
               >
+                {/* hover preview — wipes in beside the node (desktop) */}
+                {n.image ? (
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute right-[calc(100%+48px)] top-1/2 z-10 hidden h-[180px] w-[280px] -translate-y-1/2 overflow-hidden rounded-[2px] shadow-[var(--shadow-card)] transition-[clip-path] duration-700 ease-[var(--ease-out-expo)] lg:block"
+                    style={{ clipPath: active === n.id ? "inset(0 0 0 0)" : "inset(0 0 0 100%)" }}
+                  >
+                    <Image src={n.image} alt="" fill sizes="280px" className={`object-cover transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] [filter:contrast(1.05)_saturate(0.82)] ${active === n.id ? "scale-100" : "scale-110"}`} />
+                  </span>
+                ) : null}
                 <span
                   ref={(el) => {
                     markers.current[i] = el;
@@ -140,20 +151,20 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
                 <span
                   aria-hidden
                   className={`flex h-14 w-14 shrink-0 items-center justify-center border transition-colors duration-300 ${
-                    active === n.id ? "border-blue-500 bg-blue-50 text-blue-500" : "border-ink/15 text-indigo-700"
+                    active === n.id ? "border-indigo-700 bg-indigo-50 text-indigo-700" : "border-ink/15 text-indigo-700"
                   }`}
                 >
                   <Icon name={n.icon} size={26} draw />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="t-micro block text-steel-500">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="t-label mt-1 block text-blue-500">{n.label}</span>
+                  <span className="t-label mt-1 block text-indigo-700">{n.label}</span>
                   <span className="t-s mt-1.5 block text-ink">{n.text}</span>
                 </span>
                 <Icon
                   name="arrow-right"
                   size={18}
-                  className={`mt-6 shrink-0 transition-all duration-300 ${active === n.id ? "translate-x-0 text-blue-500 opacity-100" : "-translate-x-2 opacity-0"}`}
+                  className={`mt-6 shrink-0 transition-all duration-300 ${active === n.id ? "translate-x-0 text-indigo-700 opacity-100" : "-translate-x-2 opacity-0"}`}
                 />
               </Link>
             </li>

@@ -16,7 +16,7 @@ const TABS: { id: NewsType; label: string }[] = [
 ];
 
 /** §10 — Path Logicity in the news. CMS-driven; designed to stay rich when sparse. */
-export function NewsPreview({ items }: { items: NewsItem[] }) {
+export function NewsPreview({ items, standalone = false }: { items: NewsItem[]; standalone?: boolean }) {
   const [tab, setTab] = useState<NewsType>("update");
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const list = items.filter((i) => i.type === tab);
@@ -32,19 +32,17 @@ export function NewsPreview({ items }: { items: NewsItem[] }) {
   };
 
   return (
-    <section id="news" data-stage="believe" aria-labelledby="news-title" className="relative bg-canvas text-ink section-pad">
+    <section id="news" data-stage="believe" aria-labelledby="news-title" className="relative bg-porcelain text-ink section-pad">
       <div className="shell">
         <div className="grid-12 gap-y-6">
           <div className="col-span-4 sm:col-span-8 lg:col-span-8">
             <p className="t-label text-ink">
-              <span className="text-blue-500">10 /</span> Newsroom
+              <span data-idx className="text-indigo-700">10 /</span> Newsroom
             </p>
-            <RevealLines id="news-title" lines={["Path Logicity", "in the news"]} className="t-xl mt-5 text-ink" />
+            <RevealLines id="news-title" lines={["Path Logicity", "in the *news*"]} className="t-xl mt-5 text-ink" />
           </div>
           <div className="col-span-4 flex items-end sm:col-span-8 lg:col-span-3 lg:col-start-10 lg:justify-end">
-            <ArrowLink href="/news">
-              View all
-            </ArrowLink>
+            {standalone ? null : <ArrowLink href="/news">View all</ArrowLink>}
           </div>
         </div>
 
@@ -113,9 +111,11 @@ export function NewsPreview({ items }: { items: NewsItem[] }) {
 
 function Meta({ item }: { item: NewsItem }) {
   return (
-    <p className="t-micro mt-5 flex flex-wrap gap-3 text-blue-500">
+    <p className="t-micro mt-5 flex flex-wrap gap-3 text-indigo-700">
       {item.source ?? <ContentSlot tone="light">Source</ContentSlot>}
-      <span aria-hidden>·</span>
+      <span aria-hidden className={item.source && item.date ? "" : "slot-annotation"}>
+        ·
+      </span>
       {item.date ?? <ContentSlot tone="light">Date</ContentSlot>}
     </p>
   );

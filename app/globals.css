@@ -1,50 +1,54 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   PATH LOGICITY — design tokens (light theme, client round 2 · 2026-10-15)
-   White / light-grey surfaces with the CLIENT BRAND pinwheel as accents
-   (pathlogicity.com): green #449e35 · gold #e7ac00 · blue #0066b1 ·
-   indigo #201f85 · orange #ff6600. See docs/CLIENT-CHANGES-PLAN.md.
-   Roles on light: gold = action FILLS only (never text on white),
-   blue = small accent text, green = sustainability / completed.
+   PATH LOGICITY — design tokens · round 4 (2026-10-16)
+   White/light throughout with brand colours (client "Changes V2") — see
+   docs/REDESIGN-PLAN-R4.md. One typeface: Open Sans. Porcelain/stone are
+   faint brand tints; the only deep-indigo surface is the footer. Gold is the
+   action accent; indigo, blue and green carry roles (headings, links, data).
    ========================================================================== */
 
 @theme {
-  /* Surfaces + text */
-  /* Page backgrounds — a soft cool "mist", so pure white is reserved for cards */
-  --color-canvas: #f5f7fa; /* base section background */
-  --color-canvas-2: #ecf0f5; /* alternate section background */
+  /* Light surfaces — white with a faint brand-blue tint */
+  --color-porcelain: #f9fafd; /* base section background */
+  --color-stone: #eff2f9; /* alternate section background */
   --color-paper: #ffffff; /* cards, panels, tiles — and white text on dark */
-  --color-paper-2: #f3f5f9; /* tinted fills inside cards */
-  --color-paper-3: #e8ecf3;
-  --color-ink: #1a1c46; /* headings — deep brand indigo-black */
-  --color-steel-700: #4b5168; /* body text */
-  --color-steel-500: #5f667c; /* muted text (≥4.5:1 on canvas-2) */
-  --color-steel-300: #c9cedb; /* hairlines on light, disabled */
+  --color-paper-2: #f4f4f1; /* tinted fills inside cards */
+  --color-paper-3: #e9e8e3;
 
-  /* Dark brand surfaces — footer + overlays on photography only */
+  /* Text */
+  --color-ink: #111233; /* headings + strong text — near-black brand indigo */
+  --color-steel-700: #4a4c5e; /* body text */
+  --color-steel-500: #646678; /* muted text (≥4.8:1 on stone) */
+  --color-steel-300: #cfcfd6; /* hairlines, disabled */
+
+  /* Deep brand surfaces — the midnight anchor sections, footer, overlays on photography */
+  --color-midnight: #0d0e35;
+  --color-midnight-2: #16174a; /* raised panels on midnight */
   --color-navy-950: #13144a;
   --color-navy-900: #1a1b5e;
   --color-navy-800: #23247a;
   --color-navy-700: #2c2d8c;
-  --color-indigo-700: #201f85; /* client "Logicity" wordmark indigo — footer */
+  --color-indigo-700: #201f85; /* client "Logicity" wordmark indigo — accents, links */
   --color-indigo-500: #2a44a8;
   --color-indigo-400: #5a8ad2;
   --color-indigo-300: #93bbe6;
+  --color-indigo-50: #eeeef8;
 
-  /* Client blue (pinwheel) — connectivity / data / accent text */
+  /* Client blue (pinwheel) — data / map / legends only */
   --color-blue-500: #0066b1;
   --color-blue-400: #3f8bd0;
   --color-blue-300: #7fb2e0;
   --color-blue-50: #eaf3fb;
 
   /* Client orange (pinwheel) */
-  --color-orange-600: #d95500; /* large numerals on white (3.3:1) */
+  --color-orange-600: #d95500;
   --color-orange-500: #ff6600;
   --color-orange-400: #ff8a3d;
 
   /* Accents — strict roles */
-  --color-yellow-400: #e7ac00; /* ACTION FILLS — client gold */
+  --color-yellow-400: #e7ac00; /* THE accent — client gold: CTAs, rules, route comet, numerals on dark */
+  --color-yellow-300: #f0c233;
   --color-yellow-200: #f3d35e;
   --color-yellow-50: #fdf6e0;
   --color-green-500: #449e35; /* sustainability + completed — client green */
@@ -52,7 +56,9 @@
   --color-green-700: #2f7a24;
   --color-green-50: #edf6ea;
 
+  /* Open Sans only (the client's brand font). display/serif alias it so older utility names keep working. */
   --font-display: var(--font-open-sans), "Open Sans", Helvetica, Arial, sans-serif;
+  --font-serif: var(--font-open-sans), "Open Sans", Helvetica, Arial, sans-serif;
   --font-sans: var(--font-open-sans), "Open Sans", Helvetica, Arial, sans-serif;
   --font-mono: var(--font-open-sans), "Open Sans", Helvetica, Arial, sans-serif;
 
@@ -63,13 +69,15 @@
 }
 
 :root {
-  --margin: clamp(16px, 4vw, 72px);
+  --margin: clamp(20px, 4.5vw, 88px);
   --gutter: clamp(16px, 1.6vw, 28px);
   --nav-h: 88px;
-  --line-dark: rgb(255 255 255 / 0.14);
-  --line-dark-strong: rgb(255 255 255 / 0.24);
-  --line-light: rgb(26 28 70 / 0.12);
-  --line-light-strong: rgb(26 28 70 / 0.22);
+  --line-dark: rgb(255 255 255 / 0.12);
+  --line-dark-strong: rgb(255 255 255 / 0.22);
+  --line-light: rgb(17 18 51 / 0.1);
+  --line-light-strong: rgb(17 18 51 / 0.2);
+  /* soft layered shadow for cards */
+  --shadow-card: 0 1px 2px rgb(17 18 51 / 0.04), 0 8px 24px -8px rgb(17 18 51 / 0.1), 0 32px 64px -32px rgb(17 18 51 / 0.18);
 }
 
 /* --------------------------------------------------------------------------
@@ -77,15 +85,16 @@
    -------------------------------------------------------------------------- */
 @layer base {
   html {
-    background: var(--color-canvas);
+    background: var(--color-porcelain);
     color: var(--color-ink);
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
   }
   body {
+    position: relative; /* the homepage route spine is positioned against the document */
     font-family: var(--font-sans);
-    font-size: 1rem;
-    line-height: 1.65;
+    font-size: 1.0625rem;
+    line-height: 1.7;
     color: var(--color-steel-700);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -102,14 +111,22 @@
     color: var(--color-ink);
   }
   :focus-visible {
-    outline: 2px solid var(--color-blue-500);
-    outline-offset: 2px;
+    outline: 2px solid var(--color-indigo-700);
+    outline-offset: 3px;
   }
   .on-dark :focus-visible {
     outline-color: var(--color-yellow-400);
   }
   button {
     cursor: pointer;
+  }
+  /* in-page anchors land below the fixed nav */
+  [id] {
+    scroll-margin-top: 96px;
+  }
+  /* inner pages show a page header, so the homepage chapter numbers ("05 /") are hidden there */
+  body:has([data-inner]) [data-idx] {
+    display: none;
   }
 }
 
@@ -149,82 +166,86 @@ html.lenis body {
   }
 }
 @utility section-pad {
-  padding-block: clamp(96px, 14vh, 192px);
+  padding-block: clamp(112px, 15vh, 208px);
+}
+@utility card {
+  background: var(--color-paper);
+  border-radius: 2px;
+  box-shadow: var(--shadow-card);
 }
 
 /* --------------------------------------------------------------------------
-   Typography
+   Typography — Open Sans only. Headlines at 700 with slightly tight tracking;
+   accent words (`*word*` in content → <em>) are weight + colour, not a second
+   typeface. Scale (desktop): hero ≤ 4rem · titles ≤ 3rem · sub-titles ≤ 1.75rem
+   · body 17–19px · labels 14px sentence case (no tracked all-caps eyebrows).
    -------------------------------------------------------------------------- */
-/* Open Sans (the client's site font). Display sizes capped so headlines never
-   dominate; labels raised to a readable 12–13px. Sentence case throughout. */
 @utility t-hero {
   font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(2.25rem, 9vw, 3.25rem);
-  line-height: 1.06;
-  letter-spacing: -0.025em;
+  font-weight: 700;
+  font-size: clamp(2.25rem, 9.5vw, 2.875rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
   @media (width >= 40rem) {
-    font-size: clamp(2.75rem, min(5.4vw, 9vh), 5.25rem);
-    line-height: 1.04;
+    font-size: clamp(2.75rem, min(4.6vw, 8vh), 4rem);
+    line-height: 1.06;
   }
 }
 @utility t-xxl {
   font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(5.5rem, 24vw, 9rem);
+  font-weight: 700;
+  font-size: clamp(4.5rem, 22vw, 7rem);
   line-height: 0.9;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.05em;
   font-variant-numeric: tabular-nums;
   @media (width >= 64rem) {
-    font-size: clamp(7rem, 13vw, 12rem);
+    font-size: clamp(6rem, 11vw, 10rem);
   }
 }
 @utility t-xl {
   font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(2rem, 4.4vw, 4.25rem);
-  line-height: 1.08;
-  letter-spacing: -0.025em;
+  font-weight: 700;
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.028em;
 }
 @utility t-l {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(1.75rem, 3.3vw, 3.25rem);
-  line-height: 1.12;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.625rem, 2.6vw, 2.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.024em;
 }
 @utility t-m {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(1.375rem, 2vw, 2rem);
-  line-height: 1.2;
-  letter-spacing: -0.015em;
+  font-size: clamp(1.25rem, 1.7vw, 1.625rem);
+  line-height: 1.22;
+  letter-spacing: -0.016em;
 }
 @utility t-s {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(1.0625rem, 1.2vw, 1.25rem);
+  font-size: clamp(1.0625rem, 1.2vw, 1.1875rem);
   line-height: 1.35;
-  letter-spacing: -0.005em;
+  letter-spacing: -0.008em;
 }
 @utility t-body-l {
-  font-size: clamp(1.0625rem, 1.15vw, 1.1875rem);
-  line-height: 1.65;
+  font-size: clamp(1.0625rem, 1.2vw, 1.1875rem);
+  line-height: 1.7;
 }
 @utility t-label {
   font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  line-height: 1.35;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  font-weight: 700;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  font-weight: 600;
 }
 @utility t-micro {
   font-family: var(--font-sans);
-  font-size: 0.75rem;
-  line-height: 1.4;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
   font-weight: 600;
 }
 @utility no-scrollbar {
@@ -237,6 +258,18 @@ html.lenis body {
   font-variant-numeric: tabular-nums;
 }
 
+/* Accent words — same typeface, brand colour. Colour follows --accent-color so a
+   section can recolour it (green in sustainability, gold on the indigo footer). */
+:where(h1, h2, h3, h4, p, span, blockquote) em,
+em.accent {
+  font-style: normal;
+  font-weight: inherit;
+  color: var(--accent-color, var(--color-indigo-700));
+}
+.on-dark {
+  --accent-color: var(--color-yellow-400);
+}
+
 /* --------------------------------------------------------------------------
    Textures
    -------------------------------------------------------------------------- */
@@ -245,8 +278,90 @@ html.lenis body {
   background-size: 32px 32px;
 }
 @utility dot-field-light {
-  background-image: radial-gradient(circle at center, rgb(26 28 70 / 0.08) 1px, transparent 1.4px);
+  background-image: radial-gradient(circle at center, rgb(17 18 51 / 0.07) 1px, transparent 1.4px);
   background-size: 32px 32px;
+}
+
+
+/* Midnight surfaces: film grain + soft brand glows (the depth that separates
+   a premium dark section from flat navy). Apply `grain` to the section. */
+@utility grain {
+  position: relative;
+  isolation: isolate;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.07;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+}
+@utility glow-brand {
+  background-image:
+    radial-gradient(60% 50% at 12% 0%, rgb(231 172 0 / 0.14), transparent 70%),
+    radial-gradient(55% 60% at 100% 100%, rgb(32 31 133 / 0.55), transparent 70%);
+}
+/* The client pinwheel as a 2px signature stripe */
+@utility pinwheel-stripe {
+  background: linear-gradient(90deg, var(--color-yellow-400) 0 25%, var(--color-green-500) 25% 50%, var(--color-blue-500) 50% 75%, var(--color-orange-500) 75% 100%);
+}
+/* One colour grade for every photo/render, so the mixed casts read as one set */
+@utility img-grade {
+  filter: contrast(1.06) saturate(0.9) brightness(1.01);
+}
+
+/* M12 — route transition (React <ViewTransition default="page-wipe">) */
+::view-transition-image-pair(.page-wipe) {
+  background: var(--color-porcelain);
+}
+::view-transition-old(.page-wipe) {
+  animation: vt-out 420ms var(--ease-route) both;
+}
+::view-transition-new(.page-wipe) {
+  animation: vt-in 900ms var(--ease-out-expo) 120ms both;
+}
+@keyframes vt-out {
+  to {
+    opacity: 0;
+    transform: translateY(-28px) scale(0.985);
+  }
+}
+@keyframes vt-in {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(.page-wipe),
+  ::view-transition-new(.page-wipe) {
+    animation: none;
+  }
+}
+
+/* M9 — partner logo marquee: 4 copies, slides one half-width (2 copies) per loop */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 48s linear infinite;
+}
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Placeholder annotations + content slots are hidden for visitors; add
+   ?annotations=on for internal review. */
+html:not([data-annotations="on"]) .slot-annotation {
+  display: none !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -340,6 +455,15 @@ html.lenis body {
     clip-path: inset(0 0 0 0);
   }
 }
+/* §09 camera drift: a slow breathing tilt over the official plan */
+@keyframes tour-drift {
+  from {
+    transform: rotateX(9deg) rotateZ(-1.2deg) scale(1);
+  }
+  to {
+    transform: rotateX(15deg) rotateZ(1.2deg) scale(1.035);
+  }
+}
 @keyframes orbit {
   from {
     transform: perspective(1600px) rotateX(58deg) rotateZ(-14deg);
@@ -349,14 +473,41 @@ html.lenis body {
   }
 }
 
-.intro-rise {
-  display: block;
-  animation: rise 1s var(--ease-out-expo) both;
-  animation-delay: var(--d, 0ms);
+/* Route spine nodes (components/navigation/RouteSpine) */
+.route-node {
+  position: absolute;
+  left: 0;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 9999px;
+  border: 1.5px solid rgb(17 18 51 / 0.28);
+  background: var(--color-paper);
+  transition: background-color 0.3s, border-color 0.3s, transform 0.3s var(--ease-out-expo);
 }
-.intro-fade {
-  animation: fade-up 0.9s var(--ease-out-expo) both;
-  animation-delay: var(--d, 0ms);
+.route-node[data-on="1"] {
+  border-color: var(--color-yellow-400);
+  background: var(--color-yellow-400);
+  transform: scale(1.2);
+}
+.route-node-end {
+  width: 15px;
+  height: 15px;
+  margin: -7.5px 0 0 -7.5px;
+  border-width: 2px;
+}
+.route-node-end[data-on="1"] {
+  box-shadow: 0 0 0 6px rgb(231 172 0 / 0.22);
+}
+
+/* Hover lift for tiles and cards that are not links themselves */
+.lift {
+  transition: transform 0.45s var(--ease-out-expo), box-shadow 0.45s var(--ease-out-expo);
+}
+.lift:hover,
+.lift:focus-within {
+  transform: translateY(-4px);
+  box-shadow: 0 2px 4px rgb(17 18 51 / 0.05), 0 18px 36px -12px rgb(17 18 51 / 0.2);
 }
 
 /* Icons redraw on hover — purposeful "animated iconography" */
@@ -385,10 +536,6 @@ html.lenis body {
   transform: translateX(6px);
 }
 
-/* Annotation toggle (?annotations=off) — hides asset-slot labels for clean client screenshots */
-html[data-annotations="off"] .slot-annotation {
-  display: none !important;
-}
 
 /* Reduced motion — everything renders in its final state */
 @media (prefers-reduced-motion: reduce) {
@@ -413,7 +560,7 @@ html[data-annotations="off"] .slot-annotation {
 }
 .bv-grow rect {
   fill: transparent;
-  stroke: rgb(26 28 70 / 0.3);
+  stroke: rgb(17 18 51 / 0.3);
   transition: fill 0.4s, stroke 0.4s;
 }
 .bv-grow rect[data-first="true"] {
@@ -422,8 +569,8 @@ html[data-annotations="off"] .slot-annotation {
 }
 .group:hover .bv-grow rect,
 .is-on .bv-grow rect {
-  fill: var(--color-blue-500);
-  stroke: var(--color-blue-500);
+  fill: var(--color-indigo-700);
+  stroke: var(--color-indigo-700);
 }
 .group:hover .bv-grow rect[data-first="true"],
 .is-on .bv-grow rect[data-first="true"] {

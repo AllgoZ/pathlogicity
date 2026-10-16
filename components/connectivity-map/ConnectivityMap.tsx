@@ -3,11 +3,11 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import type { Destination, Mode } from "@/lib/content/types";
 import { gsap, MQ, ScrollTrigger } from "@/lib/motion/gsap";
-import { useIsoLayoutEffect } from "@/lib/motion/hooks";
+import { useIsoLayoutEffect, useMotion } from "@/lib/motion/hooks";
 import { applyRouteProgress } from "@/lib/motion/route";
 import { Icon } from "@/components/ui/Icon";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { MAP, ROUTES, SITE, VIEWS, type Level } from "./mapGeometry";
+import { ESTABLISH, MAP, ROUTES, SITE, VIEWS, type Level } from "./mapGeometry";
 
 const MODES: { id: Mode | "all"; label: string }[] = [
   { id: "all", label: "All" },
@@ -50,6 +50,7 @@ export function ConnectivityMap({ destinations }: { destinations: Destination[] 
   const head = useRef<SVGGElement>(null);
   const vb = useRef<[number, number, number, number]>([...VIEWS.map]);
   const tl = useRef<gsap.core.Timeline | null>(null);
+  const cam = useRef<gsap.core.Tween | null>(null);
   const [level, setLevel] = useState<Level>("map");
   const [mode, setMode] = useState<Mode | "all">("all");
   const [selected, setSelected] = useState<string | null>(null);
@@ -76,6 +77,10 @@ export function ConnectivityMap({ destinations }: { destinations: Destination[] 
 
   const flyTo = useCallback(
     (target: Level, then?: () => void) => {
+      // any interaction hands the camera over from the scroll-driven establishing shot
+      cam.current?.scrollTrigger?.kill();
+      cam.current?.kill();
+      cam.current = null;
       tl.current?.kill();
       const to = VIEWS[target];
       setLevel(target);
@@ -126,37 +131,60 @@ export function ConnectivityMap({ destinations }: { destinations: Destination[] 
     if (!selected) applyRouteProgress(0, { path: measure.current, trail: mask.current, head: head.current });
   }, [selected]);
 
-  // Intro: routes fade in one by one the first time the map is seen
-  useIsoLayoutEffect(() => {
-    if (!section.current) return;
-    const mm = gsap.matchMedia(section.current);
+  // M8 — Intro: (1) an establishing shot pulls back from the site to the region as the
+  // map scrolls in; (2) a gold trace draws each route in turn, and the route settles
+  // in beneath it. Any click hands the camera to the user (see flyTo).
+  useMotion(section, (mm) => {
     mm.add(MQ.motion, () => {
-      const routes = svg.current?.querySelectorAll("[data-base-route]");
-      if (!routes) return;
-      gsap.set(routes, { opacity: 0 });
-      const st = ScrollTrigger.create({
-        trigger: svg.current,
-        start: "top 70%",
-        once: true,
-        onEnter: () => gsap.to(routes, { opacity: 1, duration: 0.8, stagger: 0.12, ease: "power2.out", clearProps: "opacity" }),
+      const o = { x: ESTABLISH[0], y: ESTABLISH[1], w: ESTABLISH[2], h: ESTABLISH[3] };
+      vb.current = [...ESTABLISH];
+      applyView();
+      cam.current = gsap.to(o, {
+        x: VIEWS.map[0],
+        y: VIEWS.map[1],
+        w: VIEWS.map[2],
+        h: VIEWS.map[3],
+        ease: "none",
+        onUpdate: () => {
+          vb.current = [o.x, o.y, o.w, o.h];
+          applyView();
+        },
+        scrollTrigger: { trigger: svg.current, start: "top 90%", end: "center 55%", scrub: 0.6 },
       });
-      return () => st.kill();
+
+      const routes = gsap.utils.toArray<SVGGElement>("[data-base-route]", svg.current);
+      const traces = gsap.utils.toArray<SVGPathElement>("[data-trace]", svg.current);
+      gsap.set(routes, { opacity: 0 });
+      gsap.set(traces, { strokeDashoffset: 1, opacity: 1 });
+      const draw = gsap.timeline({ paused: true });
+      traces.forEach((t, i) => {
+        draw
+          .to(t, { strokeDashoffset: 0, duration: 0.9, ease: "power2.inOut" }, i * 0.28)
+          .to(routes[i], { opacity: 1, duration: 0.6, clearProps: "opacity" }, i * 0.28 + 0.6)
+          .to(t, { opacity: 0, duration: 0.6 }, i * 0.28 + 0.8);
+      });
+      const st = ScrollTrigger.create({ trigger: svg.current, start: "top 55%", once: true, onEnter: () => draw.play() });
+      return () => {
+        st.kill();
+        draw.kill();
+        vb.current = [...VIEWS.map];
+        applyView();
+      };
     });
-    return () => mm.revert();
-  }, []);
+  }, [applyView]);
 
   const activeGeom = selected ? ROUTES[selected] : null;
   const shown = destinations.filter((d) => ROUTES[d.id] && (mode === "all" || d.mode === mode));
 
   return (
-    <section ref={section} id="connectivity" data-stage="understand" aria-labelledby="connectivity-title" className="relative overflow-hidden bg-canvas section-pad">
+    <section ref={section} id="connectivity" data-stage="understand" aria-labelledby="connectivity-title" className="relative overflow-hidden bg-porcelain section-pad">
       <div className="shell grid-12 gap-y-8">
         <SectionHeader
           className="col-span-4 sm:col-span-8 lg:col-span-7"
           index="07"
           chapter="Solutions · Connectivity"
           id="connectivity-title"
-          lines={["Road. Rail.", "Air. Ports."]}
+          lines={["Road. Rail.", "Air. *Ports.*"]}
           body="Located in the northwest quadrant of Bengaluru, adjacent to the STRR (NH 648) — the only facility of its kind in the region. Select a destination to trace its route."
         />
         <ul className="col-span-4 self-end sm:col-span-8 lg:col-span-4 lg:col-start-9" aria-label="Line legend">
@@ -177,7 +205,7 @@ export function ConnectivityMap({ destinations }: { destinations: Destination[] 
       <div className="shell mt-12 grid-12 gap-y-6 lg:mt-14">
         {/* Map — the client's own location map with the route overlay */}
         <div className="col-span-4 sm:col-span-8 lg:col-span-7">
-          <div className="relative overflow-hidden border border-ink/10 bg-paper-2 shadow-[0_24px_60px_-32px_rgb(26_28_70/0.35)]" style={{ aspectRatio: `${MAP.w} / ${MAP.h}` }}>
+          <div className="relative overflow-hidden rounded-[2px] bg-paper-2 shadow-[var(--shadow-card)]" style={{ aspectRatio: `${MAP.w} / ${MAP.h}` }}>
             <svg
               ref={svg}
               className="absolute inset-0 h-full w-full"
@@ -209,9 +237,13 @@ export function ConnectivityMap({ destinations }: { destinations: Destination[] 
                 const r = ROUTES[d.id];
                 const dim = selected !== null && selected !== d.id;
                 return (
-                  <g key={d.id} data-base-route className="transition-opacity duration-500" opacity={dim ? 0.12 : selected ? 0 : 0.55}>
-                    <path d={r.d} style={casing(5)} />
-                    <path d={r.d} style={modeStroke(r.mode, 2.2)} />
+                  <g key={d.id}>
+                    <g data-base-route className="transition-opacity duration-500" opacity={dim ? 0.12 : selected ? 0 : 0.55}>
+                      <path d={r.d} style={casing(5)} />
+                      <path d={r.d} style={modeStroke(r.mode, 2.2)} />
+                    </g>
+                    {/* M8 intro trace — drawn once, then fades */}
+                    <path data-trace d={r.d.split(" M ")[0]} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1} opacity={0} fill="none" stroke="var(--color-yellow-400)" strokeLinecap="round" style={{ strokeWidth: u(3.5) }} />
                   </g>
                 );
               })}
@@ -289,9 +321,9 @@ export function ConnectivityMap({ destinations }: { destinations: Destination[] 
 
         {/* Route planner */}
         <div className="col-span-4 sm:col-span-8 lg:col-span-5">
-          <div className="flex h-full flex-col border border-ink/10 bg-paper shadow-[0_24px_60px_-36px_rgb(26_28_70/0.3)]">
+          <div className="card flex h-full flex-col overflow-hidden">
             <div className="border-b border-ink/10 px-5 py-4">
-              <p className="t-micro text-blue-500">Route planner</p>
+              <p className="t-micro text-indigo-700">Route planner</p>
               <div className="no-scrollbar mt-3 flex gap-1 overflow-x-auto" role="group" aria-label="Filter by mode">
                 {MODES.map((m) => (
                   <button
@@ -312,8 +344,8 @@ export function ConnectivityMap({ destinations }: { destinations: Destination[] 
                 const on = selected === d.id;
                 return (
                   <li key={d.id} className="border-b border-ink/10">
-                    <button type="button" aria-pressed={on} onClick={() => select(d.id)} className={`group flex w-full items-center gap-4 px-5 py-3 text-left transition-colors ${on ? "bg-yellow-400 text-ink" : "hover:bg-canvas"}`}>
-                      <Icon name={MODE_ICON[d.mode]} size={20} className={on ? "" : "text-blue-500"} />
+                    <button type="button" aria-pressed={on} onClick={() => select(d.id)} className={`group flex w-full items-center gap-4 px-5 py-3 text-left transition-colors ${on ? "bg-yellow-400 text-ink" : "hover:bg-porcelain"}`}>
+                      <Icon name={MODE_ICON[d.mode]} size={20} className={on ? "" : "text-indigo-700"} />
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-[0.9375rem] font-bold text-ink">{d.name}</span>
                         {d.subtitle ? <span className={`block text-[0.8125rem] ${on ? "text-ink/75" : "text-steel-500"}`}>{d.subtitle}</span> : null}
@@ -325,10 +357,10 @@ export function ConnectivityMap({ destinations }: { destinations: Destination[] 
               })}
             </ul>
 
-            <div className="border-t border-ink/10 bg-canvas px-5 py-5" aria-live="polite">
+            <div className="border-t border-ink/10 bg-porcelain px-5 py-5" aria-live="polite">
               {dest ? (
                 <>
-                  <p className="t-micro text-blue-500">Selected route</p>
+                  <p className="t-micro text-indigo-700">Selected route</p>
                   <p className="t-s mt-2 text-ink">{dest.name}</p>
                   <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3">
                     <Row k="Mode" v={dest.mode} />

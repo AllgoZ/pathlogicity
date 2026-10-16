@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { RevealLines } from "./Reveal";
+import { Reveal, RevealLines } from "./Reveal";
 
 /**
  *  03 /  EXPLORE PATH LOGICITY      ← mono index + chapter
@@ -32,7 +32,7 @@ export function SectionHeader({
   return (
     <header className={className}>
       <p className={`t-label flex items-center gap-3 ${tone === "light" ? "text-ink" : "text-paper"}`}>
-        <span className={tone === "light" ? "text-blue-500" : "text-yellow-400"}>{index} /</span>
+        <span data-idx className={`shrink-0 whitespace-nowrap ${tone === "light" ? "text-indigo-700" : "text-yellow-400"}`}>{index} /</span>
         <span>{chapter}</span>
       </p>
       <RevealLines
@@ -41,7 +41,11 @@ export function SectionHeader({
         lineClassNames={lineClassNames}
         className={`${size === "xl" ? "t-xl" : "t-l"} mt-5 ${tone === "light" ? "text-ink" : "text-paper"}`}
       />
-      {body ? <div className={`t-body-l mt-5 max-w-[48ch] ${muted}`}>{body}</div> : null}
+      {body ? (
+        <Reveal y={18} start="top 88%">
+          <div className={`t-body-l mt-5 max-w-[48ch] ${muted}`}>{body}</div>
+        </Reveal>
+      ) : null}
     </header>
   );
 }

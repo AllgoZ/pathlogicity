@@ -13,6 +13,17 @@ export function scalePath(d: string, w: number, h: number) {
   });
 }
 
+/** getTotalLength() is expensive on long curves; measure once per path geometry (Phase 4 perf). */
+const lengths = new WeakMap<SVGPathElement, { d: string | null; len: number }>();
+function totalLength(path: SVGPathElement) {
+  const d = path.getAttribute("d");
+  const hit = lengths.get(path);
+  if (hit && hit.d === d) return hit.len;
+  const len = path.getTotalLength();
+  lengths.set(path, { d, len });
+  return len;
+}
+
 /**
  * Applies progress (0–1) to a route made of: trail path, comet path, head element.
  * Trail & comet use pathLength="1".
@@ -32,7 +43,7 @@ export function applyRouteProgress(
     comet.style.strokeDashoffset = String(-s);
   }
   if (head) {
-    const len = path.getTotalLength();
+    const len = totalLength(path);
     const pt = path.getPointAtLength(t * len);
     if (head instanceof HTMLElement) {
       head.style.transform = `translate3d(${pt.x}px, ${pt.y}px, 0)`;

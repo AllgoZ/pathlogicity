@@ -18,8 +18,68 @@ type Props = {
   showMarkers?: boolean;
   /** Render as a nested <svg> with intrinsic size (for use inside a transformed parent) */
   nested?: boolean;
+  /** the SURFACE the plan sits on: light sections (default) or midnight */
+  tone?: "light" | "dark" | "tour";
   className?: string;
 };
+
+const PALETTE = {
+  light: {
+    hatch: "rgb(26 28 70 / 0.07)",
+    grid: "rgb(26 28 70 / 0.06)",
+    rail: "rgb(32 31 133 / 0.3)",
+    boundary: "rgb(26 28 70 / 0.4)",
+    roadBase: "rgb(26 28 70 / 0.1)",
+    roadDash: "rgb(26 28 70 / 0.35)",
+    roadDashOn: "rgb(180 132 0)",
+    zone: "rgb(32 31 133 / 0.07)",
+    zoneOn: "rgb(32 31 133 / 0.85)",
+    green: "rgb(68 158 53 / 0.22)",
+    greenOn: "rgb(68 158 53 / 0.7)",
+    stroke: "rgb(26 28 70 / 0.32)",
+    detail: "rgb(26 28 70 / 0.2)",
+    gateFill: "var(--color-paper)",
+    gateStroke: "var(--color-ink)",
+    gateMark: "var(--color-indigo-700)",
+  },
+  /** the Logicity360 preview: the light palette with stronger zone fills and strokes so the showpiece reads on white */
+  tour: {
+    hatch: "rgb(26 28 70 / 0.1)",
+    grid: "rgb(26 28 70 / 0.08)",
+    rail: "rgb(32 31 133 / 0.5)",
+    boundary: "rgb(26 28 70 / 0.5)",
+    roadBase: "rgb(26 28 70 / 0.14)",
+    roadDash: "rgb(26 28 70 / 0.4)",
+    roadDashOn: "rgb(180 132 0)",
+    zone: "rgb(32 31 133 / 0.16)",
+    zoneOn: "rgb(32 31 133 / 0.85)",
+    green: "rgb(68 158 53 / 0.35)",
+    greenOn: "rgb(68 158 53 / 0.75)",
+    stroke: "rgb(26 28 70 / 0.5)",
+    detail: "rgb(26 28 70 / 0.3)",
+    gateFill: "var(--color-paper)",
+    gateStroke: "var(--color-ink)",
+    gateMark: "var(--color-indigo-700)",
+  },
+  dark: {
+    hatch: "rgb(255 255 255 / 0.06)",
+    grid: "rgb(255 255 255 / 0.07)",
+    rail: "rgb(147 187 230 / 0.4)",
+    boundary: "rgb(255 255 255 / 0.5)",
+    roadBase: "rgb(255 255 255 / 0.1)",
+    roadDash: "rgb(255 255 255 / 0.3)",
+    roadDashOn: "var(--color-yellow-400)",
+    zone: "rgb(147 187 230 / 0.16)",
+    zoneOn: "rgb(231 172 0 / 0.32)",
+    green: "rgb(68 158 53 / 0.28)",
+    greenOn: "rgb(68 158 53 / 0.65)",
+    stroke: "rgb(255 255 255 / 0.42)",
+    detail: "rgb(255 255 255 / 0.24)",
+    gateFill: "var(--color-midnight)",
+    gateStroke: "rgb(255 255 255 / 0.85)",
+    gateMark: "var(--color-yellow-400)",
+  },
+} as const;
 
 /** Schematic master plan. Zones light up on hover/selection; others dim. */
 export function PlanSvg({
@@ -38,9 +98,12 @@ export function PlanSvg({
   markerRefs,
   showMarkers = false,
   nested = false,
+  tone = "light",
   className = "",
 }: Props) {
   const focus = hover ?? active;
+  const c = PALETTE[tone];
+  const hatch = `plan-hatch-${tone}`;
   const key = (id: string) => (e: KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
@@ -55,13 +118,13 @@ export function PlanSvg({
       height={nested ? PLAN_H : undefined}
       className={nested ? className : `block h-auto w-full ${className}`} fill="none" role={interactive ? "group" : "img"} aria-label="Illustrative schematic of the Path Logicity master plan">
       <defs>
-        <pattern id="plan-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-          <path d="M0 0v8" stroke="rgb(26 28 70 / 0.07)" strokeWidth="1" />
+        <pattern id={hatch} width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <path d="M0 0v8" stroke={c.hatch} strokeWidth="1" />
         </pattern>
       </defs>
 
       {showGrid ? (
-        <g aria-hidden stroke="rgb(26 28 70 / 0.06)" strokeWidth="1">
+        <g aria-hidden stroke={c.grid} strokeWidth="1">
           {Array.from({ length: 11 }).map((_, i) => (
             <path key={`v${i}`} d={`M ${i * 100} 0 V ${PLAN_H}`} />
           ))}
@@ -72,10 +135,10 @@ export function PlanSvg({
       ) : null}
 
       {/* rail line beyond the site */}
-      <path aria-hidden d="M 0 124 L 1000 102" stroke="rgb(0 102 177 / 0.4)" strokeWidth="1" strokeDasharray="2 6" />
+      <path aria-hidden d="M 0 124 L 1000 102" stroke={c.rail} strokeWidth="1" strokeDasharray="2 6" />
 
       {/* site boundary */}
-      <path aria-hidden d={boundary} fill="url(#plan-hatch)" stroke="rgb(26 28 70 / 0.4)" strokeWidth="1.2" strokeDasharray="10 5" />
+      <path aria-hidden d={boundary} fill={`url(#${hatch})`} stroke={c.boundary} strokeWidth="1.2" strokeDasharray="10 5" />
 
       {ZONE_ORDER.map((id) => {
         const g = zoneGeom[id];
@@ -102,15 +165,15 @@ export function PlanSvg({
             {isRoad ? (
               <>
                 <path d={g.d} stroke="transparent" strokeWidth="22" />
-                <path d={g.d} stroke={isFocus ? "rgb(231 172 0 / 0.45)" : "rgb(26 28 70 / 0.1)"} strokeWidth="9" className="transition-[stroke] duration-300" />
-                <path d={g.d} stroke={isFocus ? "rgb(180 132 0)" : "rgb(26 28 70 / 0.35)"} strokeWidth="1" strokeDasharray="6 6" className="transition-[stroke] duration-300" />
+                <path d={g.d} stroke={isFocus ? "rgb(231 172 0 / 0.45)" : c.roadBase} strokeWidth="9" className="transition-[stroke] duration-300" />
+                <path d={g.d} stroke={isFocus ? c.roadDashOn : c.roadDash} strokeWidth="1" strokeDasharray="6 6" className="transition-[stroke] duration-300" />
               </>
             ) : (
               <>
                 <path
                   d={g.d}
-                  fill={isFocus ? (id === "green" ? "rgb(68 158 53 / 0.7)" : "rgb(32 31 133 / 0.85)") : id === "green" ? "rgb(68 158 53 / 0.22)" : "rgb(0 102 177 / 0.1)"}
-                  stroke={isFocus ? "var(--color-yellow-400)" : "rgb(26 28 70 / 0.32)"}
+                  fill={isFocus ? (id === "green" ? c.greenOn : c.zoneOn) : id === "green" ? c.green : c.zone}
+                  stroke={isFocus ? "var(--color-yellow-400)" : c.stroke}
                   strokeWidth={isFocus ? 1.5 : 1}
                   className="transition-[fill,stroke] duration-300"
                 />
@@ -118,7 +181,7 @@ export function PlanSvg({
                   <path
                     aria-hidden
                     d={g.detail}
-                    stroke={isFocus ? "rgb(255 255 255 / 0.7)" : "rgb(26 28 70 / 0.2)"}
+                    stroke={isFocus ? "rgb(255 255 255 / 0.7)" : c.detail}
                     strokeWidth="1"
                     fill={id === "icd" || id === "commercial" ? (isFocus ? "rgb(255 255 255 / 0.12)" : "none") : "none"}
                     className="pointer-events-none transition-[stroke] duration-300"
@@ -133,15 +196,15 @@ export function PlanSvg({
 
       {/* gate */}
       <g aria-hidden transform={`translate(${GATE.x} ${GATE.y})`}>
-        <rect x="-9" y="-9" width="18" height="18" fill="var(--color-paper)" stroke="var(--color-ink)" />
-        <path d="M -4 0 H 4 M 0 -4 V 4" stroke="var(--color-blue-500)" strokeWidth="1.5" />
+        <rect x="-9" y="-9" width="18" height="18" fill={c.gateFill} stroke={c.gateStroke} />
+        <path d="M -4 0 H 4 M 0 -4 V 4" stroke={c.gateMark} strokeWidth="1.5" />
       </g>
 
       {/* route from gate to the selected zone */}
       {routeD !== undefined ? (
         <g aria-hidden className="pointer-events-none">
           <path ref={routeRef} d={routeD} stroke="none" />
-          <path ref={routeTrailRef} d={routeD} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1} stroke="var(--color-blue-500)" strokeWidth="2.5" strokeLinecap="round" />
+          <path ref={routeTrailRef} d={routeD} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1} stroke="var(--color-indigo-700)" strokeWidth="2.5" strokeLinecap="round" />
           <g ref={headRef} opacity={0}>
             <circle r="11" fill="rgb(231 172 0 / 0.3)" />
             <circle r="4.5" fill="var(--color-yellow-400)" />

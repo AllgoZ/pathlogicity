@@ -16,6 +16,9 @@ export const VIEWS: Record<Level, [number, number, number, number]> = {
   site: [300, 170, 420, 392],
 };
 
+/** M8 establishing shot: the camera starts close on the site and pulls back to the region as you scroll in */
+export const ESTABLISH: [number, number, number, number] = [214, 110, 600, 560];
+
 type Pt = [number, number];
 
 /** Catmull-Rom → cubic Bézier, so hand-placed road points read as smooth roads. */

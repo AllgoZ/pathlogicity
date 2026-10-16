@@ -44,13 +44,14 @@ export function Sustainability({ data }: { data: Homepage["sustainability"] }) {
   });
 
   return (
-    <section ref={section} id="sustainability" data-stage="believe" aria-labelledby="sus-title" className="relative overflow-hidden bg-canvas text-ink section-pad">
+    <section ref={section} id="sustainability" data-stage="believe" aria-labelledby="sus-title" className="relative overflow-hidden bg-porcelain text-ink section-pad">
+      <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(45%_45%_at_28%_62%,rgb(68_158_53/0.09),transparent_70%)]" />
       <div className="shell grid-12 gap-y-10">
         <div className="col-span-4 sm:col-span-8 lg:col-span-8">
           <p className="t-label flex items-center gap-3">
-            <span className="text-green-700">08 /</span> Sustainability · ESG
+            <span data-idx className="text-green-700">08 /</span> Sustainability · ESG
           </p>
-          <RevealLines id="sus-title" lines={data.headline} lineClassNames={["", "text-green-700"]} className="t-l mt-5 text-ink" />
+          <RevealLines id="sus-title" lines={data.headline} lineClassNames={["", "[--accent-color:var(--color-green-700)]"]} className="t-l mt-5 text-ink" />
         </div>
         <p className="t-body-l col-span-4 self-end text-steel-700 sm:col-span-8 lg:col-span-3 lg:col-start-10">
           Infrastructure, efficiency and sustainability — engineered to work together.
@@ -91,7 +92,7 @@ export function Sustainability({ data }: { data: Homepage["sustainability"] }) {
                 sizes="120px"
                 className="h-[clamp(84px,14vw,128px)] w-auto"
               />
-              <p className="mt-3 font-display text-[clamp(1.75rem,3.6vw,2.75rem)] font-extrabold leading-none tracking-[-0.02em] text-green-700">{data.certification.level}</p>
+              <p className="mt-3 font-display text-[clamp(1.75rem,3.6vw,2.75rem)] font-semibold leading-none tracking-[-0.02em] text-green-700">{data.certification.level}</p>
               <p className="t-label mt-2 text-ink">{data.certification.type}</p>
             </div>
 

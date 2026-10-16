@@ -18,7 +18,9 @@ export const getHomepage = () => ({
   milestones: home.milestones,
   statusLastUpdated: home.statusLastUpdated,
   pathGroup: home.pathGroup,
+  renders: home.renders,
   glance: home.glance,
+  amenities: home.amenities,
   destinations: home.destinations,
   gatiShakti: home.gatiShakti,
   sustainability: home.sustainability,
@@ -28,5 +30,6 @@ export const getHomepage = () => ({
 });
 
 export const getEnquiry = () => home.enquiry;
+export const getBlogs = () => home.blogs;
 
 export type Homepage = ReturnType<typeof getHomepage>;

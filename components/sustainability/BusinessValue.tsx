@@ -88,14 +88,14 @@ export function BusinessValue({ benefits }: { benefits: Benefit[] }) {
   });
 
   return (
-    <section ref={section} id="business-value" data-stage="believe" aria-labelledby="bv-title" className="relative bg-canvas">
-      <div ref={panel} className="relative bg-canvas-2 section-pad">
+    <section ref={section} id="business-value" data-stage="believe" aria-labelledby="bv-title" className="relative bg-porcelain">
+      <div ref={panel} className="relative bg-stone section-pad">
         <div className="shell grid-12 gap-y-8">
           <div className="col-span-4 sm:col-span-8 lg:col-span-8">
             <p className="t-label text-ink">
-              <span className="text-blue-500">08.1 /</span> Business value
+              <span data-idx className="text-indigo-700">08.1 /</span> Business value
             </p>
-            <RevealLines id="bv-title" lines={["Infrastructure", "that delivers", "business value"]} className="t-xl mt-5 text-ink" />
+            <RevealLines id="bv-title" lines={["Infrastructure", "that delivers", "*business value*"]} className="t-xl mt-5 text-ink" />
           </div>
           <div className="col-span-4 flex items-end sm:col-span-8 lg:col-span-3 lg:col-start-10 lg:justify-end">
             <ArrowLink href="/sustainability#business-value">Explore sustainability</ArrowLink>

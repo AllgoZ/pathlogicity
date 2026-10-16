@@ -1,15 +1,18 @@
 import type { Metadata, Viewport } from "next";
+import { ViewTransition } from "react";
 import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import { getEnquiry, getNavigation, getSettings } from "@/lib/content";
 import { Nav } from "@/components/navigation/Nav";
 import { JourneyRail } from "@/components/navigation/JourneyRail";
+import { RouteSpine } from "@/components/navigation/RouteSpine";
 import { MobileActionBar } from "@/components/navigation/MobileActionBar";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
+import { SurfaceMorph } from "@/components/providers/SurfaceMorph";
 import { EnquireBlock } from "@/components/contact/EnquireBlock";
 import { Footer } from "@/components/footer/Footer";
 
-/** Open Sans — the client's brand/site font (pathlogicity.com). Variable 300–800. */
+/** One typeface: Open Sans, the client's brand/site font (client round 2 — fonts). */
 const openSans = Open_Sans({ subsets: ["latin"], variable: "--font-open-sans", display: "swap" });
 
 export const metadata: Metadata = {
@@ -21,12 +24,12 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: "#f8f8f5",
   colorScheme: "light",
 };
 
-/** ?annotations=off hides asset-slot labels for clean client screenshots */
-const annotationsScript = `try{if(new URLSearchParams(location.search).get('annotations')==='off')document.documentElement.dataset.annotations='off'}catch(e){}`;
+/** Placeholder labels are hidden for visitors; ?annotations=on shows them for internal review */
+const annotationsScript = `try{if(new URLSearchParams(location.search).get('annotations')==='on')document.documentElement.dataset.annotations='on'}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const settings = getSettings();
@@ -37,10 +40,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <SmoothScroll />
+        <SurfaceMorph />
         <Nav items={getNavigation()} settings={settings} />
-        <main id="main">{children}</main>
+        {/* M12 — route changes: old page lifts away, new page wipes up over a light curtain */}
+        <ViewTransition default="page-wipe">
+          <main id="main">{children}</main>
+        </ViewTransition>
         <EnquireBlock content={getEnquiry()} settings={settings} />
         <Footer navigation={getNavigation()} settings={settings} />
+        <RouteSpine />
         <JourneyRail />
         <MobileActionBar settings={settings} />
       </body>

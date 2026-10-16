@@ -15,6 +15,15 @@ const HERO_ROUTE =
   "M -2 66 C 16 66, 26 54, 44 52 C 60 50, 66 32, 76 31 C 86 30, 95 40, 94 56 C 93 72, 72 79, 48 81 C 26 83, 8 84, 6 92 L 6 102";
 
 /**
+ * Phones / tablets: the line lives in the clear window of the render between the headline and the location
+ * bar (so it never crosses text), sweeps across the image and leaves at the right. Coordinates are 0–100
+ * within that window.
+ */
+const MOBILE_ROUTE = "M -2 66 C 16 28, 34 82, 56 50 C 72 28, 88 44, 102 18";
+/** the site marker sits where the first segment ends (56%, 50%) */
+const MOBILE_PIN = { x: 56, y: 50, at: 0.5 };
+
+/**
  * §01 — Hero. The render runs full-bleed behind the copy under a porcelain wash; the location, intro and
  * actions sit on a bottom bar. On desktop the hero pins briefly as you scroll: the headline lifts away, the
  * reticle shrinks and the route line draws out across the image and down into §02. No opening animation.
@@ -24,6 +33,8 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
   const media = useRef<HTMLDivElement>(null);
   const cover = useRef<HTMLDivElement>(null);
   const route = useRef<RouteHandle>(null);
+  const mroute = useRef<RouteHandle>(null);
+  const pin = useRef<HTMLSpanElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const [paused, setPaused] = useState(false);
 
@@ -61,8 +72,22 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
 
     mm.add(MQ.mobile, () => {
       const o = { p: 0 };
-      route.current?.set(0);
-      gsap.to(o, { p: 1, duration: 2.4, delay: 1.1, ease: "power2.inOut", onUpdate: () => route.current?.set(o.p) });
+      let pinned = false;
+      mroute.current?.set(0);
+      gsap.set(pin.current, { opacity: 0, scale: 0.4 });
+      gsap.to(o, {
+        p: 1,
+        duration: 2.2,
+        delay: 0.5,
+        ease: "power2.inOut",
+        onUpdate: () => {
+          mroute.current?.set(o.p);
+          if (!pinned && o.p >= MOBILE_PIN.at) {
+            pinned = true;
+            gsap.to(pin.current, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(2)" });
+          }
+        },
+      });
       gsap.to(media.current, {
         scale: 1.06,
         ease: "none",
@@ -72,6 +97,8 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
 
     mm.add("(prefers-reduced-motion: reduce)", () => {
       route.current?.set(1);
+      mroute.current?.set(1);
+      gsap.set(pin.current, { opacity: 1, scale: 1 });
     });
   });
 
@@ -115,7 +142,7 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
         <div aria-hidden className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-porcelain/80 to-transparent" />
         <div ref={cover} aria-hidden className="absolute inset-0 z-[15] bg-porcelain opacity-0" />
 
-        <Route ref={route} d={HERO_ROUTE} initial={0} base={false} tone="light" trail="blue" className="z-[16]" strokeWidth={1.5} />
+        <Route ref={route} d={HERO_ROUTE} initial={0} base={false} tone="light" trail="blue" className="z-[16] max-lg:hidden" strokeWidth={1.5} />
 
         {/* Site reticle — the location becomes a place you are looking at */}
         <div data-hero-reticle aria-hidden className="absolute left-[76%] top-[31%] z-10 hidden -translate-x-1/2 -translate-y-1/2 lg:block">
@@ -143,6 +170,15 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
               </span>
             ))}
           </h1>
+
+          {/* phones / tablets: the clear window of the render between the headline and the location bar */}
+          <div aria-hidden className="relative -mx-[var(--margin)] min-h-[72px] flex-1 lg:hidden">
+            <Route ref={mroute} d={MOBILE_ROUTE} initial={0} base={false} tone="light" trail="blue" strokeWidth={1.5} />
+            <span ref={pin} className="absolute z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 opacity-0" style={{ left: `${MOBILE_PIN.x}%`, top: `${MOBILE_PIN.y}%` }}>
+              <span className="absolute inset-0 rounded-full bg-yellow-400 animate-pulse-soft" />
+              <span className="relative block h-3 w-3 rounded-full border-2 border-paper bg-yellow-400 shadow" />
+            </span>
+          </div>
 
           <div data-hero-hud className="mt-auto">
             <div className="grid-12 gap-y-6 border-t border-ink/15 pt-5 lg:pt-6">

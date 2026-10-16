@@ -1,14 +1,14 @@
 import type { Homepage } from "@/lib/content";
-import type { Partner } from "@/lib/content/types";
+import type { Destination, Partner } from "@/lib/content/types";
 import { ArrowLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Metric } from "@/components/ui/Metric";
-import { MmlpNetwork } from "./MmlpNetwork";
+import { GatiShaktiMap } from "./GatiShaktiMap";
 import { PartnerLogos } from "@/components/ui/PartnerLogos";
 import { Reveal, RevealLines } from "@/components/ui/Reveal";
 
 /** §07b — PM Gati Shakti: the national programme, a typographic equation, and the authorities behind it. Light, with brand-colour numerals. */
-export function GatiShaktiBand({ data, partners }: { data: Homepage["gatiShakti"]; partners: Partner[] }) {
+export function GatiShaktiBand({ data, partners, destinations }: { data: Homepage["gatiShakti"]; partners: Partner[]; destinations: Destination[] }) {
   return (
     <section id="pm-gati-shakti" data-stage="understand" aria-labelledby="gs-title" className="relative overflow-hidden bg-stone text-ink section-pad">
       <div aria-hidden className="pinwheel-stripe absolute inset-x-0 top-0 h-[3px]" />
@@ -37,7 +37,7 @@ export function GatiShaktiBand({ data, partners }: { data: Homepage["gatiShakti"
             </div>
           </Reveal>
           <div className="lg:col-span-7">
-            <MmlpNetwork hubLabel="Bengaluru" />
+            <GatiShaktiMap destinations={destinations} />
           </div>
         </div>
 

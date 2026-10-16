@@ -24,7 +24,7 @@ export default function LogicityAdvantagePage() {
       <div id="solutions">
         <ConnectivityMap destinations={home.destinations} />
       </div>
-      <GatiShaktiBand data={home.gatiShakti} partners={getPartners()} />
+      <GatiShaktiBand data={home.gatiShakti} partners={getPartners()} destinations={home.destinations} />
     </div>
   );
 }

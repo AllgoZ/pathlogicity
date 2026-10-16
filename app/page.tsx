@@ -34,7 +34,7 @@ export default function HomePage() {
       <SpecDrawing glance={home.glance} />
       <Amenities items={home.amenities} />
       <ConnectivityMap destinations={home.destinations} />
-      <GatiShaktiBand data={home.gatiShakti} partners={getPartners()} />
+      <GatiShaktiBand data={home.gatiShakti} partners={getPartners()} destinations={home.destinations} />
       <Sustainability data={home.sustainability} />
       <BusinessValue benefits={home.benefits} />
       <SiteTourPreview data={home.siteTour} />

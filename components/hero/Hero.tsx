@@ -24,9 +24,14 @@ const MOBILE_ROUTE = "M -2 66 C 16 28, 34 82, 56 50 C 72 28, 88 44, 102 18";
 const MOBILE_PIN = { x: 56, y: 50, at: 0.5 };
 
 /**
- * §01 — Hero. The render runs full-bleed behind the copy under a porcelain wash; the location, intro and
- * actions sit on a bottom bar. On desktop the hero pins briefly as you scroll: the headline lifts away, the
- * reticle shrinks and the route line draws out across the image and down into §02. No opening animation.
+ * §01 — Hero. The render (or, once supplied, the Warehouse 17 site photograph) runs full-bleed behind the copy
+ * under a porcelain wash; the location, intro and actions sit on a bottom bar. On desktop the hero pins briefly
+ * as you scroll: the headline lifts away, the reticle shrinks and the route line draws out across the image and
+ * down into §02.
+ *
+ * Banner motion (client round 5), all CSS so nothing flashes before hydration and nothing runs under reduced
+ * motion: the image drifts slowly (`hero-drift`), the headline lines rise through their masks (`hero-rise`), the
+ * bottom bar fades up (`hero-fade`) and the site reticle pings (`hero-ping`).
  */
 export function Hero({ data, settings }: { data: Homepage["hero"]; settings: SiteSettings }) {
   const section = useRef<HTMLElement>(null);
@@ -113,7 +118,7 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
       >
         {/* Media */}
         <div ref={media} className="absolute inset-0 origin-[70%_40%] will-change-transform" data-paused={paused}>
-          <div className="relative isolate h-full w-full overflow-hidden bg-paper-2">
+          <div className="hero-drift relative isolate h-full w-full overflow-hidden bg-paper-2">
             {data.video.src ? (
               <video
                 ref={video}
@@ -153,9 +158,10 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
               <path d="M36 4v16M36 52v16M4 36h16M52 36h16" stroke="currentColor" />
               <circle cx="36" cy="36" r="2.5" fill="currentColor" />
             </svg>
+            <span aria-hidden className="hero-ping absolute left-1/2 top-1/2 block h-[44px] w-[44px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-yellow-400" />
             <span className="absolute left-[60px] top-[12px] block h-px w-14 origin-left -rotate-[28deg] bg-indigo-700/70" />
             <span className="absolute left-[106px] top-[-30px] whitespace-nowrap border-l-2 border-yellow-400 bg-paper/95 px-3 py-2 shadow-lg">
-              <span className="t-micro block text-blue-500">Site</span>
+              <span className="t-micro block text-blue-500">{data.siteLabel}</span>
               <span className="t-label mt-0.5 block text-ink">{data.siteTag}</span>
             </span>
           </div>
@@ -166,7 +172,9 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
           <h1 id="hero-title" className="t-hero max-w-[14ch] text-ink">
             {data.headline.map((line, i) => (
               <span key={line} data-hero-line className={`block overflow-hidden pb-[0.08em] -mb-[0.08em] ${i === data.headline.length - 1 ? "text-indigo-700" : ""}`}>
-                <span className="block">{line.replace(/\*/g, "")}</span>
+                <span className="hero-rise block" style={{ animationDelay: `${120 + i * 110}ms` }}>
+                  {line.replace(/\*/g, "")}
+                </span>
               </span>
             ))}
           </h1>
@@ -181,14 +189,14 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
           </div>
 
           <div data-hero-hud className="mt-auto">
-            <div className="grid-12 gap-y-6 border-t border-ink/15 pt-5 lg:pt-6">
+            <div className="hero-fade grid-12 gap-y-6 border-t border-ink/15 pt-5 lg:pt-6" style={{ animationDelay: "650ms" }}>
               {/* Location anchor */}
               <div className="col-span-4 flex gap-4 sm:col-span-4 lg:col-span-4">
                 <Icon name="crosshair" size={30} className="mt-1 shrink-0 text-blue-500" />
                 <div>
                   <p className="t-micro text-steel-500">Location</p>
-                  <p className="mt-1 text-[clamp(1.375rem,2vw,2rem)] font-extrabold leading-[1.05] tracking-[-0.02em] text-ink">{data.location.primary}</p>
-                  <p className="text-[clamp(1.375rem,2vw,2rem)] font-normal leading-[1.1] tracking-[-0.02em] text-steel-700">{data.location.secondary}</p>
+                  <p className="mt-1 text-[clamp(1.25rem,1.8vw,1.75rem)] font-extrabold leading-[1.05] tracking-[-0.02em] text-ink">{data.location.primary}</p>
+                  <p className="text-[clamp(1.25rem,1.8vw,1.75rem)] font-normal leading-[1.1] tracking-[-0.02em] text-steel-700">{data.location.secondary}</p>
                   <p className="t-micro mt-3 text-steel-500">
                     {data.location.roads.join("  ·  ")}
                     {settings.coordinates ? (
@@ -212,7 +220,7 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
               </div>
             </div>
 
-            <div className="mt-4 flex items-center justify-between lg:mt-5">
+            <div className="hero-fade mt-4 flex items-center justify-between lg:mt-5" style={{ animationDelay: "900ms" }}>
               <p className="t-micro flex items-center gap-3 text-steel-500">
                 <span aria-hidden className="relative block h-4 w-px overflow-hidden bg-ink/15">
                   <span className="absolute left-0 top-0 block h-1.5 w-px bg-yellow-400" style={{ animation: "scroll-cue 2.4s var(--ease-route) infinite" }} />
@@ -231,7 +239,7 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
                   {paused ? "Play film" : "Pause film"}
                 </button>
               ) : (
-                <p className="t-micro px-2 text-steel-500">Illustrative render</p>
+                <p className="t-micro px-2 text-steel-500">{data.sitePhoto ? `${data.siteLabel} · site photograph` : "Illustrative render"}</p>
               )}
             </div>
           </div>

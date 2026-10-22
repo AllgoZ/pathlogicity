@@ -6,7 +6,6 @@ import { gsap, MQ } from "@/lib/motion/gsap";
 import { useMotion } from "@/lib/motion/hooks";
 import { boxIn, useLinks } from "@/lib/motion/useLinks";
 import { ArrowLink } from "@/components/ui/Button";
-import { ContentSlot } from "@/components/ui/ContentSlot";
 import { Metric } from "@/components/ui/Metric";
 import { Reveal } from "@/components/ui/Reveal";
 import { OfficialPlanMap, useZoneTour } from "@/components/master-plan/OfficialPlanMap";
@@ -46,7 +45,6 @@ export function SpecDrawing({ glance }: { glance: Homepage["glance"] }) {
     setHover(id);
   };
   const byId = Object.fromEntries(glance.map((g) => [g.id, g]));
-  const phase1 = byId.phase1;
   const activeZone = active ? ANCHORS[active]?.zone ?? null : null;
 
   const { paths, w, h } = useLinks(stage, (c) =>
@@ -163,16 +161,21 @@ export function SpecDrawing({ glance }: { glance: Homepage["glance"] }) {
         <ul className="order-3 col-span-2 sm:col-span-4 lg:col-span-3 lg:border-l lg:border-ink/10">{RIGHT.map((id) => callout(id, "r"))}</ul>
       </div>
 
-      {/* Phase 1 band */}
+      {/* MMLP concept band */}
       <Reveal className="shell mt-16 lg:mt-24">
         <div className="grid-12 items-end gap-y-6 border-t border-ink/15 pt-10">
           <div className="col-span-4 sm:col-span-4 lg:col-span-5">
-            <p className="t-micro text-indigo-700">Phase 1</p>
-            <Metric data={{ ...phase1, unit: "Acres" }} size="xl" showLabel={false} className="mt-4" />
+            <p className="t-micro text-indigo-700">The MMLP concept</p>
+            <p className="t-xl mt-4 text-ink">
+              One park.
+              <br />
+              <em>Every mode.</em>
+            </p>
           </div>
-          <p className="t-s col-span-4 max-w-[26ch] text-ink sm:col-span-4 lg:col-span-4">{phase1.label}.</p>
+          <p className="t-s col-span-4 max-w-[36ch] text-ink sm:col-span-4 lg:col-span-4">
+            A Multimodal Logistics Park brings road, rail, warehousing, commercial space and an inland container depot into one connected ecosystem.
+          </p>
           <div className="col-span-4 flex flex-col items-start gap-4 sm:col-span-8 lg:col-span-3 lg:items-end">
-            <ContentSlot>Phase 1 boundary — to be supplied</ContentSlot>
             <ArrowLink href="/logicity-advantage">Explore the advantage</ArrowLink>
           </div>
         </div>

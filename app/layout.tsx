@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { ViewTransition } from "react";
-import { Open_Sans } from "next/font/google";
+import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
 import { getEnquiry, getNavigation, getSettings } from "@/lib/content";
 import { Nav } from "@/components/navigation/Nav";
@@ -13,8 +13,12 @@ import { MobileMotion } from "@/components/providers/MobileMotion";
 import { EnquireBlock } from "@/components/contact/EnquireBlock";
 import { Footer } from "@/components/footer/Footer";
 
-/** One typeface: Open Sans, the client's brand/site font (client round 2 — fonts). */
-const openSans = Open_Sans({ subsets: ["latin"], variable: "--font-open-sans", display: "swap" });
+/**
+ * Client round 5 — "a contemporary sans-serif such as Inter/Manrope … bold, architectural headlines":
+ * Manrope carries headlines and numerals, Inter carries body copy and labels.
+ */
+const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope", display: "swap" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 
 export const metadata: Metadata = {
   title: {
@@ -35,7 +39,7 @@ const annotationsScript = `try{if(new URLSearchParams(location.search).get('anno
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const settings = getSettings();
   return (
-    <html lang="en-IN" className={openSans.variable} suppressHydrationWarning>
+    <html lang="en-IN" className={`${manrope.variable} ${inter.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: annotationsScript }} />
       </head>

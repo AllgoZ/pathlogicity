@@ -1,9 +1,10 @@
 # Path Logicity — Architecture
 
 > Technical architecture of the Path Logicity marketing site.
-> **Last updated: 2026-10-16** — reflects `main` at `c8c4086` (round 4 complete, plus the mobile polish,
-> the Gati Shakti map and the amenity images).
+> **Last updated: 2026-10-22** — reflects `main` at `d1e37aa` plus client round 5 (uncommitted at the time of writing:
+> Manrope + Inter, hero banner motion and Warehouse 17 slot, Lorem phases, PATH Group figures/About/verticals, Constra space availability).
 > Design sources, newest first:
+> 0. [`docs/PLAN-CLIENT-ROUND-5.md`](../docs/PLAN-CLIENT-ROUND-5.md) — the latest client feedback and what changed
 > 1. [`docs/REDESIGN-PLAN-R4.md`](../docs/REDESIGN-PLAN-R4.md) — current direction: light theme, one typeface, no opening animation
 > 2. Feature plans: [`PLAN-OFFICIAL-MAP-REUSE`](../docs/PLAN-OFFICIAL-MAP-REUSE.md) · [`PLAN-MOBILE`](../docs/PLAN-MOBILE.md) · [`PLAN-GATI-SHAKTI-MAP`](../docs/PLAN-GATI-SHAKTI-MAP.md)
 > 3. [`docs/CLIENT-CHANGES-PLAN.md`](../docs/CLIENT-CHANGES-PLAN.md) — client round 2 · [`docs/REDESIGN-PLAN.md`](../docs/REDESIGN-PLAN.md) — round 3 (largely superseded) · [`docs/UI-PLAN.md`](../docs/UI-PLAN.md) — original spec
@@ -27,8 +28,8 @@ every section, ending at the enquiry block. The page behaves like the hub it des
   (deep ink, about 4% of the scroll length).
 - **Gold** is the action accent; **indigo** (headings, numerals), **blue** and **green** carry roles.
   The client's four-colour pinwheel is a 3px stripe and appears in data and legends.
-- **One typeface: Open Sans**, the client's brand font. Accent words are colour, not italics.
-- **No opening animation**: no preloader, no intro reveal. Motion is earned by scrolling or interacting.
+- **Two typefaces (round 5): Manrope** for headlines and numerals, **Inter** for body and labels. Accent words are colour, not italics.
+- **No preloader or intro reveal.** The hero banner has quiet ambient motion (slow drift, headline rise, bar fade, reticle ping: CSS only, off under reduced motion). Everything else is earned by scrolling or interacting.
 
 **Fact-safety.** Only client-supplied facts appear as claims. Every unverified fact (coordinates,
 dates, ESG metrics, news, blog posts) is `null`/empty in the content layer and renders a review-only
@@ -48,7 +49,7 @@ placeholder or a designed empty state. Placeholders are hidden from visitors and
 | Scroll scenes | **GSAP 3 + ScrollTrigger** | Route draws, the hero pin, odometers, map cameras, reveals |
 | Smooth scroll | **Lenis** | Mouse and trackpad only; off on touch devices and under reduced motion |
 | Micro-interactions | CSS keyframes + GSAP `quickTo` + the Web Animations API | No second animation library |
-| Fonts | `next/font/google` | **Open Sans only** (`--font-display` and `--font-serif` are aliases of it) |
+| Fonts | `next/font/google` | **Manrope** (`--font-display`, `--font-serif`) + **Inter** (`--font-sans`, `--font-mono`) |
 | Images | `next/image` | AVIF/WebP ([`next.config.ts`](../next.config.ts)) |
 | Server | One route handler | `POST /api/enquiry` (see §4) |
 
@@ -79,8 +80,8 @@ site/
 │  ├─ stats/        ScaleIndex — 400 odometer → 4 branching nodes with hover image previews
 │  ├─ master-plan/  MasterPlan (§03), OfficialPlanMap + useZoneTour (shared), officialZones (GENERATED)
 │  │                PlanSvg + planGeometry — the old schematic, UNUSED
-│  ├─ project-status/ ProjectStatus — sticky viewer (image or MP4) + milestone timeline (Constra parked)
-│  ├─ path-group/   PathGroup (metrics strip), EvolutionLine (timeline)
+│  ├─ project-status/ ProjectStatus — sticky viewer + milestone timeline (Lorem ipsum phases); SpaceAvailability (§04.1: leased/available space + Constra links)
+│  ├─ path-group/   PathGroup (highway photo, metrics, About PATH, track record), PathVerticals (PATH Legacy: the group's verticals)
 │  ├─ gallery/      RendersGallery — native Rail of client renders; phone full-screen viewer
 │  ├─ advantage/    HubOpener, SpecDrawing (§06.1), Amenities (§06.2), GatiShaktiBand (§07.1),
 │  │                GatiShaktiMap (the §07.1 map), MmlpNetwork — the old schematic, UNUSED
@@ -103,6 +104,7 @@ site/
 │  ├─ contours.ts         Generative contour art for AssetSlot placeholders
 │  ├─ enquiry.ts          Enquiry types, industries, `validateEnquiry` — shared by the form and the API
 │  ├─ content/
+│  │  ├─ server.ts        getHomepageWithAssets: the only place that touches `node:fs` (Warehouse 17 hero photo check); server components only
 │  │  ├─ index.ts         getHomepage / getSettings / getNavigation / getEnquiry / getBlogs / getPartners, telHref — CMS swap point
 │  │  └─ types.ts         Content models (mirror the future CMS schema)
 │  └─ motion/
@@ -192,10 +194,10 @@ Components ──props──> lib/content/index.ts ──reads──> content/ho
 
 `:root` also holds `--margin`, `--gutter`, `--line-*` and `--shadow-card`.
 
-### 6.2 Typography (`@utility`) — Open Sans only
-- Headlines at weight 700, slightly tight tracking: `t-hero` (≤ 4rem) · `t-xl` (≤ 3rem) · `t-l` (≤ 2.25rem)
-  · `t-m` · `t-s`; `t-xxl` is the big numeral. Body `t-body-l` 17–19px.
-- Labels (`t-label` 14px, `t-micro` 13px) are **sentence case** with light tracking — no tracked all-caps eyebrows.
+### 6.2 Typography (`@utility`) — Manrope + Inter
+- Headlines in Manrope, weight 800 on the big sizes and 700 below, tight tracking: `t-hero` (≤ 3.625rem) · `t-xl` (≤ 2.75rem) · `t-l` (≤ 2rem)
+  · `t-m` · `t-s`; `t-xxl` is the big numeral. Body in Inter, 16px (`t-body-l` 16–17px).
+- Labels (`t-label` 13px, `t-micro` 12px) are **sentence case** with light tracking — no tracked all-caps eyebrows.
 - Accent words: `em` takes `--accent-color` (indigo by default; gold inside `.on-dark`), normal style and weight.
 
 ### 6.3 Surfaces and utilities
@@ -241,6 +243,7 @@ coalesced `ScrollTrigger.refresh()` runs only when a late scene creates a pin.
 | M11 | Section intro paragraphs fade up | `ui/Reveal`, `ui/SectionHeader` |
 | M12 | Route transitions (`<ViewTransition>`) | `app/layout.tsx` + CSS |
 | M13 | **Route spine** — the page-wide margin line | `navigation/RouteSpine` |
+| M20 | **Hero banner motion**: slow drift on the image, headline lines rise through their masks, the bottom bar fades up, the reticle pings. CSS classes `hero-drift` / `hero-rise` / `hero-fade` / `hero-ping` (no flash before hydration; drift and ping off under reduced motion) | `hero/Hero` + `globals.css` |
 | M14 | **Hero route** (desktop): the hero pins for 140% of a viewport; the headline lifts, the reticle shrinks and the blue route (gold comet) draws across the image and down into §02, where `ScaleIndex`'s incoming route carries it on | `hero/Hero` |
 | M15 | **Official-plan zones**: hover/tap washes out the rest, re-reveals the zone and redraws its outline; first-view tour through the zones (`useZoneTour`: pauses off-screen, stops on first interaction) | `master-plan/OfficialPlanMap`, `MasterPlan`, `SpecDrawing`, `SiteTourPreview` |
 | M16 | **Site-tour camera**: the plan glides and zooms onto the chosen zone (CSS variables + transition), with a slow breathing drift | `site-tour/SiteTourPreview` |
@@ -264,7 +267,8 @@ only when a threshold is crossed, never per frame.
 | 02 | Scale | `stats/ScaleIndex` | `scale` | Porcelain |
 | 03 | Master plan | `master-plan/MasterPlan` | `zones` | Stone (official drawing, interactive) |
 | 04 | Project status | `project-status/ProjectStatus` | `milestones`, `statusLastUpdated` | Porcelain |
-| 05 | PATH Group | `path-group/PathGroup` | `pathGroup` | Stone |
+| 04.1 | Space availability | `project-status/SpaceAvailability` (inside §04) | `leasing`, `constra` | Porcelain |
+| 05 | PATH Group | `path-group/PathGroup` (+ `PathVerticals`) | `pathGroup` (metrics, about, verticals) | Stone |
 | 05.5 | Renders | `gallery/RendersGallery` | `renders` | Stone |
 | 06 | Hub opener | `advantage/HubOpener` | — | Porcelain |
 | 06.1 | At a glance | `advantage/SpecDrawing` | `glance` | Stone (official plan + figures) |

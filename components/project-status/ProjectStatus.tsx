@@ -1,12 +1,13 @@
 "use client";
 
 import { useRef, useState } from "react";
-import type { Milestone, MilestoneStatus } from "@/lib/content/types";
+import type { ConstraLink, Leasing, Milestone, MilestoneStatus } from "@/lib/content/types";
 import { gsap, MQ, ScrollTrigger } from "@/lib/motion/gsap";
 import { useMotion } from "@/lib/motion/hooks";
 import { AssetSlot } from "@/components/ui/AssetSlot";
 import { ContentSlot } from "@/components/ui/ContentSlot";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { SpaceAvailability } from "./SpaceAvailability";
 
 const STATUS: Record<MilestoneStatus, { label: string; text: string; dot: string }> = {
   completed: { label: "Completed", text: "text-green-700", dot: "bg-green-500 border-green-500" },
@@ -18,10 +19,20 @@ const isVideo = (src?: string | null) => Boolean(src && /\.(mp4|webm)(\?|$)/i.te
 
 /**
  * §04 — Watch the project take shape: sticky Constra site-capture viewer + live
- * timeline. A milestone whose media `src` is an MP4/WebM (Constra timelapse)
+ * timeline, then the leased/available space linked with Constra (§04.1). A milestone whose media `src` is an MP4/WebM (Constra timelapse)
  * plays inline; images show in the framed slot.
  */
-export function ProjectStatus({ milestones, lastUpdated }: { milestones: Milestone[]; lastUpdated: string | null }) {
+export function ProjectStatus({
+  milestones,
+  lastUpdated,
+  leasing,
+  constra,
+}: {
+  milestones: Milestone[];
+  lastUpdated: string | null;
+  leasing: Leasing;
+  constra: { url: string | null; links: ConstraLink[] };
+}) {
   const section = useRef<HTMLElement>(null);
   const list = useRef<HTMLOListElement>(null);
   const fill = useRef<HTMLSpanElement>(null);
@@ -188,6 +199,8 @@ export function ProjectStatus({ milestones, lastUpdated }: { milestones: Milesto
           </ol>
         </div>
       </div>
+
+      <SpaceAvailability leasing={leasing} constra={constra} />
     </section>
   );
 }

@@ -13,7 +13,7 @@ const TARGETS = [
   "#status [data-milestone]",
   "#sustainability ul > li",
   "#at-a-glance ul > li",
-  "#path-group ul > li",
+  "#path-group [data-mobile-rise] > li", // only the sectors list: the verticals and track record already reveal themselves
   "footer nav > div",
 ];
 

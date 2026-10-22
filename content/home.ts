@@ -7,12 +7,13 @@
  */
 import type {
   Benefit,
+  ConstraLink,
   Destination,
   Amenity,
   BlogPost,
-  EvolutionStep,
   GalleryItem,
   Initiative,
+  Leasing,
   MediaAsset,
   MetricData,
   Milestone,
@@ -21,6 +22,7 @@ import type {
   Partner,
   ScaleNode,
   SiteSettings,
+  Vertical,
   Zone,
 } from "@/lib/content/types";
 
@@ -55,8 +57,8 @@ export const navigation: NavItem[] = [
     label: "Path Group",
     href: "/path-group",
     children: [
-      { label: "Highlight", href: "/path-group#highlight", note: "27 years · 17+ states · 70+ locations" },
-      { label: "About Path", href: "/path-group#about", note: "From infrastructure to logistics ecosystems" },
+      { label: "Highlight", href: "/path-group#highlight", note: "31 years · 18 states · 6,500 lane km" },
+      { label: "About Path", href: "/path-group#about", note: "Our story, mission and verticals" },
     ],
   },
   {
@@ -86,7 +88,8 @@ export const hero = {
   headline: ["India's", "Largest", "*Multimodal*", "Logistics Hub"],
   copy: "A connected logistics ecosystem at Dobbaspet, Bengaluru, built to move businesses faster.",
   location: { primary: "Dobbaspet", secondary: "Bengaluru", roads: ["NH 648", "NH 48", "STRR"] },
-  siteTag: "Phase 1 · 138 Acres",
+  /** The tag on the site reticle: the MMLP concept, not a phase (client round 5). */
+  siteTag: "India's largest MMLP",
   video: {
     slot: "Project Video",
     spec: "Drone aerial of site · 1920×1080 + 4:5 mobile · MP4/WebM · 12–20s loop · ≤6 MB",
@@ -96,6 +99,15 @@ export const hero = {
     poster: "/client/hero-main.webp",
     alt: "Illustration of multimodal freight: a truck on the quay, a container ship, an aircraft overhead and a freight train beyond the water",
   } satisfies MediaAsset,
+  /**
+   * The actual site photograph of Warehouse 17 (client round 5). Drop the file at this path and the hero
+   * uses it automatically (lib/content/index.ts checks for it); until then the render above stays.
+   */
+  photo: {
+    src: "/client/warehouse-17.webp",
+    alt: "Warehouse 17 at Path Logicity, Dobbaspet — site photograph",
+    label: "Warehouse 17",
+  },
 };
 
 export const scale = {
@@ -191,33 +203,33 @@ export const milestones: Milestone[] = [
   {
     id: "m1",
     status: "completed",
-    phase: "Approvals",
-    title: "In-principle master plan approval obtained from the concerned authorities",
+    phase: "Lorem ipsum",
+    title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
     date: null,
-    media: progressMedia("01", "/client/image-1731136566206.webp", "The approved Path Logicity master plan", "Official master plan"),
+    media: progressMedia("01", "/client/image-1731136566206.webp", "The Path Logicity master plan", "Official master plan"),
   },
   {
     id: "m2",
     status: "completed",
-    phase: "Launch",
-    title: "Path Logicity presented at the India Warehousing Show, Yashobhoomi, Delhi",
-    date: "11–13 Jul 2024",
-    media: progressMedia("02", "/client/image-1721036670474.webp", "The Path Logicity team at the India Warehousing Show 2024", "India Warehousing Show 2024"),
+    phase: "Lorem ipsum",
+    title: "Sed do eiusmod tempor incididunt ut labore et dolore",
+    date: null,
+    media: progressMedia("02", "/client/image-1729245560924.webp", "Render of the container yard with gantry cranes", "Project render"),
   },
   {
     id: "m3",
     status: "in-progress",
-    phase: "Phase 1 · 138 acres",
-    title: "Phase 1 site development",
+    phase: "Lorem ipsum",
+    title: "Ut enim ad minim veniam, quis nostrud exercitation",
     date: null,
     media: progressMedia("03", "/construction/progress-03-building.webp", "Representative construction progress", "Representative imagery · Constra site capture to follow"),
   },
   {
     id: "m4",
     status: "upcoming",
-    phase: "Phase 1",
-    title: "First phase operational",
-    date: "Q4 2026",
+    phase: "Lorem ipsum",
+    title: "Duis aute irure dolor in reprehenderit in voluptate",
+    date: null,
     media: progressMedia("04", "/client/image-1720613648983.webp", "Aerial render of Path Logicity with the rail terminal and warehousing", "Project render"),
   },
 ];
@@ -225,28 +237,136 @@ export const statusLastUpdated: string | null = null;
 
 export const pathGroup = {
   headline: { from: "From building infrastructure", to: ["To connecting", "India's *supply chains*"] },
+  /** The four figures the client gave in round 5: 31 years · 18 states · 6,500 lane km · approximately 6,000 workforce. */
   metrics: [
-    { value: 27, unit: "Years", label: "of infrastructure legacy" },
-    { value: 17, suffix: "+", unit: "States", label: "pan-India presence" },
-    { value: 70, suffix: "+", unit: "Locations", label: "across the country" },
-    { prefix: "~", value: 5000, unit: "Workforce", label: "across the group" },
+    { value: 31, unit: "Years", label: "of infrastructure" },
+    { value: 18, unit: "States", label: "presence across India" },
+    { value: 6500, unit: "Lane KMs", label: "of highways" },
+    { prefix: "~", value: 6000, unit: "Workforce", label: "approximately, across the group" },
   ] satisfies MetricData[],
   story:
-    "With nearly three decades of experience in building India's infrastructure, PATH has evolved from developing critical infrastructure to creating integrated logistics ecosystems for the future.",
+    "With more than three decades of experience in building India's infrastructure, PATH has evolved from developing critical infrastructure to creating integrated logistics ecosystems for the future.",
   sectors: ["Infrastructure", "Highways", "Logistics"],
-  /** Captions are the client's own words (concept note / hero); years stay null until supplied. */
-  evolution: [
-    { label: "PATH Legacy", text: "Nearly three decades of experience in building India's infrastructure", year: null },
-    { label: "Infrastructure", text: "Developing critical infrastructure", year: null },
-    { label: "Logistics", text: "Creating integrated logistics ecosystems for the future", year: null },
-    { label: "PATH Logicity", text: "India's largest multimodal logistics hub", year: null },
-  ] satisfies EvolutionStep[],
+  /** "About PATH" — summarised from pathltd.com (About us → Overview, Mission & Vision). */
+  about: {
+    paragraphs: [
+      "Prakash Asphaltings & Toll Highways (India) Limited — PATH — is a diversified infrastructure group based in Mhow, Indore. Starting out as a regional road contractor in the mid-1990s, it has grown into a business that spans highways, tolling, wayside amenities, logistics parks, engineering and defence technology.",
+      "Its core work is building and maintaining highways, bridges and toll corridors, delivered through EPC, BOT, HAM and OMT models with in-house teams for design, construction and operations.",
+      "Today the group also builds the places that highways lead to: amenity centres along the country's expressways, and Path Logicity, a multimodal logistics park at Dobbaspet, Bengaluru.",
+    ],
+    mission: "To provide opportunities for growth and enrichment to employees, business partners and local communities, with honesty, fairness and integrity in everything we do.",
+    vision: "To be a rapidly growing business organisation that understands both the technical and commercial sides of civil construction, and delivers full satisfaction to customers and employees.",
+    /** "Track record" strip — the project counts listed on pathltd.com. Confirm with the client before launch. */
+    record: [
+      { value: 45, unit: "Toll plazas", label: "" },
+      { value: 30, unit: "Wayside amenities", label: "" },
+      { value: 26, unit: "EPC projects", label: "" },
+      { value: 11, unit: "BOT projects", label: "" },
+      { value: 7, unit: "OMT projects", label: "" },
+      { value: 6, unit: "HAM projects", label: "" },
+      { value: 7, unit: "Rail over bridges", label: "" },
+      { value: 3, unit: "Multi-storey parkings", label: "" },
+    ] satisfies MetricData[],
+    source: { label: "Read the full overview on pathltd.com", href: "https://www.pathltd.com/about-us/overview/" },
+  },
+  /** A highway photograph from the main PATH Group site (client round 5: "preferably a road or highway image"). */
   photo: {
     slot: "PATH Group Photography",
-    spec: "Real PATH infrastructure project · 21:9 · ≥2560px wide",
-    src: "/client/image-1729245444632.webp",
-    alt: "Aerial view of large-scale warehousing and logistics infrastructure",
+    spec: "Highway project photograph · 21:9 · ≥2560px wide",
+    src: "/client/path-group/highway.webp",
+    alt: "A multi-lane highway built by PATH, with trucks and light vehicles under a monsoon sky",
+    credit: "Photo: PATH Group · pathltd.com",
   } satisfies MediaAsset,
+  /** PATH Legacy — the group's verticals (pathltd.com → Verticals). Replaces the old four-step timeline. */
+  verticals: [
+    {
+      id: "highways",
+      brand: "PATH",
+      title: "Highway Construction",
+      text: "Engineering and design through full EPC delivery, including BOT, HAM and OMT contracts on national corridors.",
+      image: { slot: "Highway Construction", spec: "Project photograph · 4:5", src: "/client/path-group/highway-construction.webp", alt: "An excavator on a highway site at dusk" },
+      href: "https://www.pathltd.com/verticals/highway-construction/",
+    },
+    {
+      id: "toll",
+      brand: "PATH",
+      title: "Toll Operations",
+      text: "Toll collection and toll management on national highways.",
+      image: { slot: "Toll Operations", spec: "Project photograph · 4:5", src: "/client/path-group/toll-operations.webp", alt: "A multi-lane toll plaza on a national highway" },
+      href: "https://www.pathltd.com/verticals/toll-operation/",
+    },
+    {
+      id: "wayside",
+      brand: "PATH Recharge",
+      title: "Wayside Amenities",
+      text: "Highway amenity centres with fuel, EV charging, food courts, washrooms and rest zones, on the Delhi–Mumbai and Eastern Peripheral expressways and more.",
+      image: { slot: "Wayside Amenities", spec: "Project photograph · 4:5", src: "/client/path-group/wayside-amenities.webp", alt: "Welcome signage at a PATH Recharge wayside amenity on a national highway" },
+      href: "https://www.pathltd.com/verticals/path-recharge/",
+    },
+    {
+      id: "logicity",
+      brand: "Path Logicity",
+      title: "Logistics Parks",
+      text: "A multimodal logistics park at Dobbaspet, Bengaluru: road, rail, warehousing, commercial and an inland container depot in one ecosystem.",
+      image: { slot: "Logistics Parks", spec: "Render · 4:5", src: "/client/image-1720613648983.webp", alt: "Aerial render of Path Logicity with the rail terminal and warehousing" },
+      href: null,
+    },
+    {
+      id: "engineering",
+      brand: "PATH Engineering",
+      title: "Road Engineering",
+      text: "GFRP rebars, metal crash barriers and road-marking systems for safer highways.",
+      image: { slot: "Road Engineering", spec: "Project photograph · 4:5", src: "/client/path-group/engineering.webp", alt: "A mountain highway protected by metal crash barriers" },
+      href: "https://www.pathltd.com/verticals/path-engineering/",
+    },
+    {
+      id: "drones",
+      brand: "VU Dynamics",
+      title: "Drone Manufacturing",
+      text: "Indigenous unmanned aerial systems for defence and industry, with an R&D lab at Mhow and roots in IIT Kanpur.",
+      image: { slot: "Drone Manufacturing", spec: "Brand artwork · 4:5", src: "/client/path-group/vu-dynamics.webp", alt: "VU Dynamics, a PATH company, against a blue sky" },
+      href: "https://www.pathltd.com/verticals/defence/",
+    },
+    {
+      id: "sports",
+      brand: "Majhi Mumbai",
+      title: "Sports",
+      text: "PATH's franchise in the Indian Street Premier League, the tennis-ball T10 cricket league. Champions in Season 2.",
+      image: { slot: "Sports", spec: "Brand artwork · 4:5", src: "/client/path-group/majhi-mumbai.webp", alt: "The Majhi Mumbai team logo over a floodlit cricket stadium" },
+      href: "https://www.pathltd.com/verticals/majhi-mumbai/",
+    },
+    {
+      id: "it",
+      brand: "PATH",
+      title: "IT Solutions",
+      text: "Technology and system-integration solutions for infrastructure operations.",
+      image: { slot: "IT Solutions", spec: "Illustration · 4:5", src: "/client/path-group/it-solutions.webp", alt: "A hand drawing on a transparent screen of data charts" },
+      href: "https://www.pathltd.com/verticals/it-solutions/",
+    },
+  ] satisfies Vertical[],
+};
+
+/**
+ * Leased and available space, linked to Constra (client round 5). Every figure is null until the client
+ * supplies it or the Constra feed is connected; until then the block shows an enquiry fallback.
+ */
+export const leasing: Leasing = {
+  totalSqFt: null,
+  leasedSqFt: null,
+  availableSqFt: null,
+  units: [],
+  updatedAt: null,
+};
+
+/** Constra: the project link and the collaterals we point to. `href: null` until the client supplies the URLs. */
+export const constra: { url: string | null; links: ConstraLink[] } = {
+  url: null,
+  links: [
+    { id: "availability", label: "Leased & available space", text: "Live availability by building and block.", href: null },
+    { id: "progress", label: "Site progress", text: "Construction progress captures and timelapses.", href: null },
+    { id: "drone", label: "Drone captures", text: "Aerial captures of the park, by date.", href: null },
+    { id: "reports", label: "Progress reports", text: "Dated progress reports and updates.", href: null },
+  ],
 };
 
 /** Project at a glance — exact client facts. `zone` links a callout to the plan. */
@@ -257,7 +377,6 @@ export const glance: (MetricData & { id: string; zone: string })[] = [
   { id: "rail", zone: "rail", prefix: "~", value: 40, unit: "Acres", label: "dedicated to a state-of-the-art rail terminal" },
   { id: "sidings", zone: "rail", value: 6, unit: "Railway sidings", label: "enabling seamless multimodal movement" },
   { id: "bonded", zone: "icd", prefix: "~", value: 0.78, decimals: 2, unit: "Mn sq. ft.", label: "of customs-bonded infrastructure" },
-  { id: "phase1", zone: "phase1", value: 138, unit: "Acres · Phase 1", label: "the first phase, targeted for Q4 2026" },
 ];
 
 /** §05.5 — the client's own renders (pathlogicity.com), shown as a pinned horizontal gallery. Illustrative. */
@@ -374,7 +493,7 @@ export const news: NewsItem[] = [
     date: "11–13 Jul 2024",
     headline: "Path Logicity at the India Warehousing Show 2024",
     href: null,
-    image: { slot: "Update", spec: "", src: "/client/image-1721036617308.webp", alt: "Path Logicity at the India Warehousing Show 2024, Yashobhoomi, Delhi" },
+    image: { slot: "Update", spec: "", src: "/client/image-1721036617308.webp", alt: "Path Logicity at the India Warehousing Show 2024, Delhi" },
     placeholder: false,
   },
   {

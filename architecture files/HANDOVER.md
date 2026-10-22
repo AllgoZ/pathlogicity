@@ -2,7 +2,7 @@
 
 > Living status document. **Update the "Status" and "Change log" sections whenever work lands**
 > (newest first). How the system works is in [`ARCHITECTURE.md`](./ARCHITECTURE.md).
-> **Last updated: 2026-10-16** — `main` is at `c8c4086`.
+> **Last updated: 2026-10-22** — `main` is at `d1e37aa`; client round 5 is done in the working tree (not committed yet).
 
 ---
 
@@ -10,11 +10,12 @@
 
 | Item | State |
 |---|---|
-| Homepage | **Round 4 complete and live on `main`**: light theme, Open Sans only, no opening animation, interactive official master plan (used in §03, §06.1 and §09), Amenities, Gati Shakti location map, route spine, mobile polish. Plan and audit: `docs/REDESIGN-PLAN-R4.md` |
+| Homepage | **Round 4 complete and live on `main`**: light theme, Manrope + Inter (round 5), no preloader (the hero banner has ambient motion), interactive official master plan (used in §03, §06.1 and §09), Amenities, Gati Shakti location map, route spine, mobile polish. Plan and audit: `docs/REDESIGN-PLAN-R4.md` |
 | Inner pages | **Built:** `/path-group`, `/logicity-advantage`, `/sustainability`, `/site-tour`, `/news`, `/blogs` (each a `PageHero` plus the homepage sections). Blogs shows a designed empty state until real posts exist |
 | Enquiry form | Wired to `POST /api/enquiry`. **Needs `ENQUIRY_WEBHOOK_URL`** (e.g. in Vercel) or production shows a call/email fallback instead of sending |
 | Parked by decision | **Constra** project-status content (the viewer is built; the footage is not on the site) |
 | Branch | `main` = `origin/main` = `c8c4086`. Also pushed: `client-round-2`, `mobile-polish`, `hero-line-mobile` (all fully merged — safe to delete) |
+| Client round 5 | **Done, uncommitted**: plan in `docs/PLAN-CLIENT-ROUND-5.md`. Typecheck clean, build passes. Waiting on the Warehouse 17 photo and the Constra URL + figures (see §4) |
 | Pull request | PR #1 (round 2) was merged earlier. Round 4 went to `main` by fast-forward/merge, with no PR |
 | Uncommitted | Nothing, apart from these two docs while they are being updated |
 | Quality | Typecheck clean · build passes · Lighthouse desktop **98**/100/100/100 · mobile **~70** (57–72)/100/100/100 · CLS 0 · Chromium, Firefox and WebKit clean · no overflow 320–1920px |
@@ -48,7 +49,10 @@ npm run typecheck
 | Any fact, copy, image or link | `content/home.ts` only. Components read it through `lib/content/index.ts` |
 | A headline accent word | Wrap it in `*asterisks*` in the content string (rendered by `lib/accent.tsx`, colour only) |
 | Colours, type scale, utilities | `app/globals.css` (`@theme` + `@utility`) |
-| Hero image / copy / reticle label | `hero` in `content/home.ts` (`video.poster` is `/client/hero-main.webp`; set `video.src` for a film) |
+| Hero image / copy / reticle label | `hero` in `content/home.ts` (`video.poster` is the render `/client/hero-main.webp`; `hero.photo.src` is the Warehouse 17 photo that replaces it when the file exists; set `video.src` for a film) |
+| Fonts and type scale | `app/layout.tsx` (Manrope + Inter) · `@utility t-*` in `app/globals.css` · `ui/Metric.tsx` sizes |
+| PATH Group verticals, About, figures | `pathGroup` in `content/home.ts` (`verticals`, `about`, `metrics`); images and sources in `public/client/path-group/` |
+| Leased / available space and Constra links | `leasing` and `constra` in `content/home.ts`, shown by `project-status/SpaceAvailability.tsx` |
 | Hero route (desktop) and phone line | `components/hero/Hero.tsx` (`HERO_ROUTE`, `MOBILE_ROUTE`, `MOBILE_PIN`) |
 | The page-wide route line | `components/navigation/RouteSpine.tsx` |
 | Motion for a section | `useMotion(ref, mm => mm.add(MQ.motion, …))`, lazy and reduced-motion safe |
@@ -78,9 +82,9 @@ drop.
 | # | Item | Where it goes |
 |---|---|---|
 | 1 | **Enquiry destination** — where leads should go (CRM, email relay, automation webhook) | `ENQUIRY_WEBHOOK_URL` in the host environment |
-| 2 | **Constra collaterals** — timelapse / drone / progress photos with dates (parked). Milestone 03 shows a labelled stock image. The Constra project holds ~12 edited comparison and aerial MP4s per capture round; confirm which may be published | `public/constra/` → `milestones` |
+| 2 | **Constra collaterals** — timelapse / drone / progress photos with dates (parked; the milestone phases are Lorem ipsum by the client's instruction until then). Milestone 03 shows a labelled stock image. The Constra project holds ~12 edited comparison and aerial MP4s per capture round; confirm which may be published | `public/constra/` → `milestones` |
 | 3 | **Confirm the official-plan zone mapping** — we read the legend as: Warehousing = warehouse + transit warehouse; Rail Terminal = railway terminal; Dry Port/ICD = CFS shed; Commercial = commercial area; Yards = open warehouse + surface parking; Roads; Green. A wrong mapping would mislabel the drawing | `ZONES` in `scripts/generate-plan-zones.py` |
-| 4 | **PATH Group figures** — the concept note says 30+ years / 18 states / 70+ locations / ~6,100+ workforce; the live site says 27 / 17+ / 70+ / ~5,000. We show the live-site values | `pathGroup.metrics` |
+| 4 | **PATH Group figures**: now the client's round-5 numbers (31 years · 18 states · 6,500 lane km · ~6,000 workforce); pathltd.com itself lists 30 / 18 / 6,100. The new "track record" strip (45 toll plazas, 30 wayside amenities, 26 EPC …) and the About text were taken from pathltd.com on 2026-10-22: **confirm them**, and the "more than three decades" wording | `pathGroup.metrics`, `pathGroup.about` |
 | 5 | **Confirm IGBC Platinum Pre-Certification** (their site lists *GRIHA*) | `sustainability.certification` |
 | 6 | **Real site photographs for the amenities** (five cards use illustrative stock) and for the **Commercial / Yards / Green** zones | `amenities[].image`, `zones[].media.src` |
 | 7 | Leasing contact name, **WhatsApp number**, **brochure PDF** | `settings` |
@@ -93,6 +97,9 @@ drop.
 | 14 | A real PATH project photo — the current PATH Group aerial appears to be a non-PATH warehouse park | `pathGroup.photo` |
 | 15 | High-resolution, transparent **wordmark** (the current PNG is 109×42) | `public/client/logo-text*.png` |
 | 16 | **Approve the copy we wrote**: the hero location line, the inner-page intros, the enquiry confirmation text, the blog empty state | `content/home.ts`, `EnquiryForm`, `layout/PageHero` usages |
+| 18 | **Warehouse 17 site photograph** (round 5): drop it at `public/client/warehouse-17.webp` (~2000 px wide); the hero switches to it by itself and labels it "Warehouse 17 · site photograph". Then move the site reticle (`left-[76%] top-[31%]` in `Hero.tsx`) onto the building | `public/client/warehouse-17.webp` |
+| 19 | **Constra** (round 5): the project/dashboard URL, leased / available / total sq. ft. (and the unit list), and which collaterals to link (site progress, drone, reports …). Until then visitors see an enquiry card | `leasing`, `constra` in `content/home.ts` |
+| 20 | **Approve the Manrope + Inter pairing**, and a full-resolution highway photo for the PATH Group banner (the pathltd.com original is 800 px wide) | `app/layout.tsx`, `public/client/path-group/highway.webp` |
 | 17 | The footer address is PATH's Indore registered office — confirm what should show | `settings.address` |
 
 ---
@@ -142,6 +149,7 @@ drop.
 
 | Date | Change |
 |---|---|
+| 2026-10-22 | **Client round 5** (`docs/PLAN-CLIENT-ROUND-5.md`, uncommitted): **fonts** Manrope + Inter and a smaller type scale; **hero** "Phase 1" tag replaced by "India's largest MMLP", Warehouse 17 photo slot (auto-detected in `public/client/`, server check in `lib/content/server.ts`) and banner motion (`hero-drift/rise/fade/ping`); **§06.1** Phase 1 band replaced by an MMLP-concept band; **§04** milestones are Lorem ipsum, Yashobhoomi removed everywhere; **PATH Group** highway photograph from pathltd.com, new figures, expanded About (overview, mission, vision, track record), **PATH Legacy** now shows the eight verticals (`PathVerticals`, `EvolutionLine` deleted); **Constra** leasing/availability block and collateral links (`SpaceAvailability`, empty until supplied). `MobileMotion` now targets only `#path-group [data-mobile-rise]` |
 | 2026-10-16 | **Docs brought up to date** (this file and `ARCHITECTURE.md`) |
 | 2026-10-16 | **Amenity images** (`c8c4086`): the five amenity cards without a photo now show open-licensed stock in `public/client/amenities/` — four CC0 (rawpixel), the repair photo CC BY 2.0 by Shixart1985 (credited on its card). "Illustrative", logo-free, sources in `CREDITS.md` |
 | 2026-10-16 | **§07.1 PM Gati Shakti on the location map** (`8c72d53`): new `advantage/GatiShaktiMap` replaces the abstract network with the client's `345.webp` and the §07 traced routes — Path Logicity as the pulsing hub, seven points (NH 648, STRR, NH 48, Dodbele, Kempegowda Airport, Mangalore and Chennai ports), mode-styled routes drawing out from the site, per-point label placement, distances only where supplied, legend, hover/focus/tap. Plan: `docs/PLAN-GATI-SHAKTI-MAP.md` |

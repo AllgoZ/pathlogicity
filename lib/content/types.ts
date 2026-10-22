@@ -192,11 +192,43 @@ export interface Amenity {
   image: MediaAsset | null;
 }
 
-/** A step on the PATH legacy → Logicity timeline. `year` stays null until the client supplies dates. */
-export interface EvolutionStep {
+/** One business vertical of PATH Group (pathltd.com → Verticals). `href` is the vertical's own site, when it has one. */
+export interface Vertical {
+  id: string;
+  /** the group brand, e.g. "PATH Recharge" */
+  brand: string;
+  /** what it does, e.g. "Wayside Amenities" */
+  title: string;
+  text: string;
+  image: MediaAsset;
+  href: string | null;
+}
+
+export type SpaceStatus = "leased" | "available" | "reserved";
+/** A leasable building or block in the park, as held in Constra. */
+export interface SpaceUnit {
+  id: string;
+  name: string;
+  areaSqFt: number | null;
+  status: SpaceStatus;
+}
+/**
+ * Leased / available space, linked to Constra. Every figure is null until the client supplies it (or the
+ * Constra feed is connected); the UI then shows a designed enquiry fallback instead of numbers.
+ */
+export interface Leasing {
+  totalSqFt: number | null;
+  leasedSqFt: number | null;
+  availableSqFt: number | null;
+  units: SpaceUnit[];
+  updatedAt: string | null;
+}
+/** A Constra collateral (dashboard, timelapse, drone capture, report). `href` stays null until the link is supplied. */
+export interface ConstraLink {
+  id: string;
   label: string;
   text: string;
-  year: string | null;
+  href: string | null;
 }
 
 /** A card in the renders gallery */

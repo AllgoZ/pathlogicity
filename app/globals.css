@@ -3,7 +3,7 @@
 /* ==========================================================================
    PATH LOGICITY — design tokens · round 4 (2026-10-16)
    White/light throughout with brand colours (client "Changes V2") — see
-   docs/REDESIGN-PLAN-R4.md. One typeface: Open Sans. Porcelain/stone are
+   docs/REDESIGN-PLAN-R4.md. Fonts: Manrope + Inter (round 5). Porcelain/stone are
    faint brand tints; the only deep-indigo surface is the footer. Gold is the
    action accent; indigo, blue and green carry roles (headings, links, data).
    ========================================================================== */
@@ -56,11 +56,11 @@
   --color-green-700: #2f7a24;
   --color-green-50: #edf6ea;
 
-  /* Open Sans only (the client's brand font). display/serif alias it so older utility names keep working. */
-  --font-display: var(--font-open-sans), "Open Sans", Helvetica, Arial, sans-serif;
-  --font-serif: var(--font-open-sans), "Open Sans", Helvetica, Arial, sans-serif;
-  --font-sans: var(--font-open-sans), "Open Sans", Helvetica, Arial, sans-serif;
-  --font-mono: var(--font-open-sans), "Open Sans", Helvetica, Arial, sans-serif;
+  /* Manrope for headlines and numerals, Inter for body and labels (client round 5). serif/mono alias them so older utility names keep working. */
+  --font-display: var(--font-manrope), "Manrope", "Inter", Helvetica, Arial, sans-serif;
+  --font-serif: var(--font-manrope), "Manrope", "Inter", Helvetica, Arial, sans-serif;
+  --font-sans: var(--font-inter), "Inter", Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-inter), "Inter", Helvetica, Arial, sans-serif;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-route: cubic-bezier(0.65, 0, 0.35, 1);
@@ -93,8 +93,8 @@
   body {
     position: relative; /* the homepage route spine is positioned against the document */
     font-family: var(--font-sans);
-    font-size: 1.0625rem;
-    line-height: 1.7;
+    font-size: 1rem;
+    line-height: 1.65;
     color: var(--color-steel-700);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -179,75 +179,75 @@ html.lenis body {
 }
 
 /* --------------------------------------------------------------------------
-   Typography — Open Sans only. Headlines at 700 with slightly tight tracking;
-   accent words (`*word*` in content → <em>) are weight + colour, not a second
-   typeface. Scale (desktop): hero ≤ 4rem · titles ≤ 3rem · sub-titles ≤ 1.75rem
-   · body 17–19px · labels 14px sentence case (no tracked all-caps eyebrows).
+   Typography — Manrope for headlines and numerals (800 on the big sizes, 700 below),
+   Inter for body and labels. Accent words (`*word*` in content → <em>) are colour,
+   not a second typeface. Scale (desktop): hero ≤ 3.625rem · titles ≤ 2.75rem ·
+   sub-titles ≤ 2rem · body 16–17px · labels 13px sentence case (no tracked all-caps eyebrows).
    -------------------------------------------------------------------------- */
 @utility t-hero {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(2.25rem, 9.5vw, 2.875rem);
-  line-height: 1.08;
-  letter-spacing: -0.03em;
+  font-weight: 800;
+  font-size: clamp(2.125rem, 8.8vw, 2.625rem);
+  line-height: 1.06;
+  letter-spacing: -0.035em;
   @media (width >= 40rem) {
-    font-size: clamp(2.75rem, min(4.6vw, 8vh), 4rem);
-    line-height: 1.06;
+    font-size: clamp(2.5rem, min(4.2vw, 7.4vh), 3.625rem);
+    line-height: 1.04;
   }
 }
 @utility t-xxl {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(4.5rem, 22vw, 7rem);
+  font-weight: 800;
+  font-size: clamp(4rem, 20vw, 6.25rem);
   line-height: 0.9;
   letter-spacing: -0.05em;
   font-variant-numeric: tabular-nums;
   @media (width >= 64rem) {
-    font-size: clamp(6rem, 11vw, 10rem);
+    font-size: clamp(5.5rem, 10vw, 9rem);
   }
 }
 @utility t-xl {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(2rem, 3.6vw, 3rem);
+  font-weight: 800;
+  font-size: clamp(1.875rem, 3.2vw, 2.75rem);
   line-height: 1.1;
-  letter-spacing: -0.028em;
+  letter-spacing: -0.032em;
 }
 @utility t-l {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.625rem, 2.6vw, 2.25rem);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 2.3vw, 2rem);
   line-height: 1.15;
-  letter-spacing: -0.024em;
+  letter-spacing: -0.028em;
 }
 @utility t-m {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(1.25rem, 1.7vw, 1.625rem);
+  font-size: clamp(1.1875rem, 1.5vw, 1.4375rem);
   line-height: 1.22;
-  letter-spacing: -0.016em;
+  letter-spacing: -0.02em;
 }
 @utility t-s {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(1.0625rem, 1.2vw, 1.1875rem);
+  font-size: clamp(1rem, 1.1vw, 1.0625rem);
   line-height: 1.35;
-  letter-spacing: -0.008em;
+  letter-spacing: -0.012em;
 }
 @utility t-body-l {
-  font-size: clamp(1.0625rem, 1.2vw, 1.1875rem);
-  line-height: 1.7;
+  font-size: clamp(1rem, 1.1vw, 1.0625rem);
+  line-height: 1.65;
 }
 @utility t-label {
   font-family: var(--font-sans);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.45;
   letter-spacing: 0.01em;
   font-weight: 600;
 }
 @utility t-micro {
   font-family: var(--font-sans);
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   line-height: 1.45;
   letter-spacing: 0.02em;
   font-weight: 600;
@@ -344,6 +344,63 @@ em.accent {
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(.page-wipe),
   ::view-transition-new(.page-wipe) {
+    animation: none;
+  }
+}
+
+/* Hero banner motion (client round 5). Fill "both" keeps the final state; reduced motion switches the drift off below. */
+@keyframes hero-drift {
+  from {
+    transform: scale(1.04) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.13) translate3d(-1.8%, -1.2%, 0);
+  }
+}
+@keyframes hero-rise {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes hero-ping {
+  0% {
+    transform: translate(-50%, -50%) scale(0.7);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.1);
+    opacity: 0;
+  }
+}
+.hero-drift {
+  animation: hero-drift 26s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.hero-rise {
+  animation: hero-rise 1s var(--ease-out-expo) both;
+}
+.hero-fade {
+  animation: hero-fade 0.9s var(--ease-out-expo) both;
+}
+.hero-ping {
+  animation: hero-ping 3s var(--ease-route) 1.2s infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-drift,
+  .hero-ping {
     animation: none;
   }
 }

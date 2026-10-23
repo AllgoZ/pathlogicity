@@ -2,7 +2,7 @@
 
 > Living status document. **Update the "Status" and "Change log" sections whenever work lands**
 > (newest first). How the system works is in [`ARCHITECTURE.md`](./ARCHITECTURE.md).
-> **Last updated: 2026-10-22** — `main` is at `d1e37aa`; client round 5 is done in the working tree (not committed yet).
+> **Last updated: 2026-10-23** — client round 5 is on `main`, plus the Warehouse 17 photos and the Constra link.
 
 ---
 
@@ -15,7 +15,7 @@
 | Enquiry form | Wired to `POST /api/enquiry`. **Needs `ENQUIRY_WEBHOOK_URL`** (e.g. in Vercel) or production shows a call/email fallback instead of sending |
 | Parked by decision | **Constra** project-status content (the viewer is built; the footage is not on the site) |
 | Branch | `main` = `origin/main` = `c8c4086`. Also pushed: `client-round-2`, `mobile-polish`, `hero-line-mobile` (all fully merged — safe to delete) |
-| Client round 5 | **Done, uncommitted**: plan in `docs/PLAN-CLIENT-ROUND-5.md`. Typecheck clean, build passes. Waiting on the Warehouse 17 photo and the Constra URL + figures (see §4) |
+| Client round 5 | **Done and on `main`**: plan in `docs/PLAN-CLIENT-ROUND-5.md`, audit in `docs/AUDIT-CLIENT-ROUND-5.md`. Warehouse 17 photo and the Constra URL are in; still waiting on the Constra figures and collateral links (see §4) |
 | Pull request | PR #1 (round 2) was merged earlier. Round 4 went to `main` by fast-forward/merge, with no PR |
 | Uncommitted | Nothing, apart from these two docs while they are being updated |
 | Quality | Typecheck clean · build passes · Lighthouse desktop **98**/100/100/100 · mobile **~70** (57–72)/100/100/100 · CLS 0 · Chromium, Firefox and WebKit clean · no overflow 320–1920px |
@@ -97,8 +97,8 @@ drop.
 | 14 | A real PATH project photo — the current PATH Group aerial appears to be a non-PATH warehouse park | `pathGroup.photo` |
 | 15 | High-resolution, transparent **wordmark** (the current PNG is 109×42) | `public/client/logo-text*.png` |
 | 16 | **Approve the copy we wrote**: the hero location line, the inner-page intros, the enquiry confirmation text, the blog empty state | `content/home.ts`, `EnquiryForm`, `layout/PageHero` usages |
-| 18 | **Warehouse 17 site photograph** (round 5): drop it at `public/client/warehouse-17.webp` (~2000 px wide); the hero switches to it by itself and labels it "Warehouse 17 · site photograph". Then move the site reticle (`left-[76%] top-[31%]` in `Hero.tsx`) onto the building | `public/client/warehouse-17.webp` |
-| 19 | **Constra** (round 5): the project/dashboard URL, leased / available / total sq. ft. (and the unit list), and which collaterals to link (site progress, drone, reports …). Until then visitors see an enquiry card | `leasing`, `constra` in `content/home.ts` |
+| 18 | ~~Warehouse 17 site photograph~~ — **received 2026-10-23** (`reference/images/warehouse1.jpeg`, 1280 px wide, now `public/client/warehouse-17.webp`; the hero uses it and the reticle sits on the roof). A **higher-resolution original** would look sharper on large screens | `public/client/warehouse-17.webp` |
+| 19 | **Constra** (round 5): the project URL is connected (`https://constra.bandhoo.com/`, "Open Constra" in §04.1). Still needed: leased / available / total sq. ft. (and the unit list), and **deep links** for the four collateral cards (availability, site progress, drone, reports). Cards stay hidden until each has a URL; visitors see an enquiry card in place of figures | `leasing`, `constra.links[].href` in `content/home.ts` |
 | 20 | **Approve the Manrope + Inter pairing**, and a full-resolution highway photo for the PATH Group banner (the pathltd.com original is 800 px wide) | `app/layout.tsx`, `public/client/path-group/highway.webp` |
 | 17 | The footer address is PATH's Indore registered office — confirm what should show | `settings.address` |
 
@@ -149,6 +149,7 @@ drop.
 
 | Date | Change |
 |---|---|
+| 2026-10-23 | **Warehouse photos + Constra link**: `warehouse1.jpeg` → hero (`public/client/warehouse-17.webp`, reticle moved onto the building); `warehouse2.jpeg` → milestone 03 (`warehouse-17-progress.webp`, 16:9 crop, labelled "Site photograph · Warehouse 17", replaces the stock image); `constra.url` set to `https://constra.bandhoo.com/`. Originals kept in `reference/images/` |
 | 2026-10-22 | **Client round 5** (`docs/PLAN-CLIENT-ROUND-5.md`, uncommitted): **fonts** Manrope + Inter and a smaller type scale; **hero** "Phase 1" tag replaced by "India's largest MMLP", Warehouse 17 photo slot (auto-detected in `public/client/`, server check in `lib/content/server.ts`) and banner motion (`hero-drift/rise/fade/ping`); **§06.1** Phase 1 band replaced by an MMLP-concept band; **§04** milestones are Lorem ipsum, Yashobhoomi removed everywhere; **PATH Group** highway photograph from pathltd.com, new figures, expanded About (overview, mission, vision, track record), **PATH Legacy** now shows the eight verticals (`PathVerticals`, `EvolutionLine` deleted); **Constra** leasing/availability block and collateral links (`SpaceAvailability`, empty until supplied). `MobileMotion` now targets only `#path-group [data-mobile-rise]` |
 | 2026-10-16 | **Docs brought up to date** (this file and `ARCHITECTURE.md`) |
 | 2026-10-16 | **Amenity images** (`c8c4086`): the five amenity cards without a photo now show open-licensed stock in `public/client/amenities/` — four CC0 (rawpixel), the repair photo CC BY 2.0 by Shixart1985 (credited on its card). "Illustrative", logo-free, sources in `CREDITS.md` |

@@ -1,8 +1,8 @@
 # Path Logicity — Architecture
 
 > Technical architecture of the Path Logicity marketing site.
-> **Last updated: 2026-10-22** — reflects `main` at `d1e37aa` plus client round 5 (uncommitted at the time of writing:
-> Manrope + Inter, hero banner motion and Warehouse 17 slot, Lorem phases, PATH Group figures/About/verticals, Constra space availability).
+> **Last updated: 2026-10-23** — reflects client round 5 (Manrope + Inter, hero banner motion, Lorem phases, PATH Group
+> figures/About/verticals, Constra space availability) plus the Warehouse 17 photographs (hero and milestone 03) and the connected Constra URL.
 > Design sources, newest first:
 > 0. [`docs/PLAN-CLIENT-ROUND-5.md`](../docs/PLAN-CLIENT-ROUND-5.md) — the latest client feedback and what changed
 > 1. [`docs/REDESIGN-PLAN-R4.md`](../docs/REDESIGN-PLAN-R4.md) — current direction: light theme, one typeface, no opening animation

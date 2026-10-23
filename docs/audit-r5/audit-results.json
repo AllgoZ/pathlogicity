@@ -1,0 +1,358 @@
+{
+  "sweep": {
+    "/": {
+      "phase1": false,
+      "yashobhoomi": false,
+      "openSans": false,
+      "lorem": 5,
+      "status": "Path Logicity — India's Largest Multimodal Logistics Hub · Dobbaspet, Bengaluru"
+    },
+    "/path-group": {
+      "phase1": false,
+      "yashobhoomi": false,
+      "openSans": false,
+      "lorem": 0,
+      "status": "PATH Group · Path Logicity"
+    },
+    "/logicity-advantage": {
+      "phase1": false,
+      "yashobhoomi": false,
+      "openSans": false,
+      "lorem": 0,
+      "status": "The Logicity Advantage · Path Logicity"
+    },
+    "/sustainability": {
+      "phase1": false,
+      "yashobhoomi": false,
+      "openSans": false,
+      "lorem": 0,
+      "status": "Sustainability · Path Logicity"
+    },
+    "/site-tour": {
+      "phase1": false,
+      "yashobhoomi": false,
+      "openSans": false,
+      "lorem": 0,
+      "status": "Site Tour · Path Logicity"
+    },
+    "/news": {
+      "phase1": false,
+      "yashobhoomi": false,
+      "openSans": false,
+      "lorem": 0,
+      "status": "News & Media · Path Logicity"
+    },
+    "/blogs": {
+      "phase1": false,
+      "yashobhoomi": false,
+      "openSans": false,
+      "lorem": 0,
+      "status": "Blogs · Path Logicity"
+    }
+  },
+  "hero": {
+    "desktop": {
+      "h1": "India's / Largest / Multimodal / Logistics Hub",
+      "h1Font": "Manrope, \"Manrope Fallback\", Manrope, Inter, Helvetica, Arial, sans-serif",
+      "h1Size": "58px",
+      "h1Weight": "800",
+      "bodyFont": "Inter, \"Inter Fallback\", Inter, Helvetica, Arial, sans-serif",
+      "bodySize": "16px",
+      "imgSrc": "http://localhost:3100/_next/image?url=/client/hero-main.webp&w=1920&q=75",
+      "imgAlt": "Illustration of multimodal freight: a truck on the quay, a container ship, an aircraft overhead and a freight train beyond the water",
+      "driftAnim": "hero-drift",
+      "driftDur": "26s",
+      "riseAnim": "hero-rise",
+      "fadeAnim": "hero-fade",
+      "pingAnim": "hero-ping",
+      "tag": "India's largest MMLP",
+      "reticleTagVisible": true,
+      "caption": [
+        "Illustrative render"
+      ],
+      "fonts": [
+        "Manrope",
+        "Manrope",
+        "Manrope Fallback",
+        "Inter"
+      ],
+      "textHasPhase": false,
+      "driftMoves": true,
+      "t1": "matrix(1.04259, 0, 0, 1.04259, -0.778045, -0.324186)",
+      "t2": "matrix(1.05036, 0, 0, 1.05036, -3.13301, -1.30542)",
+      "failed": [],
+      "consoleErrors": []
+    },
+    "mobile": {
+      "h1": "India's / Largest / Multimodal / Logistics Hub",
+      "h1Font": "Manrope, \"Manrope Fallback\", Manrope, Inter, Helvetica, Arial, sans-serif",
+      "h1Size": "34.32px",
+      "h1Weight": "800",
+      "bodyFont": "Inter, \"Inter Fallback\", Inter, Helvetica, Arial, sans-serif",
+      "bodySize": "16px",
+      "imgSrc": "http://localhost:3100/_next/image?url=/client/hero-main.webp&w=828&q=75",
+      "imgAlt": "Illustration of multimodal freight: a truck on the quay, a container ship, an aircraft overhead and a freight train beyond the water",
+      "driftAnim": "hero-drift",
+      "driftDur": "26s",
+      "riseAnim": "hero-rise",
+      "fadeAnim": "hero-fade",
+      "pingAnim": "hero-ping",
+      "tag": "India's largest MMLP",
+      "reticleTagVisible": false,
+      "caption": [
+        "Illustrative render"
+      ],
+      "fonts": [
+        "Manrope",
+        "Manrope",
+        "Manrope Fallback",
+        "Inter",
+        "Inter Fallback"
+      ],
+      "textHasPhase": false,
+      "driftMoves": true,
+      "t1": "matrix(1.04324, 0, 0, 1.04324, -0.263683, -0.380425)",
+      "t2": "matrix(1.05165, 0, 0, 1.05165, -0.955218, -1.37813)",
+      "failed": [],
+      "consoleErrors": []
+    },
+    "reduced": {
+      "drift": "none",
+      "ping": "none",
+      "h1Visible": true
+    }
+  },
+  "type": {
+    "desktop": {
+      ".t-hero": "Manrope 58px w800",
+      ".t-xl": "Manrope 44px w800",
+      ".t-l": "Manrope 32px w300",
+      ".t-m": "Manrope 21.6px w700",
+      ".t-s": "Manrope 16px w700",
+      ".t-body-l": "Inter 16px w400",
+      ".t-label": "Inter 13px w600",
+      ".t-micro": "Inter 12px w600",
+      ".t-xxl": "Manrope 144px w800",
+      "otherFamilies": []
+    },
+    "mobile": {
+      ".t-hero": "Manrope 34.32px w800",
+      ".t-xl": "Manrope 30px w800",
+      ".t-l": "Manrope 24px w300",
+      ".t-m": "Manrope 19px w700",
+      ".t-s": "Manrope 16px w700",
+      ".t-body-l": "Inter 16px w400",
+      ".t-label": "Inter 13px w600",
+      ".t-micro": "Inter 12px w600",
+      ".t-xxl": "Manrope 78px w800",
+      "otherFamilies": []
+    }
+  },
+  "status": {
+    "items": [
+      "Completed 01 Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum",
+      "Completed 02 Sed do eiusmod tempor incididunt ut labore et dolore Lorem ipsum",
+      "In progress 03 Ut enim ad minim veniam, quis nostrud exercitation Lorem ipsum",
+      "Upcoming 04 Duis aute irure dolor in reprehenderit in voluptate Lorem ipsum"
+    ],
+    "header": "Watch the project\ntake shape",
+    "body": "04 /\nProject Status · Site progress\n\nWatch the project\ntake shape\nMilestones from approval to operations, with on-site progress captured through Constra construction monitoring.\nCompleted\n· 02\nIn progress\n· 01\nUpcoming\n· 01\n\nOfficial master plan\n\nCompleted\n· Milestone 01\n\nTimeline\n\n01 / 04\n\nCompleted\n\n01\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit\n\nLorem ipsum\n\nCompleted\n\n02\n\nSed do eiusmod tempor incididunt ut labore et dolore\n\nLorem ipsum\n\nIn progress\n\n03\n\nUt enim ad minim veniam, quis nostrud exercitation\n\nLorem ipsum\n\nUpcoming\n\n04\n\nDuis aute irure dolor in reprehenderit in vol"
+  },
+  "pathgroup_desktop": {
+    "highlight": "0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 31 Years of infrastructure 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 18 States presence across India 0 1 2 3 4 5 6 7 8 9 , 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 6,500 Lane KMs of highways ~ 0 1 2 3 4 5 6 7 8 9 , 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 6,000 Workforce approximately, across the group",
+    "aboutLen": 263,
+    "about": "About PATH “With more than three decades of experience in building India's infrastructure, PATH has evolved from developing critical infrastructure to creating integrated logistics ecosystems for the future.” Experience across Infrastructure Highways Logistics",
+    "verticals": [
+      "01 PATH Highway Construction Engineering and design through full EPC delivery, including BOT, HAM and OMT contracts on national corridors. Visit pathltd.com",
+      "Highway Construction",
+      "02 PATH Toll Operations Toll collection and toll management on national highways. Visit pathltd.com",
+      "Toll Operations",
+      "03 PATH Recharge Wayside Amenities Highway amenity centres with fuel, EV charging, food courts, washrooms and rest zones, on the Delhi–Mumbai and Eastern Peripheral expressways and more. Visit pathltd.com",
+      "Wayside Amenities",
+      "04 You are here Path Logicity Logistics Parks A multimodal logistics park at Dobbaspet, Bengaluru: road, rail, warehousing, commercial and an inland container depot in one ecosystem.",
+      "Logistics Parks",
+      "05 PATH Engineering Road Engineering GFRP rebars, metal crash barriers and road-marking systems for safer highways. Visit pathltd.com",
+      "Road Engineering",
+      "06 VU Dynamics Drone Manufacturing Indigenous unmanned aerial systems for defence and industry, with an R&D lab at Mhow and roots in IIT Kanpur. Visit pathltd.com",
+      "Drone Manufacturing",
+      "07 Majhi Mumbai Sports PATH's franchise in the Indian Street Premier League, the tennis-ball T10 cricket league. Champions in Season 2. Visit pathltd.com",
+      "Sports",
+      "08 PATH IT Solutions Technology and system-integration solutions for infrastructure operations. Visit pathltd.com",
+      "IT Solutions"
+    ],
+    "verticalLinks": [
+      "https://www.pathltd.com/verticals/highway-construction/",
+      "https://www.pathltd.com/verticals/toll-operation/",
+      "https://www.pathltd.com/verticals/path-recharge/",
+      "https://www.pathltd.com/verticals/path-engineering/",
+      "https://www.pathltd.com/verticals/defence/",
+      "https://www.pathltd.com/verticals/majhi-mumbai/",
+      "https://www.pathltd.com/verticals/it-solutions/"
+    ],
+    "imgs": [
+      "/_next/image?url=/client/path-group/highway.webp&w=1920&q=75",
+      "/_next/image?url=/client/path-group/highway-construction.webp&w=384&q=75",
+      "/_next/image?url=/client/path-group/toll-operations.webp&w=384&q=75",
+      "/_next/image?url=/client/path-group/wayside-amenities.webp&w=384&q=75",
+      "/_next/image?url=/client/image-1720613648983.webp&w=384&q=75",
+      "/_next/image?url=/client/path-group/engineering.webp&w=384&q=75",
+      "/_next/image?url=/client/path-group/vu-dynamics.webp&w=384&q=75",
+      "/_next/image?url=/client/path-group/majhi-mumbai.webp&w=384&q=75",
+      "/_next/image?url=/client/path-group/it-solutions.webp&w=384&q=75"
+    ],
+    "brokenImgs": [],
+    "hasLegacyTimeline": true,
+    "legacyText": [
+      "PATH Legacy"
+    ],
+    "overflowX": false
+  },
+  "pathgroup_mobile": {
+    "highlight": "0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 31 Years of infrastructure 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 18 States presence across India 0 1 2 3 4 5 6 7 8 9 , 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 6,500 Lane KMs of highways ~ 0 1 2 3 4 5 6 7 8 9 , 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 6,000 Workforce approximately, across the group",
+    "aboutLen": 263,
+    "about": "About PATH “With more than three decades of experience in building India's infrastructure, PATH has evolved from developing critical infrastructure to creating integrated logistics ecosystems for the future.” Experience across Infrastructure Highways Logistics",
+    "verticals": [
+      "01 PATH Highway Construction Engineering and design through full EPC delivery, including BOT, HAM and OMT contracts on national corridors. Visit pathltd.com",
+      "Highway Construction",
+      "02 PATH Toll Operations Toll collection and toll management on national highways. Visit pathltd.com",
+      "Toll Operations",
+      "03 PATH Recharge Wayside Amenities Highway amenity centres with fuel, EV charging, food courts, washrooms and rest zones, on the Delhi–Mumbai and Eastern Peripheral expressways and more. Visit pathltd.com",
+      "Wayside Amenities",
+      "04 You are here Path Logicity Logistics Parks A multimodal logistics park at Dobbaspet, Bengaluru: road, rail, warehousing, commercial and an inland container depot in one ecosystem.",
+      "Logistics Parks",
+      "05 PATH Engineering Road Engineering GFRP rebars, metal crash barriers and road-marking systems for safer highways. Visit pathltd.com",
+      "Road Engineering",
+      "06 VU Dynamics Drone Manufacturing Indigenous unmanned aerial systems for defence and industry, with an R&D lab at Mhow and roots in IIT Kanpur. Visit pathltd.com",
+      "Drone Manufacturing",
+      "07 Majhi Mumbai Sports PATH's franchise in the Indian Street Premier League, the tennis-ball T10 cricket league. Champions in Season 2. Visit pathltd.com",
+      "Sports",
+      "08 PATH IT Solutions Technology and system-integration solutions for infrastructure operations. Visit pathltd.com",
+      "IT Solutions"
+    ],
+    "verticalLinks": [
+      "https://www.pathltd.com/verticals/highway-construction/",
+      "https://www.pathltd.com/verticals/toll-operation/",
+      "https://www.pathltd.com/verticals/path-recharge/",
+      "https://www.pathltd.com/verticals/path-engineering/",
+      "https://www.pathltd.com/verticals/defence/",
+      "https://www.pathltd.com/verticals/majhi-mumbai/",
+      "https://www.pathltd.com/verticals/it-solutions/"
+    ],
+    "imgs": [
+      "/_next/image?url=/client/path-group/highway.webp&w=640&q=75",
+      "/_next/image?url=/client/path-group/highway-construction.webp&w=384&q=75",
+      "/_next/image?url=/client/path-group/toll-operations.webp&w=384&q=75",
+      "/_next/image?url=/client/path-group/wayside-amenities.webp&w=384&q=75",
+      "/_next/image?url=/client/image-1720613648983.webp&w=384&q=75",
+      "/_next/image?url=/client/path-group/engineering.webp&w=384&q=75",
+      "/_next/image?url=/client/path-group/vu-dynamics.webp&w=384&q=75",
+      "/_next/image?url=/client/path-group/majhi-mumbai.webp&w=384&q=75",
+      "/_next/image?url=/client/path-group/it-solutions.webp&w=384&q=75"
+    ],
+    "brokenImgs": [],
+    "hasLegacyTimeline": true,
+    "legacyText": [
+      "PATH Legacy"
+    ],
+    "overflowX": false
+  },
+  "highwayBytes": 83564,
+  "highwayNatural": [
+    800,
+    580
+  ],
+  "warehouse17Status": 404,
+  "constra_desktop": {
+    "text": "Space availability Leased and available space, tracked with Constra Current leased and available space is shared on request. Tell us the size and timing you are planning for and the leasing team will share what is available at Path Logicity. ENQUIRE ABOUT AVAILABLE SPACE",
+    "externalLinks": [
+      "http://localhost:3100/#enquire"
+    ],
+    "annotationsOffHidden": true,
+    "anyConstraHref": [],
+    "anyConstraText": [
+      "Milestones from approval to operations, with on-site progress captured through C",
+      "Constra",
+      "[ Constra sync date ]",
+      "[ Constra project URL ]",
+      "[ Leased / available / total sq. ft. and the unit list, from Constra ]",
+      "[ Constra links to supply: Leased & available space · Site progress · Drone capt",
+      "self.__next_f.push([1,\"18:[\\\"$\\\",\\\"$1\\\",\\\"c\\\",{\\\"children\\\":[[[\\\"$\\\",\\\"$L2c\\\",nu"
+    ]
+  },
+  "constra_mobile": {
+    "text": "Space availability Leased and available space, tracked with Constra Current leased and available space is shared on request. Tell us the size and timing you are planning for and the leasing team will share what is available at Path Logicity. ENQUIRE ABOUT AVAILABLE SPACE",
+    "externalLinks": [
+      "http://localhost:3100/#enquire"
+    ],
+    "annotationsOffHidden": true,
+    "anyConstraHref": [],
+    "anyConstraText": [
+      "Milestones from approval to operations, with on-site progress captured through C",
+      "Constra",
+      "[ Constra sync date ]",
+      "[ Constra project URL ]",
+      "[ Leased / available / total sq. ft. and the unit list, from Constra ]",
+      "[ Constra links to supply: Leased & available space · Site progress · Drone capt",
+      "self.__next_f.push([1,\"18:[\\\"$\\\",\\\"$1\\\",\\\"c\\\",{\\\"children\\\":[[[\\\"$\\\",\\\"$L2c\\\",nu"
+    ]
+  },
+  "constra_annotations": "Space availability Leased and available space, tracked with Constra Last updated · [ Constra sync date ] [ Constra project URL ] Current leased and available space is shared on request. Tell us the size and timing you are planning for and the leasing team will share what is available at Path Logicity. [ Leased / available / total sq. ft. and the unit list, from Constra ] ENQUIRE ABOUT AVAILABLE SPACE [ Constra links to supply: Leased & available space · Site progress · Drone captures · Progress reports ]",
+  "overflow": {
+    "/@390": {
+      "overflow": false,
+      "errs": []
+    },
+    "/path-group@390": {
+      "overflow": false,
+      "errs": []
+    },
+    "/logicity-advantage@390": {
+      "overflow": false,
+      "errs": []
+    },
+    "/sustainability@390": {
+      "overflow": false,
+      "errs": []
+    },
+    "/site-tour@390": {
+      "overflow": false,
+      "errs": []
+    },
+    "/news@390": {
+      "overflow": false,
+      "errs": []
+    },
+    "/blogs@390": {
+      "overflow": false,
+      "errs": []
+    },
+    "/@1440": {
+      "overflow": false,
+      "errs": []
+    },
+    "/path-group@1440": {
+      "overflow": false,
+      "errs": []
+    },
+    "/logicity-advantage@1440": {
+      "overflow": false,
+      "errs": []
+    },
+    "/sustainability@1440": {
+      "overflow": false,
+      "errs": []
+    },
+    "/site-tour@1440": {
+      "overflow": false,
+      "errs": []
+    },
+    "/news@1440": {
+      "overflow": false,
+      "errs": []
+    },
+    "/blogs@1440": {
+      "overflow": false,
+      "errs": []
+    }
+  }
+}

@@ -150,7 +150,7 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
         <Route ref={route} d={HERO_ROUTE} initial={0} base={false} tone="light" trail="blue" className="z-[16] max-lg:hidden" strokeWidth={1.5} />
 
         {/* Site reticle — the location becomes a place you are looking at */}
-        <div data-hero-reticle aria-hidden className="absolute left-[76%] top-[31%] z-10 hidden -translate-x-1/2 -translate-y-1/2 lg:block">
+        <div data-hero-reticle aria-hidden className="absolute left-[60%] top-[44%] z-10 hidden -translate-x-1/2 -translate-y-1/2 lg:block">
           <div className="relative">
             <svg width="72" height="72" viewBox="0 0 72 72" fill="none" className="text-yellow-400">
               <circle cx="36" cy="36" r="22" stroke="currentColor" strokeOpacity="0.8" />

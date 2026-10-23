@@ -222,7 +222,7 @@ export const milestones: Milestone[] = [
     phase: "Lorem ipsum",
     title: "Ut enim ad minim veniam, quis nostrud exercitation",
     date: null,
-    media: progressMedia("03", "/construction/progress-03-building.webp", "Representative construction progress", "Representative imagery · Constra site capture to follow"),
+    media: progressMedia("03", "/client/warehouse-17-progress.webp", "Aerial view of Warehouse 17 at Path Logicity, with the access road and surrounding earthworks", "Site photograph · Warehouse 17"),
   },
   {
     id: "m4",
@@ -360,7 +360,7 @@ export const leasing: Leasing = {
 
 /** Constra: the project link and the collaterals we point to. `href: null` until the client supplies the URLs. */
 export const constra: { url: string | null; links: ConstraLink[] } = {
-  url: null,
+  url: "https://constra.bandhoo.com/",
   links: [
     { id: "availability", label: "Leased & available space", text: "Live availability by building and block.", href: null },
     { id: "progress", label: "Site progress", text: "Construction progress captures and timelapses.", href: null },

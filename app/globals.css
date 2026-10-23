@@ -398,6 +398,19 @@ em.accent {
 .hero-ping {
   animation: hero-ping 3s var(--ease-route) 1.2s infinite;
 }
+/* chevrons on the phone hero's "drag to look around" hint; --dir flips the direction */
+@keyframes hero-nudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(calc(var(--dir, 1) * 4px));
+  }
+}
+.hero-nudge {
+  animation: hero-nudge 1.4s ease-in-out infinite;
+}
 @media (prefers-reduced-motion: reduce) {
   .hero-drift,
   .hero-ping {

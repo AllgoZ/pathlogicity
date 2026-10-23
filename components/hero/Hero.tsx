@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { Homepage } from "@/lib/content";
 import type { SiteSettings } from "@/lib/content/types";
 import { gsap, MQ } from "@/lib/motion/gsap";
@@ -98,6 +98,101 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
         ease: "none",
         scrollTrigger: { trigger: section.current, start: "top top", end: "bottom top", scrub: true },
       });
+      // the headline drifts up and softens as the page scrolls away from the banner
+      gsap.to(q("[data-hero-head]"), {
+        yPercent: -22,
+        opacity: 0.15,
+        ease: "none",
+        scrollTrigger: { trigger: section.current, start: "top top", end: "60% top", scrub: true },
+      });
+
+      // Look around: the photograph is much wider than a phone, so a finger drags it sideways (object-position),
+      // with a little momentum. A gentle first sweep shows it can move; the hint and track show where you are.
+      const el = section.current;
+      const img = q("[data-hero-img]")[0] as HTMLImageElement | undefined;
+      const hint = q("[data-hero-hint]")[0] as HTMLElement | undefined;
+      const thumb = q("[data-hero-thumb]")[0] as HTMLElement | undefined;
+      if (!el || !img) return;
+      const MIN = 15;
+      const MAX = 85;
+      const clamp = (n: number) => Math.min(MAX, Math.max(MIN, n));
+      const X = { v: 70 };
+      const apply = () => {
+        img.style.objectPosition = `${X.v}% center`;
+        thumb?.style.setProperty("--p", String((X.v - MIN) / (MAX - MIN)));
+      };
+      // how far the image can travel, in px: its rendered width minus the viewport's
+      const travel = () => el.clientHeight * (img.naturalWidth && img.naturalHeight ? img.naturalWidth / img.naturalHeight : 16 / 9) - el.clientWidth;
+      apply();
+
+      const intro = gsap.timeline({ delay: 2.6, onUpdate: apply });
+      intro.to(X, { v: 40, duration: 1.7, ease: "power2.inOut" }).to(X, { v: 64, duration: 1.5, ease: "power2.inOut" });
+      if (hint) gsap.fromTo(hint, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.7, delay: 1.6 });
+
+      let startX = 0;
+      let startY = 0;
+      let startV = 0;
+      let lastX = 0;
+      let lastT = 0;
+      let vel = 0;
+      let down = false;
+      let dragging = false;
+      const stopIntro = () => {
+        intro.kill();
+        gsap.killTweensOf(X);
+        if (hint) gsap.to(hint, { opacity: 0, duration: 0.4, overwrite: true });
+      };
+      const onDown = (e: PointerEvent) => {
+        if ((e.target as Element).closest("a, button, input, textarea, select")) return;
+        down = true;
+        dragging = false;
+        startX = lastX = e.clientX;
+        startY = e.clientY;
+        startV = X.v;
+        vel = 0;
+        lastT = e.timeStamp;
+      };
+      const onMove = (e: PointerEvent) => {
+        if (!down) return;
+        const dx = e.clientX - startX;
+        if (!dragging) {
+          if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(e.clientY - startY)) return;
+          dragging = true;
+          stopIntro();
+          el.setPointerCapture(e.pointerId);
+        }
+        const t = travel();
+        if (t <= 0) return;
+        const dt = e.timeStamp - lastT;
+        if (dt > 0) vel = (e.clientX - lastX) / dt;
+        lastX = e.clientX;
+        lastT = e.timeStamp;
+        X.v = clamp(startV - (dx / t) * 100);
+        apply();
+      };
+      const onUp = (e: PointerEvent) => {
+        if (!down) return;
+        down = false;
+        if (!dragging) return;
+        dragging = false;
+        if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId);
+        const t = travel();
+        if (t > 0 && Math.abs(vel) > 0.05) gsap.to(X, { v: clamp(X.v - ((vel * 380) / t) * 100), duration: 1.1, ease: "power3.out", onUpdate: apply });
+      };
+      const prevTouch = el.style.touchAction;
+      el.style.touchAction = "pan-y"; // vertical scroll stays with the browser; horizontal drags come to us
+      el.addEventListener("pointerdown", onDown);
+      el.addEventListener("pointermove", onMove);
+      el.addEventListener("pointerup", onUp);
+      el.addEventListener("pointercancel", onUp);
+      return () => {
+        el.removeEventListener("pointerdown", onDown);
+        el.removeEventListener("pointermove", onMove);
+        el.removeEventListener("pointerup", onUp);
+        el.removeEventListener("pointercancel", onUp);
+        el.style.touchAction = prevTouch;
+        img.style.objectPosition = "70% center";
+      };
     });
 
     mm.add("(prefers-reduced-motion: reduce)", () => {
@@ -134,7 +229,7 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
                 <source src={data.video.src} type="video/mp4" />
               </video>
             ) : data.video.poster ? (
-              <Image src={data.video.poster} alt={data.video.alt} fill preload fetchPriority="high" sizes="100vw" className="object-cover" style={{ objectPosition: "70% center" }} />
+              <Image src={data.video.poster} alt={data.video.alt} fill preload fetchPriority="high" sizes="100vw" className="object-cover" style={{ objectPosition: "70% center" }} data-hero-img />
             ) : null}
           </div>
         </div>
@@ -169,7 +264,7 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
 
         {/* Content */}
         <div className="shell relative z-20 flex h-full flex-col pb-5 pt-[calc(64px+5vh)] lg:pb-7 lg:pt-[calc(88px+3.5vh)]">
-          <h1 id="hero-title" className="t-hero max-w-[14ch] text-ink">
+          <h1 id="hero-title" data-hero-head className="t-hero max-w-[14ch] text-ink">
             {data.headline.map((line, i) => (
               <span key={line} data-hero-line className={`block overflow-hidden pb-[0.08em] -mb-[0.08em] ${i === data.headline.length - 1 ? "text-indigo-700" : ""}`}>
                 <span className="hero-rise block" style={{ animationDelay: `${120 + i * 110}ms` }}>
@@ -186,6 +281,19 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
               <span className="absolute inset-0 rounded-full bg-yellow-400 animate-pulse-soft" />
               <span className="relative block h-3 w-3 rounded-full border-2 border-paper bg-yellow-400 shadow" />
             </span>
+            {/* drag hint + position track; revealed by the look-around scene, so it never shows without motion or on desktop */}
+            <div data-hero-hint className="pointer-events-none absolute inset-x-0 bottom-2 flex justify-center opacity-0">
+              <span className="t-micro flex items-center gap-3 rounded-full bg-paper/90 px-4 py-2 text-ink shadow-[var(--shadow-card)]">
+                <Icon name="arrow-right" size={14} className="hero-nudge rotate-180 text-indigo-700" style={{ "--dir": -1 } as CSSProperties} />
+                <span className="flex items-center gap-3">
+                  Drag to look around
+                  <span className="relative block h-[3px] w-12 bg-ink/15">
+                    <span data-hero-thumb className="absolute top-0 block h-full w-4 bg-yellow-400" style={{ left: "calc((100% - 1rem) * var(--p, 0.65))" }} />
+                  </span>
+                </span>
+                <Icon name="arrow-right" size={14} className="hero-nudge text-indigo-700" />
+              </span>
+            </div>
           </div>
 
           <div data-hero-hud className="mt-auto">

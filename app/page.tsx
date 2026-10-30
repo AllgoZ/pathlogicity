@@ -5,6 +5,7 @@ import { ScaleIndex } from "@/components/stats/ScaleIndex";
 import { MasterPlan } from "@/components/master-plan/MasterPlan";
 import { ProjectStatus } from "@/components/project-status/ProjectStatus";
 import { PathGroup } from "@/components/path-group/PathGroup";
+import { PathLegacy } from "@/components/path-group/PathVerticals";
 import { RendersGallery } from "@/components/gallery/RendersGallery";
 import { HubOpener } from "@/components/advantage/HubOpener";
 import { SpecDrawing } from "@/components/advantage/SpecDrawing";
@@ -29,7 +30,7 @@ export default function HomePage() {
       <ScaleIndex data={home.scale} />
       <MasterPlan zones={home.zones} />
       <ProjectStatus milestones={home.milestones} lastUpdated={home.statusLastUpdated} leasing={home.leasing} constra={home.constra} />
-      <PathGroup data={home.pathGroup} />
+      <PathLegacy items={home.pathGroup.verticals} />
       <RendersGallery items={home.renders} />
       <HubOpener />
       <SpecDrawing glance={home.glance} />
@@ -39,6 +40,7 @@ export default function HomePage() {
       <Sustainability data={home.sustainability} />
       <BusinessValue benefits={home.benefits} />
       <SiteTourPreview data={home.siteTour} />
+      <PathGroup data={home.pathGroup} legacy={false} />
       <NewsPreview items={home.news} />
     </>
   );

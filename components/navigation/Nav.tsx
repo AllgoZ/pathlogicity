@@ -122,7 +122,7 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
                                   href={c.href}
                                   className="group flex gap-4 px-5 py-3.5 transition-colors hover:bg-porcelain focus-visible:bg-porcelain"
                                 >
-                                  <span className="t-micro pt-[3px] text-indigo-700">{String(j + 1).padStart(2, "0")}</span>
+                                  <span aria-hidden className="t-micro pt-[3px] text-indigo-700">•</span>
                                   <span>
                                     <span className="block text-[0.9375rem] font-bold text-ink">{c.label}</span>
                                     {c.note ? <span className="mt-1 block text-[0.8125rem] leading-snug text-steel-500">{c.note}</span> : null}
@@ -222,7 +222,7 @@ function MobileMenu({ open, items, settings, onClose }: { open: boolean; items: 
             >
               <div className="flex items-center justify-between">
                 <Link ref={i === 0 ? first : undefined} href={item.href} onClick={onClose} className="flex flex-1 items-baseline gap-4 py-3.5">
-                  <span className="t-micro tnum w-5 text-indigo-700/70">{String(i + 1).padStart(2, "0")}</span>
+                  <span aria-hidden className="t-micro tnum w-5 text-indigo-700/70">•</span>
                   <span className="text-[1.0625rem] font-medium leading-tight tracking-[-0.005em] text-ink">{item.label}</span>
                 </Link>
                 {item.children ? (

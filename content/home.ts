@@ -272,9 +272,9 @@ export const pathGroup = {
   /** A highway photograph from the main PATH Group site (client round 5: "preferably a road or highway image"). */
   photo: {
     slot: "PATH Group Photography",
-    spec: "Highway project photograph · 21:9 · ≥2560px wide",
+    spec: "Highway project photograph · 21:9 · 1200px wide (largest on pathltd.com); ≥2560px wanted",
     src: "/client/path-group/highway.webp",
-    alt: "A multi-lane highway built by PATH, with trucks and light vehicles under a monsoon sky",
+    alt: "Aerial view of a highway junction built by PATH, running through green farmland",
     credit: "Photo: PATH Group · pathltd.com",
   } satisfies MediaAsset,
   /** PATH Legacy — the group's verticals (pathltd.com → Verticals). Replaces the old four-step timeline. */
@@ -284,7 +284,7 @@ export const pathGroup = {
       brand: "PATH",
       title: "Highway Construction",
       text: "Engineering and design through full EPC delivery, including BOT, HAM and OMT contracts on national corridors.",
-      image: { slot: "Highway Construction", spec: "Project photograph · 4:5", src: "/client/path-group/highway-construction.webp", alt: "An excavator on a highway site at dusk" },
+      image: { slot: "Highway Construction", spec: "Project photograph · 4:3", src: "/client/path-group/highway-construction.webp", alt: "A bulldozer and survey crew preparing a highway site" },
       href: "https://www.pathltd.com/verticals/highway-construction/",
     },
     {

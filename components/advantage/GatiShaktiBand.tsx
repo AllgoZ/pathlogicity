@@ -15,8 +15,8 @@ export function GatiShaktiBand({ data, partners, destinations }: { data: Homepag
       <div className="shell">
         <div className="grid-12 gap-y-6">
           <div className="col-span-4 sm:col-span-8 lg:col-span-7">
-            <p className="t-label text-ink">
-              <span data-idx className="text-indigo-700">07.1 /</span> PM Gati Shakti
+            <p className="t-label flex items-center gap-2.5 text-ink">
+              <span aria-hidden className="text-indigo-700">•</span> PM Gati Shakti
             </p>
             <RevealLines id="gs-title" lines={data.headline} className="t-xl mt-5 text-ink" />
           </div>
@@ -64,7 +64,7 @@ export function GatiShaktiBand({ data, partners, destinations }: { data: Homepag
         <Reveal as="ol" className="mt-4 grid gap-x-[var(--gutter)] sm:grid-cols-2 lg:grid-cols-3">
           {data.points.map((p, i) => (
             <li key={p} className="flex gap-4 border-t border-ink/10 py-5">
-              <span className="t-micro tnum pt-1 text-indigo-700">{String(i + 1).padStart(2, "0")}</span>
+              <span aria-hidden className="t-micro tnum pt-1 text-indigo-700">•</span>
               <p className="text-[1rem] leading-relaxed text-steel-700">{p}</p>
             </li>
           ))}

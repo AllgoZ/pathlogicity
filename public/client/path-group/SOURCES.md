@@ -15,5 +15,7 @@ Group website").
 | majhi-mumbai.webp | /2023/09/MAJHI-MUMBAI.jpg |
 | vu-dynamics.webp | /2023/09/VU-DYNAMICS.jpg |
 
-The originals are 800 px wide (portrait art up to 924 px): fine for cards, soft above about 1000 px.
+**Updated 2026-10-30 (client round 6, "HD images in 05"):** `highway.webp` is now `/2025/11/img-heighwat.jpg` (1200×750, a highway junction aerial) and `highway-construction.webp` is an 800×600 crop of `/2025/08/bg-22.jpg`. All eight files were re-encoded from the JPEG originals at WebP quality 90. pathltd.com holds nothing larger and clean for the banner; `it-solutions.webp` is still 476×625.
+
+The other originals are 800 px wide (portrait art up to 924 px): fine for cards, soft above about 1000 px.
 Ask the client for the full-resolution highway photograph for the wide PATH Group banner.

@@ -47,10 +47,10 @@
   --color-orange-400: #ff8a3d;
 
   /* Accents — strict roles */
-  --color-yellow-400: #e7ac00; /* THE accent — client gold: CTAs, rules, route comet, numerals on dark */
-  --color-yellow-300: #f0c233;
-  --color-yellow-200: #f3d35e;
-  --color-yellow-50: #fdf6e0;
+  --color-yellow-400: #ffca00; /* THE accent — the Bengaluru highlight yellow on the client location map (#ffca00): CTAs, rules, route comet, numerals on dark */
+  --color-yellow-300: #ffd633;
+  --color-yellow-200: #ffe066;
+  --color-yellow-50: #fff8dc;
   --color-green-500: #449e35; /* sustainability + completed — client green */
   --color-green-300: #78c45a;
   --color-green-700: #2f7a24;
@@ -305,7 +305,7 @@ em.accent {
 }
 @utility glow-brand {
   background-image:
-    radial-gradient(60% 50% at 12% 0%, rgb(231 172 0 / 0.14), transparent 70%),
+    radial-gradient(60% 50% at 12% 0%, rgb(255 202 0 / 0.14), transparent 70%),
     radial-gradient(55% 60% at 100% 100%, rgb(32 31 133 / 0.55), transparent 70%);
 }
 /* The client pinwheel as a 2px signature stripe */
@@ -414,6 +414,48 @@ em.accent {
 @media (prefers-reduced-motion: reduce) {
   .hero-drift,
   .hero-ping {
+    animation: none;
+  }
+}
+
+/* ---- Hero redesign (client round 6) ------------------------------------------------------------------
+   The letters are CSS (so nothing flashes before hydration); switched off under reduced motion. */
+@keyframes hero-char {
+  from {
+    transform: translateY(112%) rotate(5deg);
+    filter: blur(5px);
+  }
+  to {
+    transform: translateY(0) rotate(0);
+    filter: blur(0);
+  }
+}
+/* letters rise one by one; "backwards" (not "both") so the hover lift below is free once they have landed */
+.hero-char {
+  display: inline-block;
+  animation: hero-char 0.95s var(--ease-out-expo) backwards;
+  transition:
+    transform 0.4s var(--ease-out-expo),
+    color 0.3s;
+}
+@media (hover: hover) and (pointer: fine) {
+  .hero-char:hover {
+    transform: translateY(-0.07em) rotate(-3deg);
+    color: var(--color-blue-500);
+  }
+}
+/* the wash over the photograph lifts in a soft circle around --mx / --my (set from the pointer) */
+.hero-wash {
+  --lens: 0;
+  -webkit-mask-image: radial-gradient(circle calc(var(--lens) * 1px) at calc(var(--mx, 50) * 1px) calc(var(--my, 50) * 1px), rgb(0 0 0 / 0.04) 0%, rgb(0 0 0 / 0.3) 50%, #000 100%);
+  mask-image: radial-gradient(circle calc(var(--lens) * 1px) at calc(var(--mx, 50) * 1px) calc(var(--my, 50) * 1px), rgb(0 0 0 / 0.04) 0%, rgb(0 0 0 / 0.3) 50%, #000 100%);
+}
+.hero-wash[data-lens="off"] {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-char {
     animation: none;
   }
 }
@@ -585,7 +627,7 @@ html:not([data-annotations="on"]) .slot-annotation {
   border-width: 2px;
 }
 .route-node-end[data-on="1"] {
-  box-shadow: 0 0 0 6px rgb(231 172 0 / 0.22);
+  box-shadow: 0 0 0 6px rgb(255 202 0 / 0.22);
 }
 
 /* Hover lift for tiles and cards that are not links themselves */

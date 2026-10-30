@@ -97,7 +97,7 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
 
         <div className="col-span-4 sm:col-span-8 lg:col-span-6">
           <p className="t-label flex items-center gap-3">
-            <span data-idx className="text-indigo-700">02 /</span> Scale
+            Scale
           </p>
           <div ref={num} className="mt-8 flex w-fit items-start">
             <div className="t-xxl relative text-indigo-700">
@@ -157,7 +157,7 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
                   <Icon name={n.icon} size={26} draw />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="t-micro block text-steel-500">{String(i + 1).padStart(2, "0")}</span>
+                  <span aria-hidden className="t-micro block text-steel-500">•</span>
                   <span className="t-label mt-1 block text-indigo-700">{n.label}</span>
                   <span className="t-s mt-1.5 block text-ink">{n.text}</span>
                 </span>

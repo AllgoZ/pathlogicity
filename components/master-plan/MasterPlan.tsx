@@ -93,7 +93,6 @@ export function MasterPlan({ zones }: { zones: Zone[] }) {
       <div className="shell relative grid-12 gap-y-8">
         <SectionHeader
           className="col-span-4 sm:col-span-8 lg:col-span-7"
-          index="03"
           chapter="Explore Path Logicity"
           id="explore-title"
           lines={["Explore the", "*ecosystem*"]}
@@ -130,7 +129,7 @@ export function MasterPlan({ zones }: { zones: Zone[] }) {
                       on ? "border-yellow-400 bg-yellow-400 text-ink lg:bg-transparent lg:text-indigo-700" : "border-ink/15 bg-paper text-ink/80 hover:text-indigo-700 lg:bg-transparent"
                     }`}
                   >
-                    <span className={`t-micro tnum ${on ? "" : "text-steel-500"} lg:w-7`}>{z.index}</span>
+                    <span aria-hidden className={`t-micro ${on ? "" : "text-steel-500"} lg:w-7`}>•</span>
                     <span className="whitespace-nowrap text-[0.875rem] font-bold lg:text-[0.9375rem]">{z.name}</span>
                     <span aria-hidden className={`ml-auto hidden h-px transition-all duration-500 ease-[var(--ease-out-expo)] lg:block ${on || lit ? "w-10 bg-yellow-400" : "w-3 bg-ink/25"}`} />
                   </button>

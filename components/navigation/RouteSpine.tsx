@@ -95,7 +95,7 @@ export function RouteSpine() {
       <span data-trail className="absolute inset-y-0 -left-px w-[2px] origin-top bg-yellow-400" style={{ transform: "scaleY(0)" }} />
       <span data-nodes className="absolute inset-0" />
       <span data-head className="absolute left-0 top-0 opacity-0 transition-opacity duration-300 will-change-transform">
-        <span className="absolute -left-[5px] -top-[5px] block h-2.5 w-2.5 rounded-full bg-yellow-400 shadow-[0_0_0_6px_rgb(231_172_0/0.2),0_0_18px_3px_rgb(231_172_0/0.4)]" />
+        <span className="absolute -left-[5px] -top-[5px] block h-2.5 w-2.5 rounded-full bg-yellow-400 shadow-[0_0_0_6px_rgb(255_202_0/0.2),0_0_18px_3px_rgb(255_202_0/0.4)]" />
       </span>
     </div>
   );

@@ -23,8 +23,8 @@ export function RendersGallery({ items }: { items: GalleryItem[] }) {
     <section id="renders" data-stage="believe" aria-labelledby="renders-title" className="relative overflow-hidden bg-stone py-[clamp(88px,12vh,144px)]">
       <div className="shell grid-12 items-end gap-y-6">
         <div className="col-span-4 sm:col-span-6 lg:col-span-7">
-          <p className="t-label text-ink">
-            <span data-idx className="text-indigo-700">05.5 /</span> The park
+          <p className="t-label flex items-center gap-2.5 text-ink">
+            <span aria-hidden className="text-indigo-700">•</span> The park
           </p>
           <RevealLines id="renders-title" lines={["The park,", "*in renders.*"]} className="t-xl mt-5 text-ink" />
         </div>
@@ -60,7 +60,7 @@ export function RendersGallery({ items }: { items: GalleryItem[] }) {
                 </button>
               </div>
               <figcaption className="mt-5 flex items-baseline gap-5">
-                <span className="t-micro tnum text-indigo-700">{String(i + 1).padStart(2, "0")}</span>
+                <span aria-hidden className="t-micro tnum text-indigo-700">•</span>
                 <span>
                   <span className="t-s block text-ink">{it.title}</span>
                   <span className="mt-1 block text-[0.9375rem] text-steel-700">{it.caption}</span>

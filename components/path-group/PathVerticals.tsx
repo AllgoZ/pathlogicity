@@ -8,6 +8,17 @@ import { Reveal, RevealLines } from "@/components/ui/Reveal";
  * including Wayside Amenities, the sporting venture, Drone Manufacturing"). Content: pathltd.com → Verticals.
  * Path Logicity itself is marked, so the page still reads as "this is where you are".
  */
+/** PATH Legacy as a section of its own (homepage: straight after Project status). */
+export function PathLegacy({ items }: { items: Vertical[] }) {
+  return (
+    <section data-stage="believe" aria-labelledby="verticals-title" className="relative bg-stone section-pad">
+      <div className="shell">
+        <PathVerticals items={items} />
+      </div>
+    </section>
+  );
+}
+
 export function PathVerticals({ items }: { items: Vertical[] }) {
   return (
     <div id="verticals" aria-labelledby="verticals-title">
@@ -36,7 +47,7 @@ export function PathVerticals({ items }: { items: Vertical[] }) {
                   style={{ objectPosition: "center 55%" }}
                 />
                 <span aria-hidden className="t-micro tnum absolute left-3 top-3 bg-ink px-2.5 py-1 text-paper">
-                  {String(i + 1).padStart(2, "0")}
+                  •
                 </span>
                 {here ? <span className="t-micro absolute right-3 top-3 bg-yellow-400 px-2.5 py-1 text-ink">You are here</span> : null}
               </div>

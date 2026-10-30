@@ -14,8 +14,8 @@ export function Amenities({ items }: { items: Amenity[] }) {
     <section id="amenities" data-stage="understand" aria-labelledby="amenities-title" className="relative overflow-hidden bg-paper py-[clamp(88px,12vh,144px)]">
       <div className="shell grid-12 items-end gap-y-6">
         <div className="col-span-4 sm:col-span-8 lg:col-span-8">
-          <p className="t-label text-ink">
-            <span data-idx className="text-indigo-700">06.2 /</span> Amenities
+          <p className="t-label flex items-center gap-2.5 text-ink">
+            <span aria-hidden className="text-indigo-700">•</span> Amenities
           </p>
           <RevealLines id="amenities-title" lines={["Everything your", "business needs.", "*And more.*"]} className="t-xl mt-5 text-ink" />
         </div>
@@ -56,7 +56,7 @@ export function Amenities({ items }: { items: Amenity[] }) {
                   </div>
                 )}
                 <span aria-hidden className="t-micro tnum absolute left-3 top-3 bg-ink px-2.5 py-1 text-paper">
-                  {String(i + 1).padStart(2, "0")}
+                  •
                 </span>
               </div>
               <div className="flex flex-1 flex-col p-6 lg:p-7">

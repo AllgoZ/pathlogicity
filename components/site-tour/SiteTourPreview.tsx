@@ -73,7 +73,7 @@ export function SiteTourPreview({ data }: { data: Homepage["siteTour"] }) {
         <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_55%,transparent_45%,rgb(249_250_253/0.85)_92%)]" />
         {/* soft porcelain behind the title block so text stays readable when the camera is close */}
         <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 w-[58%] bg-gradient-to-r from-porcelain via-porcelain/70 to-transparent lg:w-[42%]" />
-        <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(40%_35%_at_50%_55%,rgb(231_172_0/0.12),transparent_70%)]" />
+        <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(40%_35%_at_50%_55%,rgb(255_202_0/0.12),transparent_70%)]" />
         <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-porcelain to-transparent" />
         <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-porcelain via-porcelain/80 to-transparent" />
 
@@ -81,7 +81,7 @@ export function SiteTourPreview({ data }: { data: Homepage["siteTour"] }) {
           <div className="flex items-start justify-between gap-6">
             <div className="pointer-events-auto">
               <p className="t-label text-ink">
-                <span data-idx className="text-indigo-700">09 /</span> {data.kicker}
+                {data.kicker}
               </p>
               <RevealLines id="tour-title" lines={[data.title]} className="t-xl mt-5 text-ink" />
               <p className="t-body-l mt-4 max-w-[34ch] text-steel-700">A 3D site tour of the hub — explore every zone from above.</p>

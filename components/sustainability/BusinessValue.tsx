@@ -92,8 +92,8 @@ export function BusinessValue({ benefits }: { benefits: Benefit[] }) {
       <div ref={panel} className="relative bg-stone section-pad">
         <div className="shell grid-12 gap-y-8">
           <div className="col-span-4 sm:col-span-8 lg:col-span-8">
-            <p className="t-label text-ink">
-              <span data-idx className="text-indigo-700">08.1 /</span> Business value
+            <p className="t-label flex items-center gap-2.5 text-ink">
+              <span aria-hidden className="text-indigo-700">•</span> Business value
             </p>
             <RevealLines id="bv-title" lines={["Infrastructure", "that delivers", "*business value*"]} className="t-xl mt-5 text-ink" />
           </div>
@@ -105,7 +105,7 @@ export function BusinessValue({ benefits }: { benefits: Benefit[] }) {
         <ul className="shell no-scrollbar mt-16 flex scroll-pl-[var(--margin)] snap-x snap-mandatory gap-0 overflow-x-auto lg:mt-24 lg:grid lg:grid-cols-5 lg:overflow-visible">
           {benefits.map((b, i) => (
             <li key={b.id} className="group w-[78vw] shrink-0 snap-start border-l border-ink/10 px-6 pb-4 first:border-l-0 first:pl-0 sm:w-[44vw] lg:w-auto lg:px-7 lg:first:pl-0">
-              <span className="t-micro text-steel-500">{String(i + 1).padStart(2, "0")}</span>
+              <span aria-hidden className="t-micro text-steel-500">•</span>
               <svg data-bv viewBox="0 0 64 64" width="72" height="72" fill="none" stroke="var(--color-indigo-700)" strokeWidth="1.75" className="icon-draw mt-6 text-indigo-700" aria-hidden>
                 {DIAGRAMS[b.id]}
               </svg>

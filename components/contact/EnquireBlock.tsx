@@ -22,7 +22,7 @@ export function EnquireBlock({ content, settings }: { content: Content; settings
       <div className="shell relative grid-12 gap-y-16">
         <div className="col-span-4 sm:col-span-8 lg:col-span-5">
           <p className="t-label flex items-center gap-3 text-ink">
-            <span data-idx className="text-indigo-700">11 /</span> Enquire
+            Enquire
           </p>
           <RevealLines
             id="enquire-title"

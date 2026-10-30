@@ -7,12 +7,12 @@ import { Reveal, RevealLines } from "@/components/ui/Reveal";
 import { PathVerticals } from "./PathVerticals";
 
 /** §05 — PATH Group: legacy-led chapter. A highway photograph with the group's figures, About PATH (story, overview, mission, track record), then the verticals. */
-export function PathGroup({ data, standalone = false }: { data: Homepage["pathGroup"]; standalone?: boolean }) {
+export function PathGroup({ data, standalone = false, legacy = true }: { data: Homepage["pathGroup"]; standalone?: boolean; legacy?: boolean }) {
   return (
     <section id="path-group" data-stage="believe" aria-labelledby="pg-title" className="relative bg-stone section-pad">
       <div className="shell">
         <p className="t-label flex items-center gap-3 text-ink">
-          <span data-idx className="text-indigo-700">05 /</span> PATH Group
+          PATH Group
         </p>
         <h2 id="pg-title" className="mt-5">
           <RevealLines as="span" lines={[data.headline.from]} className="t-l block font-normal text-steel-500 [&_[data-line]]:font-normal" />
@@ -104,10 +104,11 @@ export function PathGroup({ data, standalone = false }: { data: Homepage["pathGr
         </Reveal>
       </div>
 
-      <div className="shell mt-20 lg:mt-28">
-        <PathVerticals items={data.verticals} />
+      {/* `legacy` = also show PATH Legacy (the verticals) here; the homepage shows it as its own section further up (`PathLegacy`) */}
+      <div className={`shell ${legacy ? "mt-20 lg:mt-28" : "mt-12 lg:mt-16"}`}>
+        {legacy ? <PathVerticals items={data.verticals} /> : null}
         {standalone ? null : (
-          <div className="mt-12 flex justify-end">
+          <div className={`flex justify-end ${legacy ? "mt-12" : ""}`}>
             <ArrowLink href="/path-group">Know more about PATH</ArrowLink>
           </div>
         )}

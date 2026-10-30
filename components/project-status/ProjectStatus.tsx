@@ -76,7 +76,6 @@ export function ProjectStatus({
       <div className="shell grid-12 gap-y-10">
         <SectionHeader
           className="col-span-4 sm:col-span-8 lg:col-span-8"
-          index="04"
           chapter="Project Status · Site progress"
           id="status-title"
           lines={["Watch the project", "*take shape*"]}

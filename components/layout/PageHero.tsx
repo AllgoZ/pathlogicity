@@ -38,7 +38,7 @@ export function PageHero({ kicker, lines, intro, links }: { kicker: string; line
               {links.map((l, i) => (
                 <li key={l.href} className="border-b border-ink/15">
                   <Link href={l.href} className="group flex items-baseline gap-4 py-4">
-                    <span className="t-micro tnum text-indigo-700">{String(i + 1).padStart(2, "0")}</span>
+                    <span aria-hidden className="t-micro tnum text-indigo-700">•</span>
                     <span className="min-w-0 flex-1">
                       <span className="block text-[0.9375rem] font-bold text-ink transition-colors group-hover:text-indigo-700">{l.label}</span>
                       {l.note ? <span className="mt-0.5 block text-[0.8125rem] leading-snug text-steel-500">{l.note}</span> : null}

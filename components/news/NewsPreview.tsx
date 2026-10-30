@@ -37,7 +37,7 @@ export function NewsPreview({ items, standalone = false }: { items: NewsItem[]; 
         <div className="grid-12 gap-y-6">
           <div className="col-span-4 sm:col-span-8 lg:col-span-8">
             <p className="t-label text-ink">
-              <span data-idx className="text-indigo-700">10 /</span> Newsroom
+              Newsroom
             </p>
             <RevealLines id="news-title" lines={["Path Logicity", "in the *news*"]} className="t-xl mt-5 text-ink" />
           </div>

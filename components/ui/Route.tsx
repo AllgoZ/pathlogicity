@@ -123,7 +123,7 @@ export const Route = forwardRef<RouteHandle, Props>(function Route(
         className="absolute left-0 top-0 block opacity-0 will-change-transform"
         style={{ width: 0, height: 0 }}
       >
-        <span className="absolute -left-[3px] -top-[3px] h-1.5 w-1.5 rounded-full bg-yellow-400 shadow-[0_0_0_6px_rgb(231_172_0/0.2),0_0_18px_3px_rgb(231_172_0/0.4)]" />
+        <span className="absolute -left-[3px] -top-[3px] h-1.5 w-1.5 rounded-full bg-yellow-400 shadow-[0_0_0_6px_rgb(255_202_0/0.2),0_0_18px_3px_rgb(255_202_0/0.4)]" />
       </span>
     </div>
   );

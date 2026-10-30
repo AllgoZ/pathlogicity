@@ -2,12 +2,11 @@ import type { ReactNode } from "react";
 import { Reveal, RevealLines } from "./Reveal";
 
 /**
- *  03 /  EXPLORE PATH LOGICITY      ← mono index + chapter
+ *  EXPLORE PATH LOGICITY             ← chapter
  *  HEADLINE                          ← hand-broken lines
  *  Short supporting line.
  */
 export function SectionHeader({
-  index,
   chapter,
   lines,
   body,
@@ -17,7 +16,6 @@ export function SectionHeader({
   className = "",
   lineClassNames,
 }: {
-  index: string;
   chapter: string;
   lines: ReactNode[];
   body?: ReactNode;
@@ -31,10 +29,7 @@ export function SectionHeader({
   const muted = tone === "light" ? "text-steel-700" : "text-paper/80";
   return (
     <header className={className}>
-      <p className={`t-label flex items-center gap-3 ${tone === "light" ? "text-ink" : "text-paper"}`}>
-        <span data-idx className={`shrink-0 whitespace-nowrap ${tone === "light" ? "text-indigo-700" : "text-yellow-400"}`}>{index} /</span>
-        <span>{chapter}</span>
-      </p>
+      <p className={`t-label ${tone === "light" ? "text-ink" : "text-paper"}`}>{chapter}</p>
       <RevealLines
         id={id}
         lines={lines}

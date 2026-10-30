@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { Fragment, useEffect, useRef, useState, type CSSProperties } from "react";
 import type { Homepage } from "@/lib/content";
 import type { SiteSettings } from "@/lib/content/types";
 import { gsap, MQ } from "@/lib/motion/gsap";
@@ -23,6 +23,32 @@ const MOBILE_ROUTE = "M -2 66 C 16 28, 34 82, 56 50 C 72 28, 88 44, 102 18";
 /** the site marker sits where the first segment ends (56%, 50%) */
 const MOBILE_PIN = { x: 56, y: 50, at: 0.5 };
 
+const CHAR_STEP = 26; // ms between letters
+const LENS = 260; // px radius of the cleared circle
+const INTRO = 160; // ms before the first letter rises
+
+/** One headline line, split into words and letters so each letter can rise on its own (and lift under the cursor). */
+function HeroChars({ text, from }: { text: string; from: number }) {
+  let n = from;
+  const words = text.split(" ");
+  return (
+    <>
+      {words.map((w, wi) => (
+        <Fragment key={wi}>
+          <span className="inline-block whitespace-nowrap">
+            {[...w].map((c, ci) => (
+              <span key={ci} className="hero-char" style={{ animationDelay: `${INTRO + n++ * CHAR_STEP}ms` }}>
+                {c}
+              </span>
+            ))}
+          </span>
+          {wi < words.length - 1 ? " " : null}
+        </Fragment>
+      ))}
+    </>
+  );
+}
+
 /**
  * §01 — Hero. The render (or, once supplied, the Warehouse 17 site photograph) runs full-bleed behind the copy
  * under a porcelain wash; the location, intro and actions sit on a bottom bar. On desktop the hero pins briefly
@@ -31,7 +57,13 @@ const MOBILE_PIN = { x: 56, y: 50, at: 0.5 };
  *
  * Banner motion (client round 5), all CSS so nothing flashes before hydration and nothing runs under reduced
  * motion: the image drifts slowly (`hero-drift`), the headline lines rise through their masks (`hero-rise`), the
- * bottom bar fades up (`hero-fade`) and the site reticle pings (`hero-ping`).
+ * bar fades up (`hero-fade`) and the site reticle pings (`hero-ping`).
+ *
+ * Round 6 redesign (docs/PLAN-HERO-REDESIGN.md) — kept deliberately uncluttered: nothing is added to the layout.
+ * The headline arrives letter by letter; the porcelain wash lifts in a soft circle under the cursor (a finger, on
+ * phones) so the photograph can be looked at; photo, headline and reticle move at slightly different depths with
+ * the mouse. Everything is a GSAP scene inside the existing `matchMedia` gates or a CSS animation that reduced
+ * motion switches off.
  */
 export function Hero({ data, settings }: { data: Homepage["hero"]; settings: SiteSettings }) {
   const section = useRef<HTMLElement>(null);
@@ -73,6 +105,62 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
         .to(o, { p: 1, duration: 0.62, onUpdate: () => route.current?.set(o.p) }, 0.24)
         .to(q("[data-hero-reticle]"), { opacity: 0, duration: 0.15 }, 0.72)
         .to(cover.current, { opacity: 1, duration: 0.3 }, 0.7);
+
+      // ---- cursor: the wash lifts around the pointer, and the layers drift at different depths (mouse / trackpad only) ----
+      const el = section.current;
+      const wash = q("[data-hero-wash]")[0] as HTMLElement | undefined;
+      if (!el || !wash || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+      const depth = q("[data-depth]") as HTMLElement[];
+      const moves = depth.map((d) => ({ d: Number(d.dataset.depth), x: gsap.quickTo(d, "x", { duration: 1, ease: "power3.out" }), y: gsap.quickTo(d, "y", { duration: 1, ease: "power3.out" }) }));
+      const at = { x: 0, y: 0 };
+      const rad = { v: 0 };
+      const paint = () => {
+        wash.style.setProperty("--mx", String(at.x));
+        wash.style.setProperty("--my", String(at.y));
+        wash.style.setProperty("--lens", String(rad.v));
+      };
+      let seen = false;
+      const onEnter = () => {
+        wash.dataset.lens = "on";
+        gsap.to(rad, { v: LENS, duration: 0.8, ease: "power3.out", onUpdate: paint });
+      };
+      const onLeave = () => {
+        gsap.to(rad, { v: 0, duration: 0.6, ease: "power2.in", onUpdate: paint, onComplete: () => void (wash.dataset.lens = "off") });
+        moves.forEach((m) => {
+          m.x(0);
+          m.y(0);
+        });
+      };
+      const onMove = (e: PointerEvent) => {
+        if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
+        const r = el.getBoundingClientRect();
+        const x = e.clientX - r.left;
+        const y = e.clientY - r.top;
+        if (!seen) {
+          seen = true;
+          at.x = x;
+          at.y = y;
+        }
+        gsap.to(at, { x, y, duration: 0.5, ease: "power3.out", overwrite: true, onUpdate: paint });
+        const nx = (x / r.width - 0.5) * 2;
+        const ny = (y / r.height - 0.5) * 2;
+        moves.forEach((m) => {
+          m.x(-nx * m.d);
+          m.y(-ny * m.d);
+        });
+      };
+      el.addEventListener("pointerenter", onEnter);
+      el.addEventListener("pointerleave", onLeave);
+      el.addEventListener("pointermove", onMove);
+      return () => {
+        el.removeEventListener("pointerenter", onEnter);
+        el.removeEventListener("pointerleave", onLeave);
+        el.removeEventListener("pointermove", onMove);
+        wash.dataset.lens = "off";
+        wash.style.removeProperty("--mx");
+        wash.style.removeProperty("--my");
+        wash.style.removeProperty("--lens");
+      };
     });
 
     mm.add(MQ.mobile, () => {
@@ -117,6 +205,29 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
       const MAX = 85;
       const clamp = (n: number) => Math.min(MAX, Math.max(MIN, n));
       const X = { v: 70 };
+      const wash = q("[data-hero-wash]")[0] as HTMLElement | undefined;
+      const lens = { x: 0, y: 0, v: 0 };
+      const paintLens = () => {
+        if (!wash) return;
+        wash.style.setProperty("--mx", String(lens.x));
+        wash.style.setProperty("--my", String(lens.y));
+        wash.style.setProperty("--lens", String(lens.v));
+      };
+      const lensTo = (e: PointerEvent, grow: boolean) => {
+        if (!wash) return;
+        const r = el.getBoundingClientRect();
+        const x = e.clientX - r.left;
+        const y = e.clientY - r.top;
+        if (grow) {
+          lens.x = x;
+          lens.y = y;
+          wash.dataset.lens = "on";
+          gsap.to(lens, { v: 170, duration: 0.5, ease: "power3.out", onUpdate: paintLens });
+        } else gsap.to(lens, { x, y, duration: 0.25, ease: "power2.out", overwrite: "auto", onUpdate: paintLens });
+      };
+      const lensOff = () => {
+        gsap.to(lens, { v: 0, duration: 0.6, ease: "power2.in", onUpdate: paintLens, onComplete: () => void (wash && (wash.dataset.lens = "off")) });
+      };
       const apply = () => {
         img.style.objectPosition = `${X.v}% center`;
         thumb?.style.setProperty("--p", String((X.v - MIN) / (MAX - MIN)));
@@ -151,6 +262,7 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
         startV = X.v;
         vel = 0;
         lastT = e.timeStamp;
+        lensTo(e, true);
       };
       const onMove = (e: PointerEvent) => {
         if (!down) return;
@@ -161,6 +273,7 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
           stopIntro();
           el.setPointerCapture(e.pointerId);
         }
+        lensTo(e, false);
         const t = travel();
         if (t <= 0) return;
         const dt = e.timeStamp - lastT;
@@ -173,6 +286,7 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
       const onUp = (e: PointerEvent) => {
         if (!down) return;
         down = false;
+        lensOff();
         if (!dragging) return;
         dragging = false;
         if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId);
@@ -192,6 +306,12 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
         el.removeEventListener("pointercancel", onUp);
         el.style.touchAction = prevTouch;
         img.style.objectPosition = "70% center";
+        if (wash) {
+          wash.dataset.lens = "off";
+          wash.style.removeProperty("--mx");
+          wash.style.removeProperty("--my");
+          wash.style.removeProperty("--lens");
+        }
       };
     });
 
@@ -213,39 +333,43 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
       >
         {/* Media */}
         <div ref={media} className="absolute inset-0 origin-[70%_40%] will-change-transform" data-paused={paused}>
-          <div className="hero-drift relative isolate h-full w-full overflow-hidden bg-paper-2">
-            {data.video.src ? (
-              <video
-                ref={video}
-                className="h-full w-full object-cover"
-                autoPlay={!paused}
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                poster={data.video.poster ?? undefined}
-                aria-label={data.video.alt}
-              >
-                <source src={data.video.src} type="video/mp4" />
-              </video>
-            ) : data.video.poster ? (
-              <Image src={data.video.poster} alt={data.video.alt} fill preload fetchPriority="high" sizes="100vw" className="object-cover" style={{ objectPosition: "70% center" }} data-hero-img />
-            ) : null}
+          <div data-depth="12" className="h-full w-full">
+            <div className="hero-drift relative isolate h-full w-full overflow-hidden bg-paper-2">
+              {data.video.src ? (
+                <video
+                  ref={video}
+                  className="h-full w-full object-cover"
+                  autoPlay={!paused}
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  poster={data.video.poster ?? undefined}
+                  aria-label={data.video.alt}
+                >
+                  <source src={data.video.src} type="video/mp4" />
+                </video>
+              ) : data.video.poster ? (
+                <Image src={data.video.poster} alt={data.video.alt} fill preload fetchPriority="high" sizes="100vw" className="object-cover" style={{ objectPosition: "70% center" }} data-hero-img />
+              ) : null}
+            </div>
           </div>
         </div>
 
         {/* Porcelain wash — strongest behind the headline on the left, easing off to the right; clear under the nav and at the foot */}
-        <div aria-hidden className="absolute inset-0 bg-gradient-to-r from-porcelain via-porcelain/80 to-transparent max-sm:hidden sm:via-porcelain/70 lg:via-porcelain/55 lg:to-porcelain/0" />
-        {/* phones: pale behind the headline, the render clear through the middle, pale behind the location bar */}
-        <div aria-hidden className="absolute inset-0 bg-[linear-gradient(to_bottom,rgb(249_250_253/0.9)_0%,rgb(249_250_253/0.72)_30%,rgb(249_250_253/0.18)_42%,transparent_50%)] sm:hidden" />
-        <div aria-hidden className="absolute inset-x-0 bottom-0 h-[46%] bg-gradient-to-t from-porcelain via-porcelain/85 to-transparent max-sm:h-[58%] max-sm:via-porcelain/95" />
-        <div aria-hidden className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-porcelain/80 to-transparent" />
+        <div data-hero-wash data-lens="off" aria-hidden className="hero-wash absolute inset-0">
+          <div aria-hidden className="absolute inset-0 bg-gradient-to-r from-porcelain via-porcelain/80 to-transparent max-sm:hidden sm:via-porcelain/70 lg:via-porcelain/55 lg:to-porcelain/0" />
+          {/* phones: pale behind the headline, the render clear through the middle, pale behind the location bar */}
+          <div aria-hidden className="absolute inset-0 bg-[linear-gradient(to_bottom,rgb(249_250_253/0.9)_0%,rgb(249_250_253/0.72)_30%,rgb(249_250_253/0.18)_42%,transparent_50%)] sm:hidden" />
+          <div aria-hidden className="absolute inset-x-0 bottom-0 h-[46%] bg-gradient-to-t from-porcelain via-porcelain/85 to-transparent max-sm:h-[58%] max-sm:via-porcelain/95" />
+          <div aria-hidden className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-porcelain/80 to-transparent" />
+        </div>
         <div ref={cover} aria-hidden className="absolute inset-0 z-[15] bg-porcelain opacity-0" />
 
         <Route ref={route} d={HERO_ROUTE} initial={0} base={false} tone="light" trail="blue" className="z-[16] max-lg:hidden" strokeWidth={1.5} />
 
         {/* Site reticle — the location becomes a place you are looking at */}
-        <div data-hero-reticle aria-hidden className="absolute left-[60%] top-[44%] z-10 hidden -translate-x-1/2 -translate-y-1/2 lg:block">
+        <div data-hero-reticle data-depth="12" aria-hidden className="absolute left-[60%] top-[44%] z-10 hidden -translate-x-1/2 -translate-y-1/2 lg:block">
           <div className="relative">
             <svg width="72" height="72" viewBox="0 0 72 72" fill="none" className="text-yellow-400">
               <circle cx="36" cy="36" r="22" stroke="currentColor" strokeOpacity="0.8" />
@@ -264,14 +388,16 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
 
         {/* Content */}
         <div className="shell relative z-20 flex h-full flex-col pb-5 pt-[calc(64px+5vh)] lg:pb-7 lg:pt-[calc(88px+3.5vh)]">
-          <h1 id="hero-title" data-hero-head className="t-hero max-w-[14ch] text-ink">
-            {data.headline.map((line, i) => (
-              <span key={line} data-hero-line className={`block overflow-hidden pb-[0.08em] -mb-[0.08em] ${i === data.headline.length - 1 ? "text-indigo-700" : ""}`}>
-                <span className="hero-rise block" style={{ animationDelay: `${120 + i * 110}ms` }}>
-                  {line.replace(/\*/g, "")}
+          <h1 id="hero-title" data-hero-head data-depth="-6" aria-label={data.headline.map((l) => l.replace(/\*/g, "")).join(" ")} className="t-hero max-w-[14ch] text-ink">
+            {data.headline.map((line, i) => {
+              const text = line.replace(/\*/g, "");
+              const from = data.headline.slice(0, i).reduce((n, l) => n + l.replace(/[*\s]/g, "").length, 0);
+              return (
+                <span key={line} data-hero-line aria-hidden className={`block overflow-hidden pb-[0.08em] pt-[0.1em] -mb-[0.08em] -mt-[0.1em] ${i === data.headline.length - 1 ? "text-indigo-700" : ""}`}>
+                  <HeroChars text={text} from={from} />
                 </span>
-              </span>
-            ))}
+              );
+            })}
           </h1>
 
           {/* phones / tablets: the clear window of the render between the headline and the location bar */}

@@ -225,7 +225,7 @@ export function EnquiryForm({ industries, contact }: { industries: string[]; con
       <div className="mt-10 flex items-center gap-0">
         <span aria-hidden className="relative hidden h-px flex-1 bg-ink/15 sm:block">
           <span className="route-arrive absolute inset-y-0 left-0 w-full origin-left bg-gradient-to-r from-transparent via-indigo-700/40 to-yellow-400" />
-          <span className="absolute -right-[3px] -top-[3px] h-1.5 w-1.5 rounded-full bg-yellow-400 shadow-[0_0_0_6px_rgb(231_172_0/0.16)]" />
+          <span className="absolute -right-[3px] -top-[3px] h-1.5 w-1.5 rounded-full bg-yellow-400 shadow-[0_0_0_6px_rgb(255_202_0/0.16)]" />
         </span>
         <Magnetic>
         <button

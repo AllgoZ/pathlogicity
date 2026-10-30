@@ -49,7 +49,7 @@ export function Sustainability({ data }: { data: Homepage["sustainability"] }) {
       <div className="shell grid-12 gap-y-10">
         <div className="col-span-4 sm:col-span-8 lg:col-span-8">
           <p className="t-label flex items-center gap-3">
-            <span data-idx className="text-green-700">08 /</span> Sustainability · ESG
+            Sustainability · ESG
           </p>
           <RevealLines id="sus-title" lines={data.headline} lineClassNames={["", "[--accent-color:var(--color-green-700)]"]} className="t-l mt-5 text-ink" />
         </div>
@@ -77,7 +77,7 @@ export function Sustainability({ data }: { data: Homepage["sustainability"] }) {
                 transform="rotate(-90 280 280)"
               />
               <g data-ring-head>
-                <circle cx="280" cy={280 - R} r="12" fill="rgb(231 172 0 / 0.25)" />
+                <circle cx="280" cy={280 - R} r="12" fill="rgb(255 202 0 / 0.25)" />
                 <circle cx="280" cy={280 - R} r="5" fill="var(--color-yellow-400)" />
               </g>
             </svg>
@@ -128,7 +128,7 @@ export function Sustainability({ data }: { data: Homepage["sustainability"] }) {
           <ul className="border-t border-ink/15">
             {data.initiatives.map((it, i) => (
               <li key={it.id} className="group flex items-start gap-4 border-b border-ink/15 py-4">
-                <span className="t-micro pt-1 text-green-700">{String(i + 1).padStart(2, "0")}</span>
+                <span aria-hidden className="t-micro pt-1 text-green-700">•</span>
                 <div className="flex-1">
                   <p className="t-label text-ink">{it.name}</p>
                   <p className="mt-1.5">{it.text ? <span className="text-sm text-steel-700">{it.text}</span> : <ContentSlot tone="light">Verified detail to be supplied</ContentSlot>}</p>
@@ -146,7 +146,7 @@ export function Sustainability({ data }: { data: Homepage["sustainability"] }) {
         <ol data-story className="grid gap-6 border-t border-ink/15 pt-10 lg:grid-cols-3 lg:gap-0">
           {data.story.map((s, i) => (
             <li key={s} data-story-step className="relative flex items-center gap-5 lg:pr-10">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-green-700 text-xs font-bold text-green-700">{String(i + 1).padStart(2, "0")}</span>
+              <span aria-hidden className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-green-700 text-xs font-bold text-green-700">•</span>
               <p className="font-display text-[clamp(1.125rem,1.5vw,1.5rem)] font-bold leading-[1.2] text-ink">{s}</p>
               {i < data.story.length - 1 ? (
                 <span aria-hidden data-story-line className="ml-auto hidden h-px w-16 shrink-0 bg-green-700 lg:block xl:w-24">

@@ -57,7 +57,7 @@ export function HubOpener() {
 
   return (
     <section ref={ref} id="advantage" data-stage="understand" aria-labelledby="advantage-title" className="relative flex min-h-[78svh] items-center overflow-hidden bg-porcelain text-ink lg:min-h-[92vh]">
-      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(38%_42%_at_50%_50%,rgb(231_172_0/0.16),transparent_70%),radial-gradient(70%_60%_at_100%_100%,rgb(32_31_133/0.08),transparent_70%)]" />
+      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(38%_42%_at_50%_50%,rgb(255_202_0/0.16),transparent_70%),radial-gradient(70%_60%_at_100%_100%,rgb(32_31_133/0.08),transparent_70%)]" />
       <svg aria-hidden className="absolute inset-0 h-full w-full" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" fill="none">
         {ROUTES.map((r, i) => (
           <path
@@ -83,7 +83,7 @@ export function HubOpener() {
 
       <div className="shell absolute inset-x-0 top-14 lg:top-20">
         <p className="t-label text-ink">
-          <span data-idx className="text-indigo-700">06 /</span> The Logicity Advantage
+          The Logicity Advantage
         </p>
       </div>
       <div className="shell relative w-full text-center">

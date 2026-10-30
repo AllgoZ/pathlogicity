@@ -181,7 +181,6 @@ export function ConnectivityMap({ destinations }: { destinations: Destination[] 
       <div className="shell grid-12 gap-y-8">
         <SectionHeader
           className="col-span-4 sm:col-span-8 lg:col-span-7"
-          index="07"
           chapter="Solutions · Connectivity"
           id="connectivity-title"
           lines={["Road. Rail.", "Air. *Ports.*"]}
@@ -259,7 +258,7 @@ export function ConnectivityMap({ destinations }: { destinations: Destination[] 
 
               {/* the site */}
               <g style={{ transform: `translate(${SITE.x}px, ${SITE.y}px) scale(var(--u))` }} aria-hidden>
-                <circle r="16" fill="rgb(231 172 0 / 0.25)">
+                <circle r="16" fill="rgb(255 202 0 / 0.25)">
                   <animate attributeName="r" values="8;26;8" dur="2.8s" repeatCount="indefinite" />
                   <animate attributeName="opacity" values="0.9;0;0.9" dur="2.8s" repeatCount="indefinite" />
                 </circle>
@@ -293,7 +292,7 @@ export function ConnectivityMap({ destinations }: { destinations: Destination[] 
               {/* moving head */}
               <g ref={head} opacity={0}>
                 <g style={{ transform: "scale(var(--u))" }}>
-                  <circle r="13" fill="rgb(231 172 0 / 0.3)" />
+                  <circle r="13" fill="rgb(255 202 0 / 0.3)" />
                   <circle r="6" fill="var(--color-yellow-400)" stroke="white" strokeWidth="2" />
                 </g>
               </g>

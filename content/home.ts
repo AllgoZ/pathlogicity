@@ -46,21 +46,14 @@ export const settings: SiteSettings = {
 /** Authority / partner logos, as shown on pathlogicity.com, plus the IGBC mark (igbc.in). */
 export const partners: Partner[] = [
   { id: "nhlml", name: "National Highways Logistics Management Limited (NHLML)", role: "NHAI · Ministry of Road Transport & Highways", logo: "/client/partners/nhlml.webp", width: 611, height: 640 },
-  { id: "rvnl", name: "Rail Vikas Nigam Limited (RVNL)", role: "Ministry of Railways", logo: "/client/partners/rvnl.webp", width: 333, height: 73 },
-  { id: "kiadb", name: "Karnataka Industrial Areas Development Board (KIADB)", role: "Government of Karnataka", logo: "/client/partners/kiadb.webp", width: 206, height: 73 },
+  // Client round 7: the authorities are National Highways Logistics Management Limited and Bengaluru MMLP Private
+  // Limited (RVNL and KIADB removed). No logo or role has been supplied for Bengaluru MMLP yet, so it shows as a name chip.
+  { id: "bmpl", name: "Bengaluru MMLP Private Limited", role: "" },
   { id: "igbc", name: "Indian Green Building Council (IGBC)", role: "Green building rating", logo: "/client/partners/igbc.png", width: 420, height: 666 },
 ];
 
 export const navigation: NavItem[] = [
   { label: "Home", href: "/" },
-  {
-    label: "Path Group",
-    href: "/path-group",
-    children: [
-      { label: "Highlight", href: "/path-group#highlight", note: "31 years · 18 states · 6,500 lane km" },
-      { label: "About Path", href: "/path-group#about", note: "Our story, mission and verticals" },
-    ],
-  },
   {
     label: "Logicity Advantage",
     href: "/logicity-advantage",
@@ -82,6 +75,15 @@ export const navigation: NavItem[] = [
   { label: "Site Tour", href: "/site-tour" },
   { label: "News", href: "/news" },
   { label: "Blogs", href: "/blogs" },
+  // client round 7: the Path Group tab sits last, just before the Enquire button
+  {
+    label: "Path Group",
+    href: "/path-group",
+    children: [
+      { label: "Highlight", href: "/path-group#highlight", note: "31 years · 18 states · 6,500 lane km" },
+      { label: "About Path", href: "/path-group#about", note: "Our story, mission and verticals" },
+    ],
+  },
 ];
 
 export const hero = {
@@ -127,7 +129,7 @@ export const zones: Zone[] = [
     index: "01",
     name: "Warehousing",
     short: "Grade-A warehousing at the core of the ecosystem.",
-    facts: ["~5.2 Mn sq. ft. of Grade-A warehousing"],
+    facts: ["5.2 Mn sq. ft. total warehousing area"],
     media: { slot: "Warehousing", spec: "Site photograph · 3:2", src: "/client/image-1729245699855.webp", alt: "Render of Grade-A warehousing rows" },
   },
   {
@@ -284,7 +286,7 @@ export const pathGroup = {
       brand: "PATH",
       title: "Highway Construction",
       text: "Engineering and design through full EPC delivery, including BOT, HAM and OMT contracts on national corridors.",
-      image: { slot: "Highway Construction", spec: "Project photograph · 4:3", src: "/client/path-group/highway-construction.webp", alt: "A bulldozer and survey crew preparing a highway site" },
+      image: { slot: "Highway Construction", spec: "Project photograph · 4:3", src: "/client/path-group/highway-construction.webp", alt: "Aerial view of a highway flyover and junction built by PATH, with farmland on either side" },
       href: "https://www.pathltd.com/verticals/highway-construction/",
     },
     {
@@ -316,7 +318,7 @@ export const pathGroup = {
       brand: "PATH Engineering",
       title: "Road Engineering",
       text: "GFRP rebars, metal crash barriers and road-marking systems for safer highways.",
-      image: { slot: "Road Engineering", spec: "Project photograph · 4:5", src: "/client/path-group/engineering.webp", alt: "A mountain highway protected by metal crash barriers" },
+      image: { slot: "Road Engineering", spec: "Project photograph · 4:5", src: "/client/path-group/engineering.webp", alt: "A curved, lit city flyover at night with vehicles on both carriageways" },
       href: "https://www.pathltd.com/verticals/path-engineering/",
     },
     {
@@ -372,7 +374,7 @@ export const constra: { url: string | null; links: ConstraLink[] } = {
 /** Project at a glance — exact client facts. `zone` links a callout to the plan. */
 export const glance: (MetricData & { id: string; zone: string })[] = [
   { id: "acres", zone: "site", prefix: "~", value: 400, unit: "Acres", label: "of integrated logistics infrastructure" },
-  { id: "warehousing", zone: "warehousing", prefix: "~", value: 5.2, decimals: 1, unit: "Mn sq. ft.", label: "of Grade-A warehousing" },
+  { id: "warehousing", zone: "warehousing", value: 5.2, decimals: 1, unit: "Mn sq. ft.", label: "Total warehousing area" },
   { id: "commercial", zone: "commercial", prefix: "~", value: 1.76, decimals: 2, unit: "Mn sq. ft.", label: "of commercial space" },
   { id: "rail", zone: "rail", prefix: "~", value: 40, unit: "Acres", label: "dedicated to a state-of-the-art rail terminal" },
   { id: "sidings", zone: "rail", value: 6, unit: "Railway sidings", label: "enabling seamless multimodal movement" },
@@ -385,7 +387,7 @@ export const renders: GalleryItem[] = [
   { id: "gate", title: "The entry gate", caption: "Arrival from the approach road", media: render("/client/image-1729245469753.webp", "Render of the Path Logicity entry gate") },
   { id: "icd", title: "Container yard & ICD", caption: "Gantry cranes at the inland container depot", media: render("/client/image-1729245560924.webp", "Render of the container yard with gantry cranes") },
   { id: "aerial", title: "Rail terminal & warehousing", caption: "The park from above", media: render("/client/image-1720613648983.webp", "Aerial render of Path Logicity with the rail terminal") },
-  { id: "warehousing", title: "Grade-A warehousing", caption: "~5.2 million sq. ft. of warehousing space", media: render("/client/image-1729245699855.webp", "Render of Grade-A warehousing rows") },
+  { id: "warehousing", title: "Grade-A warehousing", caption: "5.2 million sq. ft. total warehousing area", media: render("/client/image-1729245699855.webp", "Render of Grade-A warehousing rows") },
   { id: "green", title: "Solar roofs, green belts", caption: "Sustainability built into the layout", media: render("/client/image-1729245154858.webp", "Render of warehouses with rooftop solar and green belts") },
   { id: "plan", title: "The master plan", caption: "Official layout of the park", media: render("/client/image-1731136566206.webp", "Official Path Logicity master plan"), fit: "contain" },
 ];

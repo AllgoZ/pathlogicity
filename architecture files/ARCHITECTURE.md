@@ -4,8 +4,9 @@
 > **Last updated: 2026-10-23** — reflects client round 5 (Manrope + Inter, hero banner motion, Lorem phases, PATH Group
 > figures/About/verticals, Constra space availability) plus the Warehouse 17 photographs (hero and milestone 03) and the connected Constra URL.
 > **Round 6 (2026-10-30):** PATH Group now sits between Inside Logicity and News while PATH Legacy (the verticals, `PathLegacy`) stays after Project status (`app/page.tsx` + a `legacy` prop; the rail, spine and surface blending read the DOM), no section numbers in the kickers (names only; sub-sections and card counters use a bullet, so the "§05" labels in code comments are historical), gold is `#ffca00`. See `docs/PLAN-CLIENT-ROUND-6.md`.
+> **Round 7 (2026-11-04):** nav order is Home · Logicity Advantage · Sustainability · Site Tour · News · Blogs · **Path Group** (last, before Enquire); the homepage runs Renders → the verticals (headed "PATH Group"); the renders section is "Path Logicity, in renders"; the authorities strip is NHLML + Bengaluru MMLP Private Limited (+ the IGBC mark; a `Partner` without a `logo` shows its name in the chip); the News page has a CSR tab; the 400-acre previews autoplay on desktop until the visitor hovers; the hero lens is tracked on the window (M23). See `docs/PLAN-CLIENT-ROUND-7.md`.
 > Design sources, newest first:
-> 0. [`docs/PLAN-CLIENT-ROUND-5.md`](../docs/PLAN-CLIENT-ROUND-5.md) — the latest client feedback and what changed
+> 0. [`docs/PLAN-CLIENT-ROUND-7.md`](../docs/PLAN-CLIENT-ROUND-7.md) — the latest client feedback and what changed (round 7); [`docs/PLAN-CLIENT-ROUND-5.md`](../docs/PLAN-CLIENT-ROUND-5.md) — the latest client feedback and what changed
 > 1. [`docs/REDESIGN-PLAN-R4.md`](../docs/REDESIGN-PLAN-R4.md) — current direction: light theme, one typeface, no opening animation
 > 2. Feature plans: [`PLAN-OFFICIAL-MAP-REUSE`](../docs/PLAN-OFFICIAL-MAP-REUSE.md) · [`PLAN-MOBILE`](../docs/PLAN-MOBILE.md) · [`PLAN-GATI-SHAKTI-MAP`](../docs/PLAN-GATI-SHAKTI-MAP.md)
 > 3. [`docs/CLIENT-CHANGES-PLAN.md`](../docs/CLIENT-CHANGES-PLAN.md) — client round 2 · [`docs/REDESIGN-PLAN.md`](../docs/REDESIGN-PLAN.md) — round 3 (largely superseded) · [`docs/UI-PLAN.md`](../docs/UI-PLAN.md) — original spec
@@ -70,7 +71,7 @@ site/
 │  ├─ page.tsx            Homepage — composes the section components (server component)
 │  ├─ globals.css         @theme tokens · utilities (type, card, grain, pinwheel-stripe, img-grade, lift) ·
 │  │                      keyframes · route-node + rail-dim styles · reduced-motion rules
-│  ├─ icon.svg            Favicon
+│  ├─ icon.png · apple-icon.png   Tab icon and touch icon (the PATH Logicity pinwheel mark)
 │  ├─ path-group/ logicity-advantage/ sustainability/ site-tour/ news/ blogs/   Inner pages (page.tsx each)
 │  └─ api/enquiry/route.ts   POST: validate + forward the enquiry to ENQUIRY_WEBHOOK_URL
 │
@@ -239,7 +240,7 @@ coalesced `ScrollTrigger.refresh()` runs only when a late scene creates a pin.
 | M6 | Magnetic CTAs (fine pointers only) | `ui/Magnetic` |
 | M7 | Odometer reels; final value stays in the DOM. `spins` makes each digit whirl through several 0–9 turns and decelerate (used for the 400 acres) | `ui/Counter` |
 | M8 | Connectivity map: establishing shot (site → region), gold route traces, any click hands control to the user | `connectivity-map/ConnectivityMap` |
-| M9 | Partner logo marquee (pauses on hover; static under reduced motion) | `ui/PartnerLogos` |
+| M9 | Partner logo marquee (pauses on hover; static under reduced motion). Only for more than four marks; with fewer (today: NHLML, Bengaluru MMLP, IGBC) the row is still | `ui/PartnerLogos` |
 | M10 | Hub showpiece: routes converge, the pinwheel spins in, gold pulse | `advantage/HubOpener` |
 | M11 | Section intro paragraphs fade up | `ui/Reveal`, `ui/SectionHeader` |
 | M12 | Route transitions (`<ViewTransition>`) | `app/layout.tsx` + CSS |
@@ -247,7 +248,7 @@ coalesced `ScrollTrigger.refresh()` runs only when a late scene creates a pin.
 | M20 | **Hero banner motion**: slow drift on the image, headline lines rise through their masks, the bottom bar fades up, the reticle pings. CSS classes `hero-drift` / `hero-rise` / `hero-fade` / `hero-ping` (no flash before hydration; drift and ping off under reduced motion) | `hero/Hero` + `globals.css` |
 | M21 | **Phone hero: look around** (≤1023px, motion allowed): the photograph is wider than a phone, so a finger drags it sideways (`object-position`, clamped 15–85%, with momentum; vertical scroll is untouched via `touch-action: pan-y`). A first slow sweep shows it moves; a "Drag to look around" pill with a position track fades out on the first drag. The headline also drifts up and fades as you scroll off the banner | `hero/Hero` (`MQ.mobile` scene) + `hero-nudge` in `globals.css` |
 | M22 | **Phone motion for §04, §05 and PATH Legacy**, all in `providers/MobileMotion` (no component edited). Entrances: milestone dots pop and numerals wipe in, status legend chips rise, mission/vision cards wipe in from opposite sides, sector diamonds spin in, track-record figures settle, each vertical's photo frame opens upward with its number tab, title and gold rule following. Scroll-linked: site photo and vertical photos drift inside their frames, the milestone number swells as it crosses mid-screen, the About quote fills grey → ink as it is read. Uses `clip-path` and the individual `translate`/`scale`/`rotate` properties so it never fights the GSAP reveals; inline styles removed on cleanup | `providers/MobileMotion` |
-| M23 | **Hero redesign (round 6)**, deliberately uncluttered: the headline arrives letter by letter (`HeroChars`, letters `aria-hidden`, `h1` has an `aria-label`; CSS `hero-char`); desktop pointer: the porcelain wash lifts in a soft circle under the cursor (`.hero-wash` CSS mask driven by `--mx/--my/--lens`) and photo, headline and reticle drift a few px at different depths (`data-depth`, `gsap.quickTo`); phones: the same lens follows a finger while dragging. A pinwheel opening was built and removed (too long). Off under reduced motion. Plan: `docs/PLAN-HERO-REDESIGN.md` | `hero/Hero` + `globals.css` |
+| M23 | **Hero redesign (round 6)**, deliberately uncluttered: the headline arrives letter by letter (`HeroChars`, letters `aria-hidden`, `h1` has an `aria-label`; CSS `hero-char`); desktop pointer: the porcelain wash lifts in a soft circle under the cursor (`.hero-wash` CSS mask driven by `--mx/--my/--lens`; round 7: the pointer is tracked on `window` against the hero's box, so the fixed nav does not drop the lens and it starts under the pointer on re-entry) and photo, headline and reticle drift a few px at different depths (`data-depth`, `gsap.quickTo`); phones: the same lens follows a finger while dragging. A pinwheel opening was built and removed (too long). Off under reduced motion. Plan: `docs/PLAN-HERO-REDESIGN.md` | `hero/Hero` + `globals.css` |
 | M14 | **Hero route** (desktop): the hero pins for 140% of a viewport; the headline lifts, the reticle shrinks and the blue route (gold comet) draws across the image and down into §02, where `ScaleIndex`'s incoming route carries it on | `hero/Hero` |
 | M15 | **Official-plan zones**: hover/tap washes out the rest, re-reveals the zone and redraws its outline; first-view tour through the zones (`useZoneTour`: pauses off-screen, stops on first interaction) | `master-plan/OfficialPlanMap`, `MasterPlan`, `SpecDrawing`, `SiteTourPreview` |
 | M16 | **Site-tour camera**: the plan glides and zooms onto the chosen zone (CSS variables + transition), with a slow breathing drift | `site-tour/SiteTourPreview` |
@@ -272,8 +273,8 @@ only when a threshold is crossed, never per frame.
 | 03 | Master plan | `master-plan/MasterPlan` | `zones` | Stone (official drawing, interactive) |
 | 04 | Project status | `project-status/ProjectStatus` | `milestones`, `statusLastUpdated` | Porcelain |
 | 04.1 | Space availability | `project-status/SpaceAvailability` (inside §04) | `leasing`, `constra` | Porcelain |
-| 04.9 | PATH Legacy (the verticals) | `path-group/PathVerticals` (`PathLegacy`) | `pathGroup.verticals` | Stone (stays after Project status) |
-| 05.5 | Renders | `gallery/RendersGallery` | `renders` | Stone |
+| 05.5 | Renders — "Path Logicity, in renders" (before the verticals, round 7) | `gallery/RendersGallery` | `renders` | Stone |
+| 04.9 | The verticals, headed "PATH Group" (after Renders, round 7) | `path-group/PathVerticals` (`PathLegacy`) | `pathGroup.verticals` | Stone |
 | 06 | Hub opener | `advantage/HubOpener` | — | Porcelain |
 | 06.1 | At a glance | `advantage/SpecDrawing` | `glance` | Stone (official plan + figures) |
 | 06.2 | Amenities | `advantage/Amenities` | `amenities` | White |

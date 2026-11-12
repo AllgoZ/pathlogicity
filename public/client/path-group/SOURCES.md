@@ -19,3 +19,5 @@ Group website").
 
 The other originals are 800 px wide (portrait art up to 924 px): fine for cards, soft above about 1000 px.
 Ask the client for the full-resolution highway photograph for the wide PATH Group banner.
+
+**Updated 2026-11-04 (client round 7):** `highway-construction.webp` (1720×1290) and `engineering.webp` (1460×1095) now come from the client's own banners `prompts/Highway Construction.png` and `prompts/Road Engineering.png` (4000×1667). Each was cropped to a window free of the caption box, the dashed band and the PATH arrow, then encoded at WebP quality 90. The full banners stay in `prompts/`.

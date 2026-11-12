@@ -136,7 +136,7 @@ export interface Benefit {
   text: string;
 }
 
-export type NewsType = "news" | "media" | "update" | "event";
+export type NewsType = "news" | "media" | "update" | "event" | "csr";
 export interface NewsItem {
   id: string;
   type: NewsType;
@@ -165,10 +165,12 @@ export interface SiteSettings {
 export interface Partner {
   id: string;
   name: string;
+  /** shown beneath the logo; empty when none has been supplied */
   role: string;
-  logo: string;
-  width: number;
-  height: number;
+  /** omitted until the client supplies a logo: the name is set in the chip instead */
+  logo?: string;
+  width?: number;
+  height?: number;
 }
 
 /** A blog article. CMS-ready: the site never invents posts, so an empty list renders the designed empty state. */

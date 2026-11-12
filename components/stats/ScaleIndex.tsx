@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Homepage } from "@/lib/content";
 import { gsap, MQ } from "@/lib/motion/gsap";
 import { useMotion } from "@/lib/motion/hooks";
@@ -21,7 +21,44 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
   const grid = useRef<HTMLDivElement>(null);
   const num = useRef<HTMLDivElement>(null);
   const markers = useRef<(HTMLSpanElement | null)[]>([]);
+  const list = useRef<HTMLUListElement>(null);
   const [active, setActive] = useState<string | null>(null);
+  // client round 7: the previews used to appear only on hover, so a first-time visitor never saw them. On desktop
+  // they now play through on their own when the list comes into view, until the visitor takes over.
+  const [engaged, setEngaged] = useState(false);
+  const engagedRef = useRef(false);
+  const engage = (id: string | null) => {
+    engagedRef.current = true;
+    setEngaged(true);
+    setActive(id);
+  };
+
+  useEffect(() => {
+    const el = list.current;
+    if (!el || !window.matchMedia("(min-width: 1024px) and (prefers-reduced-motion: no-preference)").matches) return;
+    const ids = data.nodes.map((n) => n.id);
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let i = 0;
+    const step = () => {
+      if (engagedRef.current) return;
+      setActive(ids[i++ % ids.length]);
+      timer = setTimeout(step, 2800);
+    };
+    const io = new IntersectionObserver(
+      ([e]) => {
+        clearTimeout(timer);
+        if (engagedRef.current) return;
+        if (e.isIntersecting) timer = setTimeout(step, 1800);
+        else setActive(null);
+      },
+      { threshold: 0.6 },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      clearTimeout(timer);
+    };
+  }, [data.nodes]);
 
   const { paths, w, h } = useLinks(grid, (c) => {
     const n = boxIn(num.current, c);
@@ -117,15 +154,16 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
           </div>
         </div>
 
-        <ul data-nodes className="relative col-span-4 self-center border-l border-ink/10 sm:col-span-8 lg:col-span-5 lg:col-start-8 lg:border-l-0">
+        <div className="col-span-4 self-center sm:col-span-8 lg:col-span-5 lg:col-start-8">
+        <ul ref={list} data-nodes className="relative border-l border-ink/10 lg:border-l-0">
           {data.nodes.map((n, i) => (
             <li key={n.id} data-node className="border-b border-ink/10 first:border-t lg:first:border-t-0 lg:last:border-b-0">
               <Link
                 href={n.href}
                 data-active={active === n.id}
-                onMouseEnter={() => setActive(n.id)}
+                onMouseEnter={() => engage(n.id)}
                 onMouseLeave={() => setActive(null)}
-                onFocus={() => setActive(n.id)}
+                onFocus={() => engage(n.id)}
                 onBlur={() => setActive(null)}
                 className="group relative flex items-start gap-5 py-6 pl-6 lg:gap-6 lg:py-8 lg:pl-0"
               >
@@ -170,6 +208,12 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
             </li>
           ))}
         </ul>
+        {/* desktop cue: the previews are hover-driven once the visitor takes over */}
+        <p aria-hidden className={`t-micro mt-5 hidden items-center gap-2 text-steel-700 transition-opacity duration-500 [@media(hover:hover)]:lg:flex ${engaged ? "opacity-0" : "opacity-100"}`}>
+          <span className="block h-px w-6 bg-yellow-400" />
+          Hover over a point to preview it
+        </p>
+        </div>
       </div>
     </section>
   );

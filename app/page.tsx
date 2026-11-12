@@ -30,8 +30,8 @@ export default function HomePage() {
       <ScaleIndex data={home.scale} />
       <MasterPlan zones={home.zones} />
       <ProjectStatus milestones={home.milestones} lastUpdated={home.statusLastUpdated} leasing={home.leasing} constra={home.constra} />
-      <PathLegacy items={home.pathGroup.verticals} />
       <RendersGallery items={home.renders} />
+      <PathLegacy items={home.pathGroup.verticals} />
       <HubOpener />
       <SpecDrawing glance={home.glance} />
       <Amenities items={home.amenities} />

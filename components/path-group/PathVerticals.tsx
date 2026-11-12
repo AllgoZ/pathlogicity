@@ -8,7 +8,7 @@ import { Reveal, RevealLines } from "@/components/ui/Reveal";
  * including Wayside Amenities, the sporting venture, Drone Manufacturing"). Content: pathltd.com → Verticals.
  * Path Logicity itself is marked, so the page still reads as "this is where you are".
  */
-/** PATH Legacy as a section of its own (homepage: straight after Project status). */
+/** The verticals as a section of its own (homepage: after the renders). Client round 7: its heading reads "PATH Group", not "PATH Legacy". */
 export function PathLegacy({ items }: { items: Vertical[] }) {
   return (
     <section data-stage="believe" aria-labelledby="verticals-title" className="relative bg-stone section-pad">
@@ -24,7 +24,7 @@ export function PathVerticals({ items }: { items: Vertical[] }) {
     <div id="verticals" aria-labelledby="verticals-title">
       <div className="grid-12 items-end gap-y-6">
         <div className="col-span-4 sm:col-span-8 lg:col-span-7">
-          <p className="t-label text-indigo-700">PATH Legacy</p>
+          <p className="t-label text-indigo-700">PATH Group</p>
           <RevealLines id="verticals-title" lines={["One group,", "*many verticals*"]} className="t-xl mt-4 text-ink" />
         </div>
         <p className="t-body-l col-span-4 max-w-[44ch] text-steel-700 sm:col-span-8 lg:col-span-4 lg:col-start-9">

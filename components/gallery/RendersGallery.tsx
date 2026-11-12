@@ -9,7 +9,7 @@ import { Rail } from "@/components/ui/Rail";
 import { Reveal, RevealLines } from "@/components/ui/Reveal";
 
 /**
- * §05.5 — "The park, in renders". A free-scrolling rail: the page is never pinned or
+ * §05.5 — "Path Logicity, in renders" (client round 7: was "The park, in renders"; now sits before PATH Group). A free-scrolling rail: the page is never pinned or
  * captured (round 4 — the old pinned gallery locked ~5 screens of scroll). Drag, swipe,
  * arrows or ←/→ move it; scrolling the page past it always works.
  */
@@ -24,9 +24,9 @@ export function RendersGallery({ items }: { items: GalleryItem[] }) {
       <div className="shell grid-12 items-end gap-y-6">
         <div className="col-span-4 sm:col-span-6 lg:col-span-7">
           <p className="t-label flex items-center gap-2.5 text-ink">
-            <span aria-hidden className="text-indigo-700">•</span> The park
+            <span aria-hidden className="text-indigo-700">•</span> Renders
           </p>
-          <RevealLines id="renders-title" lines={["The park,", "*in renders.*"]} className="t-xl mt-5 text-ink" />
+          <RevealLines id="renders-title" lines={["Path Logicity,", "*in renders.*"]} className="t-xl mt-5 text-ink" />
         </div>
         <Reveal className="col-span-4 flex flex-col gap-2 sm:col-span-2 lg:col-span-4 lg:col-start-9">
           <p className="t-body-l text-steel-700">From the entry gate to the rail terminal — the park as it is planned.</p>

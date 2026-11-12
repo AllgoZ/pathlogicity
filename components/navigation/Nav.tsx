@@ -120,12 +120,12 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
                               <li key={c.href}>
                                 <Link
                                   href={c.href}
-                                  className="group flex gap-4 px-5 py-3.5 transition-colors hover:bg-porcelain focus-visible:bg-porcelain"
+                                  className="group flex gap-4 px-5 py-3.5 transition-colors hover:bg-stone focus-visible:bg-stone"
                                 >
                                   <span aria-hidden className="t-micro pt-[3px] text-indigo-700">•</span>
                                   <span>
                                     <span className="block text-[0.9375rem] font-bold text-ink">{c.label}</span>
-                                    {c.note ? <span className="mt-1 block text-[0.8125rem] leading-snug text-steel-500">{c.note}</span> : null}
+                                    {c.note ? <span className="mt-1 block text-[0.8125rem] leading-snug text-steel-700">{c.note}</span> : null}
                                   </span>
                                 </Link>
                               </li>

@@ -13,6 +13,7 @@ const TABS: { id: NewsType; label: string }[] = [
   { id: "media", label: "Media coverage" },
   { id: "update", label: "Project updates" },
   { id: "event", label: "Events" },
+  { id: "csr", label: "CSR activities" },
 ];
 
 /** §10 — Path Logicity in the news. CMS-driven; designed to stay rich when sparse. */

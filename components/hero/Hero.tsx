@@ -119,28 +119,34 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
         wash.style.setProperty("--my", String(at.y));
         wash.style.setProperty("--lens", String(rad.v));
       };
-      let seen = false;
-      const onEnter = () => {
+      // Client round 7 ("issues in cursor movement"): the pointer is tracked on the window against the hero's own box,
+      // not with pointerenter / pointerleave on the section. The fixed nav sits over the top of the hero, so crossing it
+      // used to drop the lens; and the lens used to reappear at the point where it was last left and slide across.
+      let on = false;
+      let last: { x: number; y: number } | null = null;
+      const enter = (x: number, y: number) => {
+        on = true;
+        gsap.killTweensOf(at);
+        at.x = x;
+        at.y = y;
         wash.dataset.lens = "on";
-        gsap.to(rad, { v: LENS, duration: 0.8, ease: "power3.out", onUpdate: paint });
+        gsap.to(rad, { v: LENS, duration: 0.8, ease: "power3.out", overwrite: true, onUpdate: paint });
       };
-      const onLeave = () => {
-        gsap.to(rad, { v: 0, duration: 0.6, ease: "power2.in", onUpdate: paint, onComplete: () => void (wash.dataset.lens = "off") });
+      const leave = () => {
+        if (!on) return;
+        on = false;
+        gsap.to(rad, { v: 0, duration: 0.6, ease: "power2.in", overwrite: true, onUpdate: paint, onComplete: () => void (wash.dataset.lens = "off") });
         moves.forEach((m) => {
           m.x(0);
           m.y(0);
         });
       };
-      const onMove = (e: PointerEvent) => {
-        if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
+      const track = (cx: number, cy: number) => {
         const r = el.getBoundingClientRect();
-        const x = e.clientX - r.left;
-        const y = e.clientY - r.top;
-        if (!seen) {
-          seen = true;
-          at.x = x;
-          at.y = y;
-        }
+        const x = cx - r.left;
+        const y = cy - r.top;
+        if (x < 0 || y < 0 || x > r.width || y > r.height) return leave();
+        if (!on) enter(x, y);
         gsap.to(at, { x, y, duration: 0.5, ease: "power3.out", overwrite: true, onUpdate: paint });
         const nx = (x / r.width - 0.5) * 2;
         const ny = (y / r.height - 0.5) * 2;
@@ -149,13 +155,20 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
           m.y(-ny * m.d);
         });
       };
-      el.addEventListener("pointerenter", onEnter);
-      el.addEventListener("pointerleave", onLeave);
-      el.addEventListener("pointermove", onMove);
+      const onMove = (e: PointerEvent) => {
+        if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
+        last = { x: e.clientX, y: e.clientY };
+        track(last.x, last.y);
+      };
+      // a resting mouse while the page scrolls: re-check, so the lens never stays behind on a hero that has left
+      const onScroll = () => last && track(last.x, last.y);
+      window.addEventListener("pointermove", onMove, { passive: true });
+      window.addEventListener("scroll", onScroll, { passive: true });
+      document.documentElement.addEventListener("mouseleave", leave);
       return () => {
-        el.removeEventListener("pointerenter", onEnter);
-        el.removeEventListener("pointerleave", onLeave);
-        el.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("scroll", onScroll);
+        document.documentElement.removeEventListener("mouseleave", leave);
         wash.dataset.lens = "off";
         wash.style.removeProperty("--mx");
         wash.style.removeProperty("--my");

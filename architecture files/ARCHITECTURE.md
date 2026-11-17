@@ -1,12 +1,14 @@
 # Path Logicity — Architecture
 
 > Technical architecture of the Path Logicity marketing site.
-> **Last updated: 2026-10-23** — reflects client round 5 (Manrope + Inter, hero banner motion, Lorem phases, PATH Group
+> **Last updated: 2026-11-17** (rounds 8 and 9 are in the Round notes below) — reflects client round 5 (Manrope + Inter, hero banner motion, Lorem phases, PATH Group
 > figures/About/verticals, Constra space availability) plus the Warehouse 17 photographs (hero and milestone 03) and the connected Constra URL.
 > **Round 6 (2026-10-30):** PATH Group now sits between Inside Logicity and News while PATH Legacy (the verticals, `PathLegacy`) stays after Project status (`app/page.tsx` + a `legacy` prop; the rail, spine and surface blending read the DOM), no section numbers in the kickers (names only; sub-sections and card counters use a bullet, so the "§05" labels in code comments are historical), gold is `#ffca00`. See `docs/PLAN-CLIENT-ROUND-6.md`.
 > **Round 7 (2026-11-04):** nav order is Home · Logicity Advantage · Sustainability · Site Tour · News · Blogs · **Path Group** (last, before Enquire); the homepage runs Renders → the verticals (headed "PATH Group"); the renders section is "Path Logicity, in renders"; the authorities strip is NHLML + Bengaluru MMLP Private Limited (+ the IGBC mark; a `Partner` without a `logo` shows its name in the chip); the News page has a CSR tab; the 400-acre previews autoplay on desktop until the visitor hovers; the hero lens is tracked on the window (M23). See `docs/PLAN-CLIENT-ROUND-7.md`.
+> **Round 8 (2026-11-14):** new hero (the client's photograph that dissolves into a pencil drawing: a generated pencil layer underneath, the photograph "develops" across it, a lens roams by itself and a pointer/finger takes it over, no wash over the photo, headline on the white paper side, frosted bottom bar), yellow brightened to `#ffd60a`, the 400-acre previews open one by one by themselves and keep looping, the partner logos always scroll slowly left to right, and hover-only card effects now play in turn by themselves (`ui/Flow`, M24). See `docs/PLAN-CLIENT-ROUND-8.md`.
+> **Round 9 (2026-11-17):** the hero photograph is `hero-v4.webp` (from `reference/images/hero2.png`); the 400-acre previews open **one at a time with the scroll** while the list is held on screen for ~1.4 viewports (M26); and the **hero was redone** (M25): one continuous picture, no white card, no lens, no pin. See `docs/PLAN-HERO-REDESIGN-R9.md`.
 > Design sources, newest first:
-> 0. [`docs/PLAN-CLIENT-ROUND-7.md`](../docs/PLAN-CLIENT-ROUND-7.md) — the latest client feedback and what changed (round 7); [`docs/PLAN-CLIENT-ROUND-5.md`](../docs/PLAN-CLIENT-ROUND-5.md) — the latest client feedback and what changed
+> 0. [`docs/PLAN-HERO-REDESIGN-R9.md`](../docs/PLAN-HERO-REDESIGN-R9.md) - the hero redo (round 9, the latest); [`docs/PLAN-CLIENT-ROUND-8.md`](../docs/PLAN-CLIENT-ROUND-8.md) - round 8 (the latest); [`docs/PLAN-CLIENT-ROUND-7.md`](../docs/PLAN-CLIENT-ROUND-7.md) — the latest client feedback and what changed (round 7); [`docs/PLAN-CLIENT-ROUND-5.md`](../docs/PLAN-CLIENT-ROUND-5.md) — the latest client feedback and what changed
 > 1. [`docs/REDESIGN-PLAN-R4.md`](../docs/REDESIGN-PLAN-R4.md) — current direction: light theme, one typeface, no opening animation
 > 2. Feature plans: [`PLAN-OFFICIAL-MAP-REUSE`](../docs/PLAN-OFFICIAL-MAP-REUSE.md) · [`PLAN-MOBILE`](../docs/PLAN-MOBILE.md) · [`PLAN-GATI-SHAKTI-MAP`](../docs/PLAN-GATI-SHAKTI-MAP.md)
 > 3. [`docs/CLIENT-CHANGES-PLAN.md`](../docs/CLIENT-CHANGES-PLAN.md) — client round 2 · [`docs/REDESIGN-PLAN.md`](../docs/REDESIGN-PLAN.md) — round 3 (largely superseded) · [`docs/UI-PLAN.md`](../docs/UI-PLAN.md) — original spec
@@ -78,7 +80,7 @@ site/
 ├─ components/
 │  ├─ navigation/   Nav (+ MobileMenu), MobileActionBar, JourneyRail, RouteSpine, Logo,
 │  │                useHeroThreshold (useHeroThreshold / useScrolledPast / useHideOnScroll)
-│  ├─ hero/         Hero — full-bleed render under a porcelain wash; letter-by-letter headline, cursor lens; desktop pin + route; separate phone line
+│  ├─ hero/         Hero (round 9) — full-bleed photograph, text on a deep-ink foot gradient (no card); develop-from-drawing intro, route line, scroll parallax, phone look-around
 │  ├─ stats/        ScaleIndex — 400 odometer → 4 branching nodes with hover image previews
 │  ├─ master-plan/  MasterPlan (§03), OfficialPlanMap + useZoneTour (shared), officialZones (GENERATED)
 │  │                PlanSvg + planGeometry — the old schematic, UNUSED
@@ -96,7 +98,7 @@ site/
 │  ├─ footer/       Footer — deep ink, grain, pinwheel stripe, partner marquee
 │  ├─ layout/       PageHero — the inner-page header (the one h1, intro, "On this page")
 │  ├─ providers/    SmoothScroll (Lenis), SurfaceMorph, MobileMotion
-│  └─ ui/           Route, Rail, ImageViewer, Counter, Metric, AssetSlot, RevealMedia, ContentSlot,
+│  └─ ui/           Flow (round 8: hover-only effects play in turn), Route, Rail, ImageViewer, Counter, Metric, AssetSlot, RevealMedia, ContentSlot,
 │                   Button/ArrowLink, Magnetic, SectionHeader, Reveal/RevealLines, Icon, PartnerLogos,
 │                   SurveyGrid (UNUSED)
 │
@@ -106,7 +108,6 @@ site/
 │  ├─ contours.ts         Generative contour art for AssetSlot placeholders
 │  ├─ enquiry.ts          Enquiry types, industries, `validateEnquiry` — shared by the form and the API
 │  ├─ content/
-│  │  ├─ server.ts        getHomepageWithAssets: the only place that touches `node:fs` (Warehouse 17 hero photo check); server components only
 │  │  ├─ index.ts         getHomepage / getSettings / getNavigation / getEnquiry / getBlogs / getPartners, telHref — CMS swap point
 │  │  └─ types.ts         Content models (mirror the future CMS schema)
 │  └─ motion/
@@ -118,7 +119,7 @@ site/
 ├─ scripts/generate-plan-zones.py   Traces the 7 zones from the official plan → master-plan/officialZones.ts
 ├─ public/
 │  ├─ client/             Client assets from pathlogicity.com (+ MANIFEST.md): logos, renders, 345.webp map,
-│  │                      image-1731136566206.webp (official plan), hero-main.webp (hero), partners/,
+│  │                      image-1731136566206.webp (official plan), hero-v3.webp + hero-v3-sketch.webp (hero, round 8), hero-main.webp / warehouse-17.webp (earlier heroes, now unused), partners/,
 │  │                      amenities/ (illustrative stock + CREDITS.md)
 │  ├─ constra/            Drop folder for Constra timelapses/photos (awaited — parked)
 │  └─ construction/       Representative stock progress images (labelled as such) + CREDITS.md
@@ -191,7 +192,7 @@ Components ──props──> lib/content/index.ts ──reads──> content/ho
 | Text | `ink` #111233 · `steel-700` #4a4c5e · `steel-500` #646678 | Headings · body · muted (≥ 4.5:1 on stone) |
 | Deep | `ink` / `midnight` #0d0e35 | The footer (`bg-ink`) and viewer overlays; `midnight` is no longer a section colour |
 | Brand indigo | `indigo-700` #201f85 (+ 500/400/300/50) | Labels, links, numerals, accent words, hover wipes |
-| **Gold** | `yellow-400` #ffca00 — the Bengaluru highlight on the client's map (+ 300/200/50) | **Action accent**: CTAs, rules, route comet and spine, markers. Never small text on white |
+| **Gold** | `yellow-400` #ffd60a — brightened in round 8, was #ffca00 (+ 300/200/50) | **Action accent**: CTAs, rules, route comet and spine, markers. Never small text on white |
 | Pinwheel | `green-500` #449e35 · `blue-500` #0066b1 · `orange-500` #ff6600 | Stripe, map legends and route modes, sustainability (green), status dots |
 
 `:root` also holds `--margin`, `--gutter`, `--line-*` and `--shadow-card`.
@@ -236,28 +237,31 @@ coalesced `ScrollTrigger.refresh()` runs only when a late scene creates a pin.
 | M1/M2 | ~~Preloader, hero window reveal, word rise~~ — **removed**: the page is complete on first paint | — |
 | M3 | Surface morph: an entering light/dark section blends from the previous colour (only the footer is dark now) | `providers/SurfaceMorph` |
 | M4 | Image reveal: wipe up behind a gold leading edge, settle from 1.2×, ±5% parallax | `ui/RevealMedia` (inside `AssetSlot`) |
-| M5 | ~~Pinned gallery~~ — replaced by a native scroll-snap **Rail** (drag, arrows, ←/→, progress); the page is never captured | `ui/Rail`, `gallery/RendersGallery` |
+| M5 | **Renders (round 9): sideways with the scroll on desktop.** The section holds the screen (`ScrollTrigger` pin, `data-hscroll="on"` sets full-height layout, height-fitted cards and no snapping) and the strip's `scrollLeft` follows the page scroll; `HOLD` = 0.65 page px per sideways px (about 2,000 px of hold on a 1600 px screen). Arrows, mouse drag and ←/→ still work and move the page to match (`manualUntil` stops the two fighting). Phones, tablets and reduced motion keep the free rail below. Before round 9: ~~Pinned gallery~~ — replaced by a native scroll-snap **Rail** (drag, arrows, ←/→, progress); the page is never captured | `ui/Rail`, `gallery/RendersGallery` |
 | M6 | Magnetic CTAs (fine pointers only) | `ui/Magnetic` |
 | M7 | Odometer reels; final value stays in the DOM. `spins` makes each digit whirl through several 0–9 turns and decelerate (used for the 400 acres) | `ui/Counter` |
 | M8 | Connectivity map: establishing shot (site → region), gold route traces, any click hands control to the user | `connectivity-map/ConnectivityMap` |
-| M9 | Partner logo marquee (pauses on hover; static under reduced motion). Only for more than four marks; with fewer (today: NHLML, Bengaluru MMLP, IGBC) the row is still | `ui/PartnerLogos` |
+| M9 | Partner logo marquee, **round 8: always on, slow (~40px/s), left to right**, pauses on hover/focus; 8 copies of the set so any width is filled; under reduced motion one still set (copies hidden by CSS). Footer and Gati Shakti band | `ui/PartnerLogos` |
 | M10 | Hub showpiece: routes converge, the pinwheel spins in, gold pulse | `advantage/HubOpener` |
 | M11 | Section intro paragraphs fade up | `ui/Reveal`, `ui/SectionHeader` |
 | M12 | Route transitions (`<ViewTransition>`) | `app/layout.tsx` + CSS |
 | M13 | **Route spine** — the page-wide margin line | `navigation/RouteSpine` |
-| M20 | **Hero banner motion**: slow drift on the image, headline lines rise through their masks, the bottom bar fades up, the reticle pings. CSS classes `hero-drift` / `hero-rise` / `hero-fade` / `hero-ping` (no flash before hydration; drift and ping off under reduced motion) | `hero/Hero` + `globals.css` |
-| M21 | **Phone hero: look around** (≤1023px, motion allowed): the photograph is wider than a phone, so a finger drags it sideways (`object-position`, clamped 15–85%, with momentum; vertical scroll is untouched via `touch-action: pan-y`). A first slow sweep shows it moves; a "Drag to look around" pill with a position track fades out on the first drag. The headline also drifts up and fades as you scroll off the banner | `hero/Hero` (`MQ.mobile` scene) + `hero-nudge` in `globals.css` |
+| M20 | ~~Hero banner motion~~ (round 5; only the drift survives, the rest is M24): **Hero banner motion**: slow drift on the image, headline lines rise through their masks, the bottom bar fades up, the reticle pings. CSS classes `hero-drift` / `hero-rise` / `hero-fade` / `hero-ping` (no flash before hydration; drift and ping off under reduced motion) | `hero/Hero` + `globals.css` |
+| M21 | **Phone hero: look around** (kept in round 9, now without the lens; M25): (≤1023px, motion allowed): the photograph is wider than a phone, so a finger drags it sideways (`object-position`, clamped 15–85%, with momentum; vertical scroll is untouched via `touch-action: pan-y`). A first slow sweep shows it moves; a "Drag to look around" pill with a position track fades out on the first drag. The headline also drifts up and fades as you scroll off the banner | `hero/Hero` (`MQ.mobile` scene) + `hero-nudge` in `globals.css` |
 | M22 | **Phone motion for §04, §05 and PATH Legacy**, all in `providers/MobileMotion` (no component edited). Entrances: milestone dots pop and numerals wipe in, status legend chips rise, mission/vision cards wipe in from opposite sides, sector diamonds spin in, track-record figures settle, each vertical's photo frame opens upward with its number tab, title and gold rule following. Scroll-linked: site photo and vertical photos drift inside their frames, the milestone number swells as it crosses mid-screen, the About quote fills grey → ink as it is read. Uses `clip-path` and the individual `translate`/`scale`/`rotate` properties so it never fights the GSAP reveals; inline styles removed on cleanup | `providers/MobileMotion` |
-| M23 | **Hero redesign (round 6)**, deliberately uncluttered: the headline arrives letter by letter (`HeroChars`, letters `aria-hidden`, `h1` has an `aria-label`; CSS `hero-char`); desktop pointer: the porcelain wash lifts in a soft circle under the cursor (`.hero-wash` CSS mask driven by `--mx/--my/--lens`; round 7: the pointer is tracked on `window` against the hero's box, so the fixed nav does not drop the lens and it starts under the pointer on re-entry) and photo, headline and reticle drift a few px at different depths (`data-depth`, `gsap.quickTo`); phones: the same lens follows a finger while dragging. A pinwheel opening was built and removed (too long). Off under reduced motion. Plan: `docs/PLAN-HERO-REDESIGN.md` | `hero/Hero` + `globals.css` |
-| M14 | **Hero route** (desktop): the hero pins for 140% of a viewport; the headline lifts, the reticle shrinks and the blue route (gold comet) draws across the image and down into §02, where `ScaleIndex`'s incoming route carries it on | `hero/Hero` |
+| M23 | ~~Hero redesign (round 6)~~ superseded by M24: **Hero redesign (round 6)**, deliberately uncluttered: the headline arrives letter by letter (`HeroChars`, letters `aria-hidden`, `h1` has an `aria-label`; CSS `hero-char`); desktop pointer: the porcelain wash lifts in a soft circle under the cursor (`.hero-wash` CSS mask driven by `--mx/--my/--lens`; round 7: the pointer is tracked on `window` against the hero's box, so the fixed nav does not drop the lens and it starts under the pointer on re-entry) and photo, headline and reticle drift a few px at different depths (`data-depth`, `gsap.quickTo`); phones: the same lens follows a finger while dragging. A pinwheel opening was built and removed (too long). Off under reduced motion. Plan: `docs/PLAN-HERO-REDESIGN.md` | `hero/Hero` + `globals.css` |
+| M24 | **Round 8: hero and flow** (the hero half is superseded by M25; `ui/Flow` and the Scale / Gati Shakti parts stand). *Hero*: pencil drawing under, photograph over (`hero-develop` clip sweep + `hero-scan` gold edge, both CSS and transform-only so CLS stays 0), headline words rise through masks then a gold rule draws (`hero-word`, `hero-rule`), a **lens** (`makeLens` in `hero/Hero.tsx`: CSS mask on the photo layer plus a gold ring) roams the photograph on its own and is taken over by a mouse (desktop) or a finger (phones), gliding back when let go; this replaces the cursor wash of M23 and the reticle. *Flow* (`ui/Flow`): once a group is on screen its `[data-flow]` items get `data-lit="true"` one after another (the look a hover gives, via `group-data-[lit=true]:`), stopping when a mouse enters; used on Amenities, PATH verticals, Sustainability initiatives (ring node and row together), Space availability cards and Gati Shakti tiles; the Gati Shakti map points use `useZoneTour`. *Scale (§02)*: previews open one by one, loop, yield to the pointer and resume; phones show each photo inline as it scrolls in | `hero/Hero`, `ui/Flow`, `stats/ScaleIndex`, `advantage/GatiShaktiMap` |
+| M25 | **Hero (round 9)**: everything CSS keyframes (no flash before hydration, CLS 0): the generated pencil drawing is on screen, the photograph *develops* across it behind a gold edge (`hero-develop` + `hero-scan`, 1.7 s), the foot gradient (`hero-scrim`, same clip) is revealed with it, the kicker and headline words rise (`hero-fade` / `hero-word`, from 1.25 s), a gold route line draws across the base of the headline with a leading node that pings on arrival (`hero-route-line` / `hero-route-node`), then copy and actions rise; afterwards only the 28 s drift (`hero-drift`) remains. JS (GSAP, `MQ.motion`): scroll exit with **no pin**, the photograph parallaxes down 10% and swells, the text lifts and fades; desktop mouse: photograph and headline shift a few px at different depths (`quickTo`); phones: drag to look around (M21). A `sticky` veil keeps the nav legible over the scrolling photograph (the section is `overflow-clip` so sticky works). Reduced motion: the finished state | `hero/Hero` + `globals.css` |
+| M26 | **Scale previews (round 9)**: on desktop the list is pinned (`ScrollTrigger`, `start: "center center"`, `end: +=1.4 viewports`) and the four previews open one at a time with the scroll (the first closes as the second opens); the pointer or focus shows the row it is on; after the fourth the page moves on. Reduced motion and phones: unchanged (hover-only / inline photos) | `stats/ScaleIndex` |
+| M14 | ~~Hero route (desktop)~~ — **removed in round 9** (no pin, no route across the photograph; M25 replaces it). Was: **Hero route** (desktop): the hero pins for 140% of a viewport; the headline lifts, the reticle shrinks and the blue route (gold comet) draws across the image and down into §02, where `ScaleIndex`'s incoming route carries it on | `hero/Hero` |
 | M15 | **Official-plan zones**: hover/tap washes out the rest, re-reveals the zone and redraws its outline; first-view tour through the zones (`useZoneTour`: pauses off-screen, stops on first interaction) | `master-plan/OfficialPlanMap`, `MasterPlan`, `SpecDrawing`, `SiteTourPreview` |
 | M16 | **Site-tour camera**: the plan glides and zooms onto the chosen zone (CSS variables + transition), with a slow breathing drift | `site-tour/SiteTourPreview` |
 | M17 | **Gati Shakti map**: the site pops, routes draw out one by one, each point lands with its route; hover/focus/tap emphasises one | `advantage/GatiShaktiMap` |
 | M18 | **Phone only:** blocks (milestones, initiatives, glance figures, PATH sectors, footer link groups) rise and fade in as they arrive (Web Animations API, staggered, leaves no inline styles) | `providers/MobileMotion` |
 | M19 | **Phone only:** the master plan pans sideways and glides to the lit zone; rails dim non-current cards; the hero has its own short line in the clear part of the image | `MasterPlan`, `ui/Rail` + CSS, `hero/Hero` |
 
-**Pinned scenes:** only the **hero on desktop** (one ScrollTrigger, killed on unmount). Phones and reduced
-motion have none.
+**Pinned scenes (round 9):** the **Scale list** (M26, about 1.4 viewports) and the **Renders gallery** (M5, about 2 viewports), both desktop only. The hero no longer pins. Phones and
+reduced motion have none.
 
 **Scroll state:** the nav, rail and action bar use `useScrolledPast` / `useHideOnScroll`, which re-render
 only when a threshold is crossed, never per frame.

@@ -104,29 +104,44 @@ export function Nav({ items, settings }: { items: NavItem[]; settings: SiteSetti
                       </button>
                       <div
                         id={`nav-panel-${i}`}
-                        className={`absolute left-1/2 top-full w-[300px] -translate-x-1/2 pt-3 transition-[opacity,transform,visibility] duration-300 ease-[var(--ease-out-expo)] ${
+                        className={`absolute left-1/2 top-full w-[324px] -translate-x-1/2 pt-3 transition-[opacity,transform,visibility] duration-300 ease-[var(--ease-out-expo)] ${
                           open === i ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0"
                         }`}
                       >
-                        <div className="relative border border-ink/10 bg-paper shadow-[0_18px_40px_-16px_rgb(26_28_70/0.25)]">
+                        {/* deep-ink panel with a soft gold glow (the footer's look), a gold edge that draws in, and rows that rise in turn */}
+                        <div className="on-dark relative overflow-hidden rounded-[3px] border border-paper/10 bg-ink bg-[radial-gradient(120%_90%_at_100%_0%,rgb(255_214_10/0.12),transparent_55%)] shadow-[0_28px_60px_-18px_rgb(17_18_51/0.55)]">
                           <span
                             aria-hidden
-                            className={`absolute left-0 top-0 h-px w-full origin-left bg-yellow-400 transition-transform duration-500 ease-[var(--ease-out-expo)] ${
+                            className={`absolute left-0 top-0 h-[2px] w-full origin-left bg-yellow-400 transition-transform duration-500 ease-[var(--ease-out-expo)] ${
                               open === i ? "scale-x-100" : "scale-x-0"
                             }`}
                           />
-                          <ul className="py-2">
+                          <ul className="px-2 py-3">
                             {item.children.map((c, j) => (
-                              <li key={c.href}>
+                              <li
+                                key={c.href}
+                                className={`transition-[opacity,transform] duration-500 ease-[var(--ease-out-expo)] ${open === i ? "translate-y-0 opacity-100" : "translate-y-1.5 opacity-0"}`}
+                                style={{ transitionDelay: open === i ? `${80 + j * 45}ms` : "0ms" }}
+                              >
                                 <Link
                                   href={c.href}
-                                  className="group flex gap-4 px-5 py-3.5 transition-colors hover:bg-stone focus-visible:bg-stone"
+                                  className="group relative flex items-center gap-4 rounded-[2px] px-4 py-3.5 transition-colors duration-300 hover:bg-paper/[0.07] focus-visible:bg-paper/[0.07]"
                                 >
-                                  <span aria-hidden className="t-micro pt-[3px] text-indigo-700">•</span>
-                                  <span>
-                                    <span className="block text-[0.9375rem] font-bold text-ink">{c.label}</span>
-                                    {c.note ? <span className="mt-1 block text-[0.8125rem] leading-snug text-steel-700">{c.note}</span> : null}
+                                  {/* gold bar grows in on hover / focus */}
+                                  <span
+                                    aria-hidden
+                                    className="absolute inset-y-3 left-0 w-[2px] origin-center scale-y-0 bg-yellow-400 transition-transform duration-300 ease-[var(--ease-out-expo)] group-hover:scale-y-100 group-focus-visible:scale-y-100"
+                                  />
+                                  <span aria-hidden className="block h-1.5 w-1.5 shrink-0 rounded-full bg-yellow-400/80 transition-all duration-300 group-hover:scale-125 group-hover:bg-yellow-400 group-focus-visible:bg-yellow-400" />
+                                  <span className="min-w-0 flex-1 transition-transform duration-300 ease-[var(--ease-out-expo)] group-hover:translate-x-0.5">
+                                    <span className="block text-[0.9375rem] font-bold leading-tight text-paper">{c.label}</span>
+                                    {c.note ? <span className="mt-1 block text-[0.8125rem] leading-snug text-paper/60 transition-colors duration-300 group-hover:text-paper/80">{c.note}</span> : null}
                                   </span>
+                                  <Icon
+                                    name="arrow-right"
+                                    size={16}
+                                    className="shrink-0 -translate-x-2 text-yellow-400 opacity-0 transition-all duration-300 ease-[var(--ease-out-expo)] group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100"
+                                  />
                                 </Link>
                               </li>
                             ))}

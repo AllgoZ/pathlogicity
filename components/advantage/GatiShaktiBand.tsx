@@ -1,6 +1,7 @@
 import type { Homepage } from "@/lib/content";
 import type { Destination, Partner } from "@/lib/content/types";
 import { ArrowLink } from "@/components/ui/Button";
+import { Flow } from "@/components/ui/Flow";
 import { Icon } from "@/components/ui/Icon";
 import { Metric } from "@/components/ui/Metric";
 import { GatiShaktiMap } from "./GatiShaktiMap";
@@ -42,9 +43,10 @@ export function GatiShaktiBand({ data, partners, destinations }: { data: Homepag
         </div>
 
         {/* ROAD + RAIL + WAREHOUSING + COMMERCIAL + ICD = ONE ECOSYSTEM */}
+        <Flow step={1000}>
         <Reveal className="mt-16 flex flex-wrap items-stretch gap-px bg-ink/10 shadow-[var(--shadow-card)] lg:mt-20 lg:flex-nowrap" stagger={0.08}>
           {data.equation.map((t) => (
-            <div key={t.label} className="group flex grow basis-[calc(50%-1px)] flex-col gap-4 bg-paper px-5 py-7 transition-colors duration-300 hover:bg-indigo-50 sm:basis-[calc(33.333%-1px)] lg:basis-0 lg:px-7 lg:py-9">
+            <div key={t.label} data-flow className="group flex grow basis-[calc(50%-1px)] flex-col gap-4 bg-paper px-5 py-7 transition-colors duration-300 hover:bg-indigo-50 group-data-[lit=true]:bg-indigo-50 sm:basis-[calc(33.333%-1px)] lg:basis-0 lg:px-7 lg:py-9">
               <Icon name={t.icon} size={30} draw className="text-indigo-700" />
               <p className="text-[clamp(1rem,1.2vw,1.1875rem)] font-bold text-ink">{t.label}</p>
             </div>
@@ -58,6 +60,7 @@ export function GatiShaktiBand({ data, partners, destinations }: { data: Homepag
             </p>
           </div>
         </Reveal>
+        </Flow>
 
         {/* Contributing to India's growth story */}
         <p className="t-label mt-16 text-ink lg:mt-20">Contributing to India&apos;s growth story</p>

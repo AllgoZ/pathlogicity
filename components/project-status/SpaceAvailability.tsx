@@ -3,6 +3,7 @@ import { ArrowLink } from "@/components/ui/Button";
 import { ContentSlot } from "@/components/ui/ContentSlot";
 import { Icon } from "@/components/ui/Icon";
 import { Metric } from "@/components/ui/Metric";
+import { Flow } from "@/components/ui/Flow";
 import { Reveal } from "@/components/ui/Reveal";
 
 const STATUS: Record<SpaceStatus, { label: string; chip: string; bar: string }> = {
@@ -121,14 +122,15 @@ export function SpaceAvailability({ leasing, constra }: { leasing: Leasing; cons
       )}
 
       {links.length ? (
+        <Flow step={1300}>
         <Reveal as="ul" stagger={0.07} className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:mt-12 lg:grid-cols-4">
           {links.map((l) => (
-            <li key={l.id} className="flex">
+            <li key={l.id} data-flow className="group flex">
               <a
                 href={l.href as string}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex w-full flex-col justify-between bg-paper p-6 shadow-[var(--shadow-card)] transition-transform duration-500 ease-[var(--ease-out-expo)] hover:-translate-y-1.5"
+                className="flex w-full flex-col justify-between bg-paper p-6 shadow-[var(--shadow-card)] transition-transform duration-500 ease-[var(--ease-out-expo)] hover:-translate-y-1.5 group-data-[lit=true]:-translate-y-1.5"
               >
                 <span>
                   <span className="t-micro text-indigo-700">On Constra</span>
@@ -136,7 +138,7 @@ export function SpaceAvailability({ leasing, constra }: { leasing: Leasing; cons
                   <span className="mt-2 block text-[0.9375rem] leading-snug text-steel-700">{l.text}</span>
                 </span>
                 <span className="mt-6 flex items-center justify-between">
-                  <span aria-hidden className="block h-[3px] w-10 bg-yellow-400 transition-[width] duration-500 ease-[var(--ease-out-expo)] group-hover:w-20" />
+                  <span aria-hidden className="block h-[3px] w-10 bg-yellow-400 transition-[width] duration-500 ease-[var(--ease-out-expo)] group-hover:w-20 group-data-[lit=true]:w-20" />
                   <Icon name="arrow-right" size={16} className="arrow-nudge text-indigo-700" />
                 </span>
                 <span className="sr-only"> (opens Constra in a new tab)</span>
@@ -144,6 +146,7 @@ export function SpaceAvailability({ leasing, constra }: { leasing: Leasing; cons
             </li>
           ))}
         </Reveal>
+        </Flow>
       ) : null}
       {missing.length ? (
         <p className="mt-6">

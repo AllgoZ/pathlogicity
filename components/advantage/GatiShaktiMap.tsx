@@ -6,6 +6,7 @@ import { gsap, MQ } from "@/lib/motion/gsap";
 import { useIsoLayoutEffect, useMotion } from "@/lib/motion/hooks";
 import { Icon } from "@/components/ui/Icon";
 import { MAP, ROUTES, SITE } from "@/components/connectivity-map/mapGeometry";
+import { useZoneTour } from "@/components/master-plan/OfficialPlanMap";
 
 /** The points, in the order they are drawn (nearest corridors first, far ports last). */
 const ORDER = ["nh648", "strr", "nh48", "dodbele", "kia", "mangalore", "chennai"] as const;
@@ -66,6 +67,14 @@ export function GatiShaktiMap({ destinations }: { destinations: Destination[] })
   const [active, setActive] = useState<string | null>(null);
   const byId = Object.fromEntries(destinations.map((d) => [d.id, d]));
   const ids = ORDER.filter((id) => ROUTES[id] && byId[id]);
+  // client round 8: once the routes have drawn, the points are emphasised one by one by themselves (as a hover would);
+  // the first hover / focus / tap hands control to the visitor for good.
+  const [tour, stopTour] = useZoneTour(root, ids, { start: 5200, step: 1900 });
+  const shown = active ?? tour;
+  const take = (id: string) => {
+    stopTour();
+    setActive(id);
+  };
 
   // user-units-per-pixel, so line widths and dashes stay a constant size on screen at any map width
   useIsoLayoutEffect(() => {
@@ -106,11 +115,11 @@ export function GatiShaktiMap({ destinations }: { destinations: Destination[] })
           </defs>
           {ids.map((id) => {
             const r = ROUTES[id];
-            const dim = active && active !== id;
+            const dim = shown && shown !== id;
             return (
               <g key={id} mask={`url(#gs-mask-${id})`} className="transition-opacity duration-500" opacity={dim ? 0.22 : 1}>
-                <path d={r.d} style={casing(active === id ? 11 : 9)} />
-                <path d={r.d} style={stroke(r.mode, active === id ? 4.4 : 3.4)} />
+                <path d={r.d} style={casing(shown === id ? 11 : 9)} />
+                <path d={r.d} style={stroke(r.mode, shown === id ? 4.4 : 3.4)} />
               </g>
             );
           })}
@@ -131,19 +140,19 @@ export function GatiShaktiMap({ destinations }: { destinations: Destination[] })
         {ids.map((id) => {
           const r = ROUTES[id];
           const d = byId[id];
-          const on = active === id;
+          const on = shown === id;
           const place = PLACE[id] ?? "right";
           return (
-            <div key={id} className={`absolute z-20 transition-opacity duration-500 ${active && !on ? "opacity-40" : ""}`} style={{ left: pct(r.end.x, MAP.w), top: pct(r.end.y, MAP.h) }}>
+            <div key={id} className={`absolute z-20 transition-opacity duration-500 ${shown && !on ? "opacity-40" : ""}`} style={{ left: pct(r.end.x, MAP.w), top: pct(r.end.y, MAP.h) }}>
               <button
                 data-gpin
                 type="button"
                 aria-label={`${SHORT[id]}${dist(d) ? `, ${dist(d)}` : ""} — show route`}
                 aria-pressed={on}
-                onPointerEnter={(e) => e.pointerType === "mouse" && setActive(id)}
-                onFocus={() => setActive(id)}
+                onPointerEnter={(e) => e.pointerType === "mouse" && take(id)}
+                onFocus={() => take(id)}
                 onBlur={() => setActive(null)}
-                onClick={() => setActive(id)}
+                onClick={() => take(id)}
                 className="absolute flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center"
               >
                 <span className="block h-3 w-3 rounded-full border-2 border-white shadow transition-transform duration-300" style={{ background: on ? "var(--color-yellow-400)" : MODE_COLOR[r.mode], transform: on ? "scale(1.45)" : undefined }} />

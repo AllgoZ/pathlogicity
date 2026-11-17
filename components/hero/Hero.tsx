@@ -8,70 +8,49 @@ import { gsap, MQ } from "@/lib/motion/gsap";
 import { useMotion } from "@/lib/motion/hooks";
 import { ArrowLink, ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { Route, type RouteHandle } from "@/components/ui/Route";
 
-/** Route across the render: enters left, passes the site reticle, loops and exits down at x=6% into §02 (where ScaleIndex carries it on). */
-const HERO_ROUTE =
-  "M -2 66 C 16 66, 26 54, 44 52 C 60 50, 66 32, 76 31 C 86 30, 95 40, 94 56 C 93 72, 72 79, 48 81 C 26 83, 8 84, 6 92 L 6 102";
+const WORD_STEP = 110; // ms between headline words
+const INTRO = 1300; // ms before the first word rises (the photograph has developed by then)
+const BLEED = 24; // px the photograph extends past the hero on every side, so the pointer drift never shows an edge
 
-/**
- * Phones / tablets: the line lives in the clear window of the render between the headline and the location
- * bar (so it never crosses text), sweeps across the image and leaves at the right. Coordinates are 0–100
- * within that window.
- */
-const MOBILE_ROUTE = "M -2 66 C 16 28, 34 82, 56 50 C 72 28, 88 44, 102 18";
-/** the site marker sits where the first segment ends (56%, 50%) */
-const MOBILE_PIN = { x: 56, y: 50, at: 0.5 };
+type HeadWord = { w: string; accent: boolean };
 
-const CHAR_STEP = 26; // ms between letters
-const LENS = 260; // px radius of the cleared circle
-const INTRO = 160; // ms before the first letter rises
-
-/** One headline line, split into words and letters so each letter can rise on its own (and lift under the cursor). */
-function HeroChars({ text, from }: { text: string; from: number }) {
-  let n = from;
-  const words = text.split(" ");
+/** One headline row: each word rises through its own mask, one after another. Accent words (`*word*` in the content) are gold. */
+function HeroRow({ words, from }: { words: HeadWord[]; from: number }) {
   return (
-    <>
-      {words.map((w, wi) => (
-        <Fragment key={wi}>
-          <span className="inline-block whitespace-nowrap">
-            {[...w].map((c, ci) => (
-              <span key={ci} className="hero-char" style={{ animationDelay: `${INTRO + n++ * CHAR_STEP}ms` }}>
-                {c}
-              </span>
-            ))}
+    <span aria-hidden className="block overflow-hidden pb-[0.1em] pt-[0.06em] -mb-[0.1em] -mt-[0.06em] [text-wrap:balance]">
+      {words.map((x, i) => (
+        <Fragment key={i}>
+          <span className="inline-block overflow-hidden pb-[0.12em] align-bottom">
+            <span className={`hero-word ${x.accent ? "text-yellow-400" : ""}`} style={{ animationDelay: `${INTRO + (from + i) * WORD_STEP}ms` }}>
+              {x.w}
+            </span>
           </span>
-          {wi < words.length - 1 ? " " : null}
+          {i < words.length - 1 ? " " : null}
         </Fragment>
       ))}
-    </>
+    </span>
   );
 }
 
 /**
- * §01 — Hero. The render (or, once supplied, the Warehouse 17 site photograph) runs full-bleed behind the copy
- * under a porcelain wash; the location, intro and actions sit on a bottom bar. On desktop the hero pins briefly
- * as you scroll: the headline lifts away, the reticle shrinks and the route line draws out across the image and
- * down into §02.
+ * §01 — Hero (round 9 redo, docs/PLAN-HERO-REDESIGN-R9.md). One continuous picture: the client's photograph runs
+ * full-bleed and everything else sits ON it, on a soft deep-ink gradient at the foot. No card, no ring, no pin.
  *
- * Banner motion (client round 5), all CSS so nothing flashes before hydration and nothing runs under reduced
- * motion: the image drifts slowly (`hero-drift`), the headline lines rise through their masks (`hero-rise`), the
- * bar fades up (`hero-fade`) and the site reticle pings (`hero-ping`).
- *
- * Round 6 redesign (docs/PLAN-HERO-REDESIGN.md) — kept deliberately uncluttered: nothing is added to the layout.
- * The headline arrives letter by letter; the porcelain wash lifts in a soft circle under the cursor (a finger, on
- * phones) so the photograph can be looked at; photo, headline and reticle move at slightly different depths with
- * the mouse. Everything is a GSAP scene inside the existing `matchMedia` gates or a CSS animation that reduced
- * motion switches off.
+ * Motion, in the order a visitor sees it (all CSS keyframes, so nothing flashes before hydration):
+ *  1. a pencil drawing of the scene is on screen; the photograph DEVELOPS across it, left to right, behind a gold edge;
+ *  2. the foot gradient fades in, the location kicker appears and the headline words rise through masks;
+ *  3. a gold route line draws across the base of the headline, a node leading it, and pings on arrival;
+ *  4. the copy and the two actions rise in turn;
+ *  5. the photograph then breathes slowly (`hero-drift`). On desktop a mouse shifts photograph and headline a few px at
+ *     different depths; on scroll the photograph parallaxes and the text lifts away (the page is never held);
+ *  6. phones: the photograph is wider than the screen, so a finger drags it sideways to look around.
+ * Reduced motion: the finished image, headline and route line; no drift, no scroll effects.
  */
 export function Hero({ data, settings }: { data: Homepage["hero"]; settings: SiteSettings }) {
   const section = useRef<HTMLElement>(null);
   const media = useRef<HTMLDivElement>(null);
-  const cover = useRef<HTMLDivElement>(null);
-  const route = useRef<RouteHandle>(null);
-  const mroute = useRef<RouteHandle>(null);
-  const pin = useRef<HTMLSpanElement>(null);
+  const content = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const [paused, setPaused] = useState(false);
 
@@ -91,167 +70,74 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
   useMotion(section, (mm) => {
     const q = gsap.utils.selector(section);
 
-    mm.add(MQ.desktop, () => {
-      const o = { p: 0 };
-      route.current?.set(0);
-      const tl = gsap.timeline({
-        defaults: { ease: "none" },
-        scrollTrigger: { trigger: section.current, start: "top top", end: "+=140%", scrub: 0.6, pin: true, anticipatePin: 1 },
-      });
-      tl.to(media.current, { scale: 1.12, duration: 0.4 }, 0)
-        .to(q("[data-hero-line]"), { yPercent: -115, opacity: 0, stagger: 0.035, duration: 0.28, ease: "power2.in" }, 0.08)
-        .to(q("[data-hero-hud]"), { opacity: 0, y: -24, duration: 0.2 }, 0.12)
-        .to(q("[data-hero-reticle]"), { scale: 0.6, opacity: 0.35, duration: 0.3 }, 0.2)
-        .to(o, { p: 1, duration: 0.62, onUpdate: () => route.current?.set(o.p) }, 0.24)
-        .to(q("[data-hero-reticle]"), { opacity: 0, duration: 0.15 }, 0.72)
-        .to(cover.current, { opacity: 1, duration: 0.3 }, 0.7);
-
-      // ---- cursor: the wash lifts around the pointer, and the layers drift at different depths (mouse / trackpad only) ----
-      const el = section.current;
-      const wash = q("[data-hero-wash]")[0] as HTMLElement | undefined;
-      if (!el || !wash || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-      const depth = q("[data-depth]") as HTMLElement[];
-      const moves = depth.map((d) => ({ d: Number(d.dataset.depth), x: gsap.quickTo(d, "x", { duration: 1, ease: "power3.out" }), y: gsap.quickTo(d, "y", { duration: 1, ease: "power3.out" }) }));
-      const at = { x: 0, y: 0 };
-      const rad = { v: 0 };
-      const paint = () => {
-        wash.style.setProperty("--mx", String(at.x));
-        wash.style.setProperty("--my", String(at.y));
-        wash.style.setProperty("--lens", String(rad.v));
-      };
-      // Client round 7 ("issues in cursor movement"): the pointer is tracked on the window against the hero's own box,
-      // not with pointerenter / pointerleave on the section. The fixed nav sits over the top of the hero, so crossing it
-      // used to drop the lens; and the lens used to reappear at the point where it was last left and slide across.
-      let on = false;
-      let last: { x: number; y: number } | null = null;
-      const enter = (x: number, y: number) => {
-        on = true;
-        gsap.killTweensOf(at);
-        at.x = x;
-        at.y = y;
-        wash.dataset.lens = "on";
-        gsap.to(rad, { v: LENS, duration: 0.8, ease: "power3.out", overwrite: true, onUpdate: paint });
-      };
-      const leave = () => {
-        if (!on) return;
-        on = false;
-        gsap.to(rad, { v: 0, duration: 0.6, ease: "power2.in", overwrite: true, onUpdate: paint, onComplete: () => void (wash.dataset.lens = "off") });
-        moves.forEach((m) => {
-          m.x(0);
-          m.y(0);
-        });
-      };
-      const track = (cx: number, cy: number) => {
-        const r = el.getBoundingClientRect();
-        const x = cx - r.left;
-        const y = cy - r.top;
-        if (x < 0 || y < 0 || x > r.width || y > r.height) return leave();
-        if (!on) enter(x, y);
-        gsap.to(at, { x, y, duration: 0.5, ease: "power3.out", overwrite: true, onUpdate: paint });
-        const nx = (x / r.width - 0.5) * 2;
-        const ny = (y / r.height - 0.5) * 2;
-        moves.forEach((m) => {
-          m.x(-nx * m.d);
-          m.y(-ny * m.d);
-        });
-      };
-      const onMove = (e: PointerEvent) => {
-        if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
-        last = { x: e.clientX, y: e.clientY };
-        track(last.x, last.y);
-      };
-      // a resting mouse while the page scrolls: re-check, so the lens never stays behind on a hero that has left
-      const onScroll = () => last && track(last.x, last.y);
-      window.addEventListener("pointermove", onMove, { passive: true });
-      window.addEventListener("scroll", onScroll, { passive: true });
-      document.documentElement.addEventListener("mouseleave", leave);
-      return () => {
-        window.removeEventListener("pointermove", onMove);
-        window.removeEventListener("scroll", onScroll);
-        document.documentElement.removeEventListener("mouseleave", leave);
-        wash.dataset.lens = "off";
-        wash.style.removeProperty("--mx");
-        wash.style.removeProperty("--my");
-        wash.style.removeProperty("--lens");
-      };
-    });
-
-    mm.add(MQ.mobile, () => {
-      const o = { p: 0 };
-      let pinned = false;
-      mroute.current?.set(0);
-      gsap.set(pin.current, { opacity: 0, scale: 0.4 });
-      gsap.to(o, {
-        p: 1,
-        duration: 2.2,
-        delay: 0.5,
-        ease: "power2.inOut",
-        onUpdate: () => {
-          mroute.current?.set(o.p);
-          if (!pinned && o.p >= MOBILE_PIN.at) {
-            pinned = true;
-            gsap.to(pin.current, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(2)" });
-          }
-        },
-      });
+    // ---- scroll exit, desktop and phones: the photograph parallaxes down and swells a little; the text lifts away ----
+    mm.add(MQ.motion, () => {
       gsap.to(media.current, {
-        scale: 1.06,
+        yPercent: 10,
+        scale: 1.05,
         ease: "none",
         scrollTrigger: { trigger: section.current, start: "top top", end: "bottom top", scrub: true },
       });
-      // the headline drifts up and softens as the page scrolls away from the banner
-      gsap.to(q("[data-hero-head]"), {
-        yPercent: -22,
-        opacity: 0.15,
+      gsap.to(content.current, {
+        y: -64,
+        opacity: 0,
         ease: "none",
         scrollTrigger: { trigger: section.current, start: "top top", end: "60% top", scrub: true },
       });
+    });
 
-      // Look around: the photograph is much wider than a phone, so a finger drags it sideways (object-position),
-      // with a little momentum. A gentle first sweep shows it can move; the hint and track show where you are.
+    // ---- desktop mouse: photograph and headline shift a few px at different depths ----
+    mm.add(MQ.desktop, () => {
       const el = section.current;
-      const img = q("[data-hero-img]")[0] as HTMLImageElement | undefined;
+      if (!el || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+      const moves = (q("[data-depth]") as HTMLElement[]).map((d) => ({
+        d: Number(d.dataset.depth),
+        x: gsap.quickTo(d, "x", { duration: 1.2, ease: "power3.out" }),
+        y: gsap.quickTo(d, "y", { duration: 1.2, ease: "power3.out" }),
+      }));
+      let visible = true;
+      const io = new IntersectionObserver(([e]) => {
+        visible = e.isIntersecting;
+        if (!visible) moves.forEach((m) => (m.x(0), m.y(0)));
+      });
+      io.observe(el);
+      const onMove = (e: PointerEvent) => {
+        if (!visible || (e.pointerType !== "mouse" && e.pointerType !== "pen")) return;
+        const nx = (e.clientX / window.innerWidth - 0.5) * 2;
+        const ny = (e.clientY / window.innerHeight - 0.5) * 2;
+        moves.forEach((m) => (m.x(-nx * m.d), m.y(-ny * m.d)));
+      };
+      window.addEventListener("pointermove", onMove, { passive: true });
+      return () => {
+        window.removeEventListener("pointermove", onMove);
+        io.disconnect();
+      };
+    });
+
+    // ---- phones / tablets: look around. The photograph is much wider than a phone, so a finger drags it sideways
+    // (object-position) with a little momentum. A gentle first sweep shows it can move; the hint shows where you are. ----
+    mm.add(MQ.mobile, () => {
+      const el = section.current;
+      const imgs = q("[data-hero-img]") as HTMLImageElement[]; // the photograph and the drawing under it pan together
+      const img = imgs[0];
       const hint = q("[data-hero-hint]")[0] as HTMLElement | undefined;
       const thumb = q("[data-hero-thumb]")[0] as HTMLElement | undefined;
       if (!el || !img) return;
-      const MIN = 15;
-      const MAX = 85;
+      const MIN = 10;
+      const MAX = 90;
       const clamp = (n: number) => Math.min(MAX, Math.max(MIN, n));
-      const X = { v: 70 };
-      const wash = q("[data-hero-wash]")[0] as HTMLElement | undefined;
-      const lens = { x: 0, y: 0, v: 0 };
-      const paintLens = () => {
-        if (!wash) return;
-        wash.style.setProperty("--mx", String(lens.x));
-        wash.style.setProperty("--my", String(lens.y));
-        wash.style.setProperty("--lens", String(lens.v));
-      };
-      const lensTo = (e: PointerEvent, grow: boolean) => {
-        if (!wash) return;
-        const r = el.getBoundingClientRect();
-        const x = e.clientX - r.left;
-        const y = e.clientY - r.top;
-        if (grow) {
-          lens.x = x;
-          lens.y = y;
-          wash.dataset.lens = "on";
-          gsap.to(lens, { v: 170, duration: 0.5, ease: "power3.out", onUpdate: paintLens });
-        } else gsap.to(lens, { x, y, duration: 0.25, ease: "power2.out", overwrite: "auto", onUpdate: paintLens });
-      };
-      const lensOff = () => {
-        gsap.to(lens, { v: 0, duration: 0.6, ease: "power2.in", onUpdate: paintLens, onComplete: () => void (wash && (wash.dataset.lens = "off")) });
-      };
+      const X = { v: 42 };
       const apply = () => {
-        img.style.objectPosition = `${X.v}% center`;
+        imgs.forEach((i) => (i.style.objectPosition = `${X.v}% 50%`));
         thumb?.style.setProperty("--p", String((X.v - MIN) / (MAX - MIN)));
       };
-      // how far the image can travel, in px: its rendered width minus the viewport's
-      const travel = () => el.clientHeight * (img.naturalWidth && img.naturalHeight ? img.naturalWidth / img.naturalHeight : 16 / 9) - el.clientWidth;
+      // how far the photograph can travel, in px: its rendered width (cover, height-limited) minus the box's width
+      const travel = () => img.clientHeight * (img.naturalWidth && img.naturalHeight ? img.naturalWidth / img.naturalHeight : 4 / 3) - img.clientWidth;
       apply();
 
-      const intro = gsap.timeline({ delay: 2.6, onUpdate: apply });
-      intro.to(X, { v: 40, duration: 1.7, ease: "power2.inOut" }).to(X, { v: 64, duration: 1.5, ease: "power2.inOut" });
-      if (hint) gsap.fromTo(hint, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.7, delay: 1.6 });
+      const intro = gsap.timeline({ delay: 3.2, onUpdate: apply });
+      intro.to(X, { v: 62, duration: 2, ease: "power2.inOut" }).to(X, { v: 46, duration: 1.7, ease: "power2.inOut" });
+      if (hint) gsap.fromTo(hint, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.7, delay: 2.4 });
 
       let startX = 0;
       let startY = 0;
@@ -275,7 +161,6 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
         startV = X.v;
         vel = 0;
         lastT = e.timeStamp;
-        lensTo(e, true);
       };
       const onMove = (e: PointerEvent) => {
         if (!down) return;
@@ -286,7 +171,6 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
           stopIntro();
           el.setPointerCapture(e.pointerId);
         }
-        lensTo(e, false);
         const t = travel();
         if (t <= 0) return;
         const dt = e.timeStamp - lastT;
@@ -299,7 +183,6 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
       const onUp = (e: PointerEvent) => {
         if (!down) return;
         down = false;
-        lensOff();
         if (!dragging) return;
         dragging = false;
         if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId);
@@ -318,22 +201,16 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
         el.removeEventListener("pointerup", onUp);
         el.removeEventListener("pointercancel", onUp);
         el.style.touchAction = prevTouch;
-        img.style.objectPosition = "70% center";
-        if (wash) {
-          wash.dataset.lens = "off";
-          wash.style.removeProperty("--mx");
-          wash.style.removeProperty("--my");
-          wash.style.removeProperty("--lens");
-        }
+        imgs.forEach((i) => (i.style.objectPosition = ""));
       };
     });
-
-    mm.add("(prefers-reduced-motion: reduce)", () => {
-      route.current?.set(1);
-      mroute.current?.set(1);
-      gsap.set(pin.current, { opacity: 1, scale: 1 });
-    });
   });
+
+  // the content's short headline lines are set as two rows (nothing is reworded); `*word*` marks an accent word
+  const lines = data.headline.map((l) => ({ text: l.replace(/\*/g, ""), accent: l.includes("*") }));
+  const mid = Math.ceil(lines.length / 2);
+  const rows: HeadWord[][] = [lines.slice(0, mid), lines.slice(mid)].map((r) => r.flatMap((l) => l.text.split(" ").map((w) => ({ w, accent: l.accent }))));
+  const headline = lines.map((l) => l.text);
 
   return (
     <>
@@ -342,13 +219,14 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
         ref={section}
         data-stage="discover"
         aria-labelledby="hero-title"
-        className="relative h-svh min-h-[640px] overflow-hidden bg-porcelain lg:min-h-[680px]"
+        className="relative h-svh min-h-[640px] overflow-clip bg-paper lg:min-h-[680px]"
       >
-        {/* Media */}
-        <div ref={media} className="absolute inset-0 origin-[70%_40%] will-change-transform" data-paused={paused}>
-          <div data-depth="12" className="h-full w-full">
-            <div className="hero-drift relative isolate h-full w-full overflow-hidden bg-paper-2">
-              {data.video.src ? (
+        {/* Media: the pencil drawing underneath, the photograph on top (it develops across the drawing). The box reaches 14% above
+            the hero so the scroll parallax never uncovers an edge. */}
+        <div ref={media} className="absolute inset-x-0 bottom-0 -top-[14%] will-change-transform" data-paused={paused}>
+          <div data-depth="14" className="absolute" style={{ inset: -BLEED }}>
+            {data.video.src ? (
+              <div className="hero-drift relative isolate h-full w-full overflow-hidden bg-paper-2">
                 <video
                   ref={video}
                   className="h-full w-full object-cover"
@@ -362,133 +240,109 @@ export function Hero({ data, settings }: { data: Homepage["hero"]; settings: Sit
                 >
                   <source src={data.video.src} type="video/mp4" />
                 </video>
-              ) : data.video.poster ? (
-                <Image src={data.video.poster} alt={data.video.alt} fill preload fetchPriority="high" sizes="100vw" className="object-cover" style={{ objectPosition: "70% center" }} data-hero-img />
-              ) : null}
-            </div>
-          </div>
-        </div>
-
-        {/* Porcelain wash — strongest behind the headline on the left, easing off to the right; clear under the nav and at the foot */}
-        <div data-hero-wash data-lens="off" aria-hidden className="hero-wash absolute inset-0">
-          <div aria-hidden className="absolute inset-0 bg-gradient-to-r from-porcelain via-porcelain/80 to-transparent max-sm:hidden sm:via-porcelain/70 lg:via-porcelain/55 lg:to-porcelain/0" />
-          {/* phones: pale behind the headline, the render clear through the middle, pale behind the location bar */}
-          <div aria-hidden className="absolute inset-0 bg-[linear-gradient(to_bottom,rgb(249_250_253/0.9)_0%,rgb(249_250_253/0.72)_30%,rgb(249_250_253/0.18)_42%,transparent_50%)] sm:hidden" />
-          <div aria-hidden className="absolute inset-x-0 bottom-0 h-[46%] bg-gradient-to-t from-porcelain via-porcelain/85 to-transparent max-sm:h-[58%] max-sm:via-porcelain/95" />
-          <div aria-hidden className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-porcelain/80 to-transparent" />
-        </div>
-        <div ref={cover} aria-hidden className="absolute inset-0 z-[15] bg-porcelain opacity-0" />
-
-        <Route ref={route} d={HERO_ROUTE} initial={0} base={false} tone="light" trail="blue" className="z-[16] max-lg:hidden" strokeWidth={1.5} />
-
-        {/* Site reticle — the location becomes a place you are looking at */}
-        <div data-hero-reticle data-depth="12" aria-hidden className="absolute left-[60%] top-[44%] z-10 hidden -translate-x-1/2 -translate-y-1/2 lg:block">
-          <div className="relative">
-            <svg width="72" height="72" viewBox="0 0 72 72" fill="none" className="text-yellow-400">
-              <circle cx="36" cy="36" r="22" stroke="currentColor" strokeOpacity="0.8" />
-              <circle cx="36" cy="36" r="34" stroke="currentColor" strokeOpacity="0.25" strokeDasharray="2 5" />
-              <path d="M36 4v16M36 52v16M4 36h16M52 36h16" stroke="currentColor" />
-              <circle cx="36" cy="36" r="2.5" fill="currentColor" />
-            </svg>
-            <span aria-hidden className="hero-ping absolute left-1/2 top-1/2 block h-[44px] w-[44px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-yellow-400" />
-            <span className="absolute left-[60px] top-[12px] block h-px w-14 origin-left -rotate-[28deg] bg-indigo-700/70" />
-            <span className="absolute left-[106px] top-[-30px] whitespace-nowrap border-l-2 border-yellow-400 bg-paper/95 px-3 py-2 shadow-lg">
-              <span className="t-micro block text-blue-500">{data.siteLabel}</span>
-              <span className="t-label mt-0.5 block text-ink">{data.siteTag}</span>
-            </span>
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="shell relative z-20 flex h-full flex-col pb-5 pt-[calc(64px+5vh)] lg:pb-7 lg:pt-[calc(88px+3.5vh)]">
-          <h1 id="hero-title" data-hero-head data-depth="-6" aria-label={data.headline.map((l) => l.replace(/\*/g, "")).join(" ")} className="t-hero max-w-[14ch] text-ink">
-            {data.headline.map((line, i) => {
-              const text = line.replace(/\*/g, "");
-              const from = data.headline.slice(0, i).reduce((n, l) => n + l.replace(/[*\s]/g, "").length, 0);
-              return (
-                <span key={line} data-hero-line aria-hidden className={`block overflow-hidden pb-[0.08em] pt-[0.1em] -mb-[0.08em] -mt-[0.1em] ${i === data.headline.length - 1 ? "text-indigo-700" : ""}`}>
-                  <HeroChars text={text} from={from} />
-                </span>
-              );
-            })}
-          </h1>
-
-          {/* phones / tablets: the clear window of the render between the headline and the location bar */}
-          <div aria-hidden className="relative -mx-[var(--margin)] min-h-[72px] flex-1 lg:hidden">
-            <Route ref={mroute} d={MOBILE_ROUTE} initial={0} base={false} tone="light" trail="blue" strokeWidth={1.5} />
-            <span ref={pin} className="absolute z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 opacity-0" style={{ left: `${MOBILE_PIN.x}%`, top: `${MOBILE_PIN.y}%` }}>
-              <span className="absolute inset-0 rounded-full bg-yellow-400 animate-pulse-soft" />
-              <span className="relative block h-3 w-3 rounded-full border-2 border-paper bg-yellow-400 shadow" />
-            </span>
-            {/* drag hint + position track; revealed by the look-around scene, so it never shows without motion or on desktop */}
-            <div data-hero-hint className="pointer-events-none absolute inset-x-0 bottom-2 flex justify-center opacity-0">
-              <span className="t-micro flex items-center gap-3 rounded-full bg-paper/90 px-4 py-2 text-ink shadow-[var(--shadow-card)]">
-                <Icon name="arrow-right" size={14} className="hero-nudge rotate-180 text-indigo-700" style={{ "--dir": -1 } as CSSProperties} />
-                <span className="flex items-center gap-3">
-                  Drag to look around
-                  <span className="relative block h-[3px] w-12 bg-ink/15">
-                    <span data-hero-thumb className="absolute top-0 block h-full w-4 bg-yellow-400" style={{ left: "calc((100% - 1rem) * var(--p, 0.65))" }} />
-                  </span>
-                </span>
-                <Icon name="arrow-right" size={14} className="hero-nudge text-indigo-700" />
-              </span>
-            </div>
-          </div>
-
-          <div data-hero-hud className="mt-auto">
-            <div className="hero-fade grid-12 gap-y-6 border-t border-ink/15 pt-5 lg:pt-6" style={{ animationDelay: "650ms" }}>
-              {/* Location anchor */}
-              <div className="col-span-4 flex gap-4 sm:col-span-4 lg:col-span-4">
-                <Icon name="crosshair" size={30} className="mt-1 shrink-0 text-blue-500" />
-                <div>
-                  <p className="t-micro text-steel-500">Location</p>
-                  <p className="mt-1 text-[clamp(1.25rem,1.8vw,1.75rem)] font-extrabold leading-[1.05] tracking-[-0.02em] text-ink">{data.location.primary}</p>
-                  <p className="text-[clamp(1.25rem,1.8vw,1.75rem)] font-normal leading-[1.1] tracking-[-0.02em] text-steel-700">{data.location.secondary}</p>
-                  <p className="t-micro mt-3 text-steel-500">
-                    {data.location.roads.join("  ·  ")}
-                    {settings.coordinates ? (
-                      <span className="ml-3 text-steel-700">
-                        {settings.coordinates.lat.toFixed(4)}°N / {settings.coordinates.lng.toFixed(4)}°E
-                      </span>
-                    ) : null}
-                  </p>
+              </div>
+            ) : (
+              <div className="hero-drift absolute inset-0 overflow-hidden bg-paper">
+                <Image src={data.sketch} alt="" aria-hidden fill loading="eager" fetchPriority="low" sizes="100vw" className="object-cover" style={{ objectPosition: "50% 50%" }} data-hero-img />
+                <div className="hero-develop absolute inset-0">
+                  <Image src={data.video.poster ?? ""} alt={data.video.alt} fill preload fetchPriority="high" sizes="100vw" className="object-cover" style={{ objectPosition: "50% 50%" }} data-hero-img />
                 </div>
-              </div>
-
-              <p className="t-body-l col-span-4 max-w-[34ch] text-steel-700 sm:col-span-4 lg:col-span-3 lg:pt-1">{data.copy}</p>
-
-              <div className="col-span-4 flex flex-col gap-3 sm:col-span-8 sm:flex-row sm:items-center lg:col-span-5 lg:flex-col lg:items-end lg:justify-start xl:flex-row xl:items-start xl:justify-end xl:gap-7">
-                <ButtonLink href="#explore" className="w-full sm:w-auto">
-                  Explore the project
-                </ButtonLink>
-                <ArrowLink href="#enquire" className="justify-center whitespace-nowrap sm:justify-start xl:h-14">
-                  Enquire leasing now
-                </ArrowLink>
-              </div>
-            </div>
-
-            <div className="hero-fade mt-4 flex items-center justify-between lg:mt-5" style={{ animationDelay: "900ms" }}>
-              <p className="t-micro flex items-center gap-3 text-steel-500">
-                <span aria-hidden className="relative block h-4 w-px overflow-hidden bg-ink/15">
-                  <span className="absolute left-0 top-0 block h-1.5 w-px bg-yellow-400" style={{ animation: "scroll-cue 2.4s var(--ease-route) infinite" }} />
+                {/* the gold edge that leads the photograph across the drawing */}
+                <span aria-hidden className="hero-scan pointer-events-none absolute inset-0 z-[2] block">
+                  <span className="absolute inset-y-0 right-0 block w-[2px] bg-yellow-400 shadow-[0_0_24px_6px_rgb(255_214_10/0.45)]" />
                 </span>
-                Scroll to enter
-              </p>
-              {/* film control only when there is a film; until then the render is labelled so it is never mistaken for site footage */}
-              {data.video.src ? (
-                <button
-                  type="button"
-                  onClick={() => setPaused((p) => !p)}
-                  aria-pressed={paused}
-                  className="t-micro flex h-10 items-center gap-2 px-2 text-steel-500 transition-colors hover:text-ink"
-                >
-                  <Icon name={paused ? "play" : "pause"} size={14} />
-                  {paused ? "Play film" : "Pause film"}
-                </button>
-              ) : (
-                <p className="t-micro px-2 text-steel-500">{data.sitePhoto ? `${data.siteLabel} · site photograph` : "Illustrative render"}</p>
-              )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* one soft deep-ink gradient at the foot: the text sits on the photograph, not on a card. A light veil behind the nav. */}
+        <div aria-hidden className="hero-scrim pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-[74%] lg:h-[68%]" />
+        {/* (sticky, so it stays behind the nav while the hero scrolls away; `overflow-clip` on the section keeps sticky working) */}
+        <div aria-hidden className="pointer-events-none sticky top-0 z-[5] h-0">
+          <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-paper/65 to-transparent" />
+        </div>
+
+        {/* phones: where the drag hint lives (in the clear upper part of the photograph) */}
+        <div data-hero-hint aria-hidden className="pointer-events-none absolute inset-x-0 top-[24%] z-[6] flex justify-center opacity-0 lg:hidden">
+          <span className="t-micro flex items-center gap-3 rounded-full bg-ink/55 px-4 py-2 text-paper backdrop-blur-sm">
+            <Icon name="arrow-right" size={14} className="hero-nudge rotate-180 text-yellow-400" style={{ "--dir": -1 } as CSSProperties} />
+            <span className="flex items-center gap-3">
+              Drag to look around
+              <span className="relative block h-[3px] w-12 bg-paper/25">
+                <span data-hero-thumb className="absolute top-0 block h-full w-4 bg-yellow-400" style={{ left: "calc((100% - 1rem) * var(--p, 0.25))" }} />
+              </span>
+            </span>
+            <Icon name="arrow-right" size={14} className="hero-nudge text-yellow-400" />
+          </span>
+        </div>
+
+        {/* Content: bottom-left, on the photograph */}
+        <div ref={content} className="on-dark shell relative z-20 flex h-full flex-col justify-end pb-5 pt-[calc(88px+3vh)] lg:pb-8">
+          <div data-hero-head data-depth="-6">
+            <p className="hero-fade t-label flex flex-wrap items-center gap-x-3 gap-y-1 text-paper/90 [text-shadow:0_1px_14px_rgb(17_18_51/0.5)]" style={{ animationDelay: "1250ms" }}>
+              <span aria-hidden className="block h-px w-8 bg-yellow-400" />
+              <span>
+                {data.location.primary}, {data.location.secondary}
+              </span>
+              <span aria-hidden className="text-paper/40">
+                ·
+              </span>
+              <span className="text-paper/70">{data.location.roads.join("  ·  ")}</span>
+              {settings.coordinates ? (
+                <span className="text-paper/70">
+                  {settings.coordinates.lat.toFixed(4)}°N / {settings.coordinates.lng.toFixed(4)}°E
+                </span>
+              ) : null}
+            </p>
+            <h1 id="hero-title" aria-label={headline.join(" ")} className="hero-title mt-4 text-paper [text-shadow:0_2px_30px_rgb(17_18_51/0.35)] lg:mt-5">
+              {rows.map((row, ri) => (
+                <HeroRow key={ri} words={row} from={rows.slice(0, ri).reduce((n, r) => n + r.length, 0)} />
+              ))}
+            </h1>
+          </div>
+
+          {/* the route: a gold line draws across the base of the headline, a node leading it */}
+          <div aria-hidden className="relative mt-6 h-[2px] w-full lg:mt-8">
+            <span className="hero-route-line absolute inset-0 block" />
+            <span className="hero-route-node absolute top-1/2 block h-[9px] w-[9px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-yellow-400 shadow-[0_0_14px_3px_rgb(255_214_10/0.55)]" />
+          </div>
+
+          <div className="mt-5 flex flex-col gap-5 lg:mt-6 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
+            <p className="hero-fade t-body-l max-w-[44ch] text-paper/90" style={{ animationDelay: "2300ms" }}>
+              {data.copy}
+            </p>
+            <div className="hero-fade flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-7" style={{ animationDelay: "2450ms" }}>
+              <ButtonLink href="#explore" className="w-full sm:w-auto">
+                Explore the project
+              </ButtonLink>
+              <ArrowLink href="#enquire" tone="light" className="justify-center whitespace-nowrap sm:justify-start">
+                Enquire leasing now
+              </ArrowLink>
             </div>
+          </div>
+
+          <div className="hero-fade mt-4 flex items-center justify-between lg:mt-5" style={{ animationDelay: "2650ms" }}>
+            <p className="t-micro flex items-center gap-3 text-paper/70">
+              <span aria-hidden className="relative block h-4 w-px overflow-hidden bg-paper/25">
+                <span className="absolute left-0 top-0 block h-1.5 w-px bg-yellow-400" style={{ animation: "scroll-cue 2.4s var(--ease-route) infinite" }} />
+              </span>
+              Scroll to enter
+            </p>
+            {/* film control only when there is a film; until then the image is labelled so it is never mistaken for site footage */}
+            {data.video.src ? (
+              <button
+                type="button"
+                onClick={() => setPaused((p) => !p)}
+                aria-pressed={paused}
+                className="t-micro flex h-10 items-center gap-2 px-2 text-paper/70 transition-colors hover:text-paper"
+              >
+                <Icon name={paused ? "play" : "pause"} size={14} />
+                {paused ? "Play film" : "Pause film"}
+              </button>
+            ) : (
+              <p className="t-micro text-paper/70">Illustrative image</p>
+            )}
           </div>
         </div>
       </section>

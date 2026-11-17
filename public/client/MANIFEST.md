@@ -63,3 +63,11 @@ locks up `logo-mark.png` + the tone-matched text image.
 | `logo-lockup-indigo.webp` | Client's footer lockup, white on indigo `#201f86` | pathlogicity.com `Screenshot from 2024-07-02 15-48-18.webp` (256×91) |
 
 `345.webp` is the **location map** used as the base layer of §07 Connectivity.
+
+## Hero (client round 8)
+| File | What |
+|---|---|
+| `hero-v3.webp` | The client's `hero.webp` (4939×3301) resized to 2560×1711, q82: a photograph that dissolves into a pencil drawing of the same scene. Illustrative, not the site. Original kept in `reference/images/hero-client-v3-original.webp` |
+| `hero-v3-sketch.webp` | Generated pencil-drawing layer for the whole scene (`scripts/make-hero-sketch.py`): the photograph side turned into pencil lines, the client's own drawing kept on the right. Sits under the photograph |
+| `hero-v4.webp` | **The current hero** (round 9): `reference/images/hero2.png` (2665×1938, a warehouse at sunset) with the 8 px border trimmed, resized to 2560 px wide, q82. Labelled "Illustrative image" on the page. `hero-v3*` are now unused |
+| `hero-v4-sketch.webp` | Generated pencil-drawing layer for `hero-v4.webp` (`python scripts/make-hero-sketch.py <src> <photo.webp> <sketch.webp> <preview.webp> full`; `full` sketches the whole frame). Sits under the photograph in the hero's develop intro |

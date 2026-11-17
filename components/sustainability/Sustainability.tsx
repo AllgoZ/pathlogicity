@@ -9,6 +9,7 @@ import { AssetSlot } from "@/components/ui/AssetSlot";
 import { ContentSlot } from "@/components/ui/ContentSlot";
 import { Icon } from "@/components/ui/Icon";
 import { Metric } from "@/components/ui/Metric";
+import { Flow } from "@/components/ui/Flow";
 import { RevealLines } from "@/components/ui/Reveal";
 
 const R = 210; // ring radius in a 560 box
@@ -58,7 +59,8 @@ export function Sustainability({ data }: { data: Homepage["sustainability"] }) {
         </p>
       </div>
 
-      <div className="shell mt-14 grid-12 items-center gap-y-12 lg:mt-20">
+      {/* client round 8: each initiative (its ring node and its row together) takes its "hover" look in turn, by itself */}
+      <Flow step={1600} className="shell mt-14 grid-12 items-center gap-y-12 lg:mt-20">
         {/* Ring */}
         <div className="col-span-4 sm:col-span-8 lg:col-span-7">
           <div data-ring className="relative mx-auto aspect-square w-full max-w-[600px]">
@@ -77,7 +79,7 @@ export function Sustainability({ data }: { data: Homepage["sustainability"] }) {
                 transform="rotate(-90 280 280)"
               />
               <g data-ring-head>
-                <circle cx="280" cy={280 - R} r="12" fill="rgb(255 202 0 / 0.25)" />
+                <circle cx="280" cy={280 - R} r="12" fill="rgb(255 214 10 / 0.25)" />
                 <circle cx="280" cy={280 - R} r="5" fill="var(--color-yellow-400)" />
               </g>
             </svg>
@@ -105,8 +107,8 @@ export function Sustainability({ data }: { data: Homepage["sustainability"] }) {
               const left = Math.cos(a) < -0.1;
               return (
                 <div key={it.id} className="absolute" style={{ left: `${x}%`, top: `${y}%` }}>
-                  <div data-ring-node className="group relative -translate-x-1/2 -translate-y-1/2">
-                    <span className="flex h-14 w-14 items-center justify-center border border-ink/15 bg-paper text-green-700 shadow-sm transition-colors duration-300 group-hover:border-green-700 group-hover:bg-green-700 group-hover:text-paper sm:h-16 sm:w-16">
+                  <div data-ring-node data-flow={i} className="group relative -translate-x-1/2 -translate-y-1/2">
+                    <span className="flex h-14 w-14 items-center justify-center border border-ink/15 bg-paper text-green-700 shadow-sm transition-colors duration-300 group-hover:border-green-700 group-hover:bg-green-700 group-hover:text-paper group-data-[lit=true]:border-green-700 group-data-[lit=true]:bg-green-700 group-data-[lit=true]:text-paper sm:h-16 sm:w-16">
                       <Icon name={it.icon} size={26} draw />
                     </span>
                     <div
@@ -127,19 +129,19 @@ export function Sustainability({ data }: { data: Homepage["sustainability"] }) {
         <div className="col-span-4 sm:col-span-8 lg:col-span-4 lg:col-start-9">
           <ul className="border-t border-ink/15">
             {data.initiatives.map((it, i) => (
-              <li key={it.id} className="group flex items-start gap-4 border-b border-ink/15 py-4">
+              <li key={it.id} data-flow={i} className="group flex items-start gap-4 border-b border-ink/15 py-4">
                 <span aria-hidden className="t-micro pt-1 text-green-700">•</span>
                 <div className="flex-1">
                   <p className="t-label text-ink">{it.name}</p>
                   <p className="mt-1.5">{it.text ? <span className="text-sm text-steel-700">{it.text}</span> : <ContentSlot tone="light">Verified detail to be supplied</ContentSlot>}</p>
                 </div>
-                <Icon name={it.icon} size={20} className="mt-0.5 text-ink/40 transition-colors group-hover:text-green-700" />
+                <Icon name={it.icon} size={20} className="mt-0.5 text-ink/40 transition-colors group-hover:text-green-700 group-data-[lit=true]:text-green-700" />
               </li>
             ))}
           </ul>
           <AssetSlot slot={data.media.slot} spec={data.media.spec} ratio="4/3" tone="paper" variant={4} className="mt-8" compact label={data.media.alt} src={data.media.src} focus="center" sizes="(min-width: 1024px) 40vw, 100vw" />
         </div>
-      </div>
+      </Flow>
 
       {/* Story strip */}
       <div className="shell mt-20 lg:mt-28">

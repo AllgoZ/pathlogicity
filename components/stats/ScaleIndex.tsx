@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { Homepage } from "@/lib/content";
-import { gsap, MQ } from "@/lib/motion/gsap";
+import { gsap, MQ, ScrollTrigger } from "@/lib/motion/gsap";
 import { useMotion } from "@/lib/motion/hooks";
 import { boxIn, curve, useLinks } from "@/lib/motion/useLinks";
 import { Counter } from "@/components/ui/Counter";
@@ -23,41 +23,44 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
   const markers = useRef<(HTMLSpanElement | null)[]>([]);
   const list = useRef<HTMLUListElement>(null);
   const [active, setActive] = useState<string | null>(null);
-  // client round 7: the previews used to appear only on hover, so a first-time visitor never saw them. On desktop
-  // they now play through on their own when the list comes into view, until the visitor takes over.
-  const [engaged, setEngaged] = useState(false);
-  const engagedRef = useRef(false);
-  const engage = (id: string | null) => {
-    engagedRef.current = true;
-    setEngaged(true);
+  // Client round 9: the previews used to appear only on hover. On desktop the list now holds the screen for a moment and the
+  // previews open ONE AT A TIME as the visitor scrolls: the first opens, closes as the second opens, and so on (each lights
+  // its branch); after the fourth the page moves on. Scrolling back reverses it. The pointer (or keyboard focus) still shows
+  // the row it is on. Phones get each photo inline instead (below); reduced motion keeps the original hover-only previews.
+  const paused = useRef(false);
+  const [hover, setHover] = useState<string | null>(null);
+  const take = (id: string) => {
+    paused.current = true;
+    setHover(id);
     setActive(id);
   };
+  const give = () => {
+    paused.current = false;
+    setHover(null);
+    setActive(null);
+  };
+  const [seen, setSeen] = useState<string[]>([]);
+  const [open, setOpen] = useState<string[]>([]);
+  // the pointer wins while it is on the list; otherwise the preview the scroll has reached
+  const shown = (id: string) => (hover ? hover === id : open.includes(id));
 
   useEffect(() => {
     const el = list.current;
-    if (!el || !window.matchMedia("(min-width: 1024px) and (prefers-reduced-motion: no-preference)").matches) return;
-    const ids = data.nodes.map((n) => n.id);
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    let i = 0;
-    const step = () => {
-      if (engagedRef.current) return;
-      setActive(ids[i++ % ids.length]);
-      timer = setTimeout(step, 2800);
-    };
-    const io = new IntersectionObserver(
-      ([e]) => {
-        clearTimeout(timer);
-        if (engagedRef.current) return;
-        if (e.isIntersecting) timer = setTimeout(step, 1800);
-        else setActive(null);
-      },
-      { threshold: 0.6 },
+    if (!el) return;
+    // phones / tablets: each point opens its photo the first time it scrolls into view
+    const rows = Array.from(el.querySelectorAll<HTMLElement>("[data-node]"));
+    const rio = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          const id = (e.target as HTMLElement).dataset.node;
+          if (id) setSeen((v) => (v.includes(id) ? v : [...v, id]));
+          rio.unobserve(e.target);
+        }),
+      { threshold: 0.5 },
     );
-    io.observe(el);
-    return () => {
-      io.disconnect();
-      clearTimeout(timer);
-    };
+    rows.forEach((r) => rio.observe(r));
+    return () => rio.disconnect();
   }, [data.nodes]);
 
   const { paths, w, h } = useLinks(grid, (c) => {
@@ -90,6 +93,23 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
         delay: 0.5,
         ease: "expo.out",
         scrollTrigger: { trigger: grid.current, start: "top 60%", once: true },
+      });
+      // the list holds the screen while the four previews open one by one with the scroll, then releases
+      const ids = data.nodes.map((n) => n.id);
+      const sync = (p: number) => {
+        const cur = p < 0.05 ? null : ids[Math.min(ids.length - 1, Math.floor((p - 0.05) / 0.25))];
+        setOpen((v) => (cur ? (v.length === 1 && v[0] === cur ? v : [cur]) : v.length ? [] : v));
+        if (!paused.current) setActive(cur);
+      };
+      ScrollTrigger.create({
+        trigger: grid.current,
+        start: "center center",
+        end: () => "+=" + Math.round(window.innerHeight * 1.4),
+        pin: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => sync(self.progress),
+        onRefresh: (self) => sync(self.progress),
       });
     });
     mm.add(MQ.mobile, () => {
@@ -155,26 +175,25 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
         </div>
 
         <div className="col-span-4 self-center sm:col-span-8 lg:col-span-5 lg:col-start-8">
-        <ul ref={list} data-nodes className="relative border-l border-ink/10 lg:border-l-0">
+        <ul ref={list} data-nodes className="relative border-l border-ink/10 lg:border-l-0" onMouseLeave={give}>
           {data.nodes.map((n, i) => (
-            <li key={n.id} data-node className="border-b border-ink/10 first:border-t lg:first:border-t-0 lg:last:border-b-0">
+            <li key={n.id} data-node={n.id} className="border-b border-ink/10 first:border-t lg:first:border-t-0 lg:last:border-b-0">
               <Link
                 href={n.href}
                 data-active={active === n.id}
-                onMouseEnter={() => engage(n.id)}
-                onMouseLeave={() => setActive(null)}
-                onFocus={() => engage(n.id)}
-                onBlur={() => setActive(null)}
+                onMouseEnter={() => take(n.id)}
+                onFocus={() => take(n.id)}
+                onBlur={give}
                 className="group relative flex items-start gap-5 py-6 pl-6 lg:gap-6 lg:py-8 lg:pl-0"
               >
-                {/* hover preview — wipes in beside the node (desktop) */}
+                {/* preview — wipes in beside the node as the section arrives, then stays open (desktop) */}
                 {n.image ? (
                   <span
                     aria-hidden
-                    className="pointer-events-none absolute right-[calc(100%+48px)] top-1/2 z-10 hidden h-[180px] w-[280px] -translate-y-1/2 overflow-hidden rounded-[2px] shadow-[var(--shadow-card)] transition-[clip-path] duration-700 ease-[var(--ease-out-expo)] lg:block"
-                    style={{ clipPath: active === n.id ? "inset(0 0 0 0)" : "inset(0 0 0 100%)" }}
+                    className={`pointer-events-none absolute right-[calc(100%+48px)] top-1/2 ${active === n.id ? "z-20" : "z-10"} hidden h-[180px] w-[280px] -translate-y-1/2 overflow-hidden rounded-[2px] shadow-[var(--shadow-card)] transition-[clip-path] duration-700 ease-[var(--ease-out-expo)] lg:block`}
+                    style={{ clipPath: shown(n.id) ? "inset(0 0 0 0)" : "inset(0 0 0 100%)" }}
                   >
-                    <Image src={n.image} alt="" fill sizes="280px" className={`object-cover transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] [filter:contrast(1.05)_saturate(0.82)] ${active === n.id ? "scale-100" : "scale-110"}`} />
+                    <Image src={n.image} alt="" fill sizes="280px" className={`object-cover transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] [filter:contrast(1.05)_saturate(0.82)] ${shown(n.id) ? "scale-100" : "scale-110"}`} />
                   </span>
                 ) : null}
                 <span
@@ -198,6 +217,16 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
                   <span aria-hidden className="t-micro block text-steel-500">•</span>
                   <span className="t-label mt-1 block text-indigo-700">{n.label}</span>
                   <span className="t-s mt-1.5 block text-ink">{n.text}</span>
+                  {/* phones / tablets: the photo opens inline the first time the point scrolls into view */}
+                  {n.image ? (
+                    <span
+                      aria-hidden
+                      className="relative mt-4 block aspect-[16/9] overflow-hidden rounded-[2px] shadow-[var(--shadow-card)] transition-[clip-path] duration-1000 ease-[var(--ease-out-expo)] lg:hidden"
+                      style={{ clipPath: seen.includes(n.id) ? "inset(0 0 0 0)" : "inset(0 100% 0 0)" }}
+                    >
+                      <Image src={n.image} alt="" fill sizes="(max-width: 640px) 80vw, 480px" className="object-cover [filter:contrast(1.05)_saturate(0.82)]" />
+                    </span>
+                  ) : null}
                 </span>
                 <Icon
                   name="arrow-right"
@@ -208,11 +237,6 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
             </li>
           ))}
         </ul>
-        {/* desktop cue: the previews are hover-driven once the visitor takes over */}
-        <p aria-hidden className={`t-micro mt-5 hidden items-center gap-2 text-steel-700 transition-opacity duration-500 [@media(hover:hover)]:lg:flex ${engaged ? "opacity-0" : "opacity-100"}`}>
-          <span className="block h-px w-6 bg-yellow-400" />
-          Hover over a point to preview it
-        </p>
         </div>
       </div>
     </section>

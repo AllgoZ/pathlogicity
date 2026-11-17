@@ -258,7 +258,7 @@ export function ConnectivityMap({ destinations }: { destinations: Destination[] 
 
               {/* the site */}
               <g style={{ transform: `translate(${SITE.x}px, ${SITE.y}px) scale(var(--u))` }} aria-hidden>
-                <circle r="16" fill="rgb(255 202 0 / 0.25)">
+                <circle r="16" fill="rgb(255 214 10 / 0.25)">
                   <animate attributeName="r" values="8;26;8" dur="2.8s" repeatCount="indefinite" />
                   <animate attributeName="opacity" values="0.9;0;0.9" dur="2.8s" repeatCount="indefinite" />
                 </circle>
@@ -292,7 +292,7 @@ export function ConnectivityMap({ destinations }: { destinations: Destination[] 
               {/* moving head */}
               <g ref={head} opacity={0}>
                 <g style={{ transform: "scale(var(--u))" }}>
-                  <circle r="13" fill="rgb(255 202 0 / 0.3)" />
+                  <circle r="13" fill="rgb(255 214 10 / 0.3)" />
                   <circle r="6" fill="var(--color-yellow-400)" stroke="white" strokeWidth="2" />
                 </g>
               </g>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { Vertical } from "@/lib/content/types";
 import { Icon } from "@/components/ui/Icon";
+import { Flow } from "@/components/ui/Flow";
 import { Reveal, RevealLines } from "@/components/ui/Reveal";
 
 /**
@@ -32,6 +33,8 @@ export function PathVerticals({ items }: { items: Vertical[] }) {
         </p>
       </div>
 
+      {/* client round 8: each vertical takes its "hover" look in turn, by itself, once the grid is on screen */}
+      <Flow step={1300}>
       <Reveal as="ul" stagger={0.07} className="mt-12 grid grid-cols-1 gap-x-[var(--gutter)] gap-y-10 sm:grid-cols-2 lg:mt-14 lg:grid-cols-4">
         {items.map((v, i) => {
           const here = v.id === "logicity";
@@ -43,7 +46,7 @@ export function PathVerticals({ items }: { items: Vertical[] }) {
                   alt={v.image.alt}
                   fill
                   sizes="(min-width: 1024px) 24vw, (min-width: 640px) 46vw, 92vw"
-                  className="img-grade object-cover transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] group-hover:scale-[1.05]"
+                  className="img-grade object-cover transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] group-hover:scale-[1.05] group-data-[lit=true]:scale-[1.05]"
                   style={{ objectPosition: "center 55%" }}
                 />
                 <span aria-hidden className="t-micro tnum absolute left-3 top-3 bg-ink px-2.5 py-1 text-paper">
@@ -55,7 +58,7 @@ export function PathVerticals({ items }: { items: Vertical[] }) {
                 <p className="t-micro text-indigo-700">{v.brand}</p>
                 <h3 className="t-m mt-1.5 text-ink">{v.title}</h3>
                 <p className="mt-3 flex-1 text-[0.9375rem] leading-relaxed text-steel-700">{v.text}</p>
-                <span aria-hidden className="mt-5 block h-[3px] w-10 bg-yellow-400 transition-[width] duration-500 ease-[var(--ease-out-expo)] group-hover:w-20" />
+                <span aria-hidden className="mt-5 block h-[3px] w-10 bg-yellow-400 transition-[width] duration-500 ease-[var(--ease-out-expo)] group-hover:w-20 group-data-[lit=true]:w-20" />
                 {v.href ? (
                   <span className="t-micro mt-4 inline-flex items-center gap-2 text-indigo-700">
                     Visit pathltd.com
@@ -66,14 +69,14 @@ export function PathVerticals({ items }: { items: Vertical[] }) {
             </>
           );
           return (
-            <li key={v.id} className="group flex">
+            <li key={v.id} data-flow className="group flex">
               {v.href ? (
                 <a
                   href={v.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`${v.title} (${v.brand}) — opens pathltd.com in a new tab`}
-                  className="flex w-full flex-col transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1.5"
+                  className="flex w-full flex-col transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1.5 group-data-[lit=true]:-translate-y-1.5"
                 >
                   {body}
                 </a>
@@ -84,6 +87,7 @@ export function PathVerticals({ items }: { items: Vertical[] }) {
           );
         })}
       </Reveal>
+      </Flow>
     </div>
   );
 }

@@ -90,26 +90,20 @@ export const hero = {
   headline: ["India's", "Largest", "*Multimodal*", "Logistics Hub"],
   copy: "A connected logistics ecosystem at Dobbaspet, Bengaluru, built to move businesses faster.",
   location: { primary: "Dobbaspet", secondary: "Bengaluru", roads: ["NH 648", "NH 48", "STRR"] },
-  /** The tag on the site reticle: the MMLP concept, not a phase (client round 5). */
-  siteTag: "India's largest MMLP",
   video: {
     slot: "Project Video",
     spec: "Drone aerial of site · 1920×1080 + 4:5 mobile · MP4/WebM · 12–20s loop · ≤6 MB",
     src: null,
-    // The client's key visual (pathlogicity.com main.webp, 1462×825): road, rail, air and sea freight.
-    // An illustrative render, not footage of the site — labelled as such in the hero. Swap for drone footage when supplied.
-    poster: "/client/hero-main.webp",
-    alt: "Illustration of multimodal freight: a truck on the quay, a container ship, an aircraft overhead and a freight train beyond the water",
+    // Client round 9 (reference/images/hero2.png): an aerial photograph of a large warehouse at sunset, resized to 2560 px
+    // wide (public/client/hero-v4.webp). The round-8 photograph (hero-v3.webp) is kept in public/client/ but unused.
+    poster: "/client/hero-v4.webp",
+    alt: "Aerial photograph of a large warehouse with a landscaped forecourt and a roundabout at sunset",
   } satisfies MediaAsset,
   /**
-   * The actual site photograph of Warehouse 17 (client round 5). Drop the file at this path and the hero
-   * uses it automatically (lib/content/index.ts checks for it); until then the render above stays.
+   * The pencil-drawing layer under the photograph (scripts/make-hero-sketch.py): the photograph develops across it on
+   * load, and the roaming lens shows it through the photograph. If the studio has the original line art, swap this file.
    */
-  photo: {
-    src: "/client/warehouse-17.webp",
-    alt: "Warehouse 17 at Path Logicity, Dobbaspet — site photograph",
-    label: "Warehouse 17",
-  },
+  sketch: "/client/hero-v4-sketch.webp",
 };
 
 export const scale = {

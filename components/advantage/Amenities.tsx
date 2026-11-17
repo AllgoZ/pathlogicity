@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { Amenity } from "@/lib/content/types";
 import { Icon } from "@/components/ui/Icon";
 import { Rail } from "@/components/ui/Rail";
+import { Flow } from "@/components/ui/Flow";
 import { Reveal, RevealLines } from "@/components/ui/Reveal";
 
 /**
@@ -24,10 +25,12 @@ export function Amenities({ items }: { items: Amenity[] }) {
         </Reveal>
       </div>
 
+      {/* client round 8: each card takes its "hover" look in turn, by itself, while the rail is on screen */}
+      <Flow step={1700}>
       <Rail label="Amenities at Path Logicity" count={items.length} className="mt-12 lg:mt-14" trackClassName="gap-[clamp(14px,1.6vw,28px)]">
         {items.map((a, i) => (
-          <li key={a.id} className="group w-[78vw] shrink-0 snap-start sm:w-[42vw] lg:w-[clamp(300px,25vw,400px)]">
-            <article className="flex h-full flex-col bg-porcelain shadow-[var(--shadow-card)] transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1.5">
+          <li key={a.id} data-flow className="group w-[78vw] shrink-0 snap-start sm:w-[42vw] lg:w-[clamp(300px,25vw,400px)]">
+            <article className="flex h-full flex-col bg-porcelain shadow-[var(--shadow-card)] transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1.5 group-data-[lit=true]:-translate-y-1.5">
               <div className="relative aspect-[4/3] overflow-hidden">
                 {a.image?.src ? (
                   <>
@@ -37,7 +40,7 @@ export function Amenities({ items }: { items: Amenity[] }) {
                       fill
                       sizes="(min-width: 1024px) 25vw, 78vw"
                       draggable={false}
-                      className="img-grade object-cover transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] group-hover:scale-[1.05]"
+                      className="img-grade object-cover transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] group-hover:scale-[1.05] group-data-[lit=true]:scale-[1.05]"
                     />
                     <span className="t-micro absolute bottom-3 left-3 max-w-[calc(100%-1.5rem)] bg-paper/90 px-2.5 py-1 text-steel-700">Illustrative{a.image.credit ? ` · ${a.image.credit}` : ""}</span>
                   </>
@@ -49,7 +52,7 @@ export function Amenities({ items }: { items: Amenity[] }) {
                       <path d="M -2 70 C 28 70, 40 46, 64 50 C 84 53, 90 28, 102 24" stroke="var(--color-yellow-400)" strokeOpacity="0.55" strokeWidth="0.5" vectorEffect="non-scaling-stroke" />
                     </svg>
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="flex h-24 w-24 items-center justify-center bg-paper text-indigo-700 shadow-[var(--shadow-card)] transition-colors duration-300 group-hover:bg-indigo-700 group-hover:text-paper">
+                      <span className="flex h-24 w-24 items-center justify-center bg-paper text-indigo-700 shadow-[var(--shadow-card)] transition-colors duration-300 group-hover:bg-indigo-700 group-hover:text-paper group-data-[lit=true]:bg-indigo-700 group-data-[lit=true]:text-paper">
                         <Icon name={a.icon} size={44} strokeWidth={1.4} draw />
                       </span>
                     </div>
@@ -65,13 +68,14 @@ export function Amenities({ items }: { items: Amenity[] }) {
                   <h3 className="t-s text-ink">{a.title}</h3>
                 </div>
                 <p className="mt-3 flex-1 text-[0.9375rem] leading-relaxed text-steel-700">{a.text}</p>
-                <span aria-hidden className="mt-6 block h-[3px] w-10 bg-yellow-400 transition-[width] duration-500 ease-[var(--ease-out-expo)] group-hover:w-20" />
+                <span aria-hidden className="mt-6 block h-[3px] w-10 bg-yellow-400 transition-[width] duration-500 ease-[var(--ease-out-expo)] group-hover:w-20 group-data-[lit=true]:w-20" />
               </div>
             </article>
           </li>
         ))}
         <li aria-hidden className="w-px shrink-0 sm:w-[var(--margin)]" />
       </Rail>
+      </Flow>
     </section>
   );
 }

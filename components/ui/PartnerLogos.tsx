@@ -1,12 +1,18 @@
+import { Fragment, type CSSProperties } from "react";
 import Image from "next/image";
 import type { Partner } from "@/lib/content/types";
+
+/** copies of the whole set in the track; the loop slides half of them, so half of them must be wider than the widest screen */
+const COPIES = 8;
 
 /**
  * Authority / partner logos from pathlogicity.com (+ the IGBC mark). Each mark
  * sits on its own white chip so it keeps its colours on any surface; the role
  * caption sits beneath the chip in the surface's text colour.
- * `marquee` (M9): the row drifts slowly and pauses on hover; under reduced
- * motion it stays still. The duplicate copy is aria-hidden.
+ *
+ * `marquee` (M9, client round 8): the row scrolls slowly from left to right, always (even for three marks), and
+ * pauses on hover / focus. The set is repeated enough times to fill any width; the copies are aria-hidden. Under
+ * reduced motion the copies are hidden by CSS and the row is one still set.
  */
 export function PartnerLogos({
   partners,
@@ -21,11 +27,14 @@ export function PartnerLogos({
   marquee?: boolean;
   className?: string;
 }) {
-  // Client round 7 follow-up: with only a few marks (NHLML, Bengaluru MMLP, IGBC) a drifting loop cuts tiles off and
-  // hides the names, so the row stays still; the marquee is kept for a longer list.
-  const loop = marquee && partners.length > 4;
+  const loop = marquee && partners.length > 0;
   const item = (p: Partner, hidden = false) => (
-    <li key={`${p.id}${hidden ? "-dup" : ""}`} aria-hidden={hidden || undefined} className={`flex flex-col ${loop ? (compact ? "w-[180px] shrink-0" : "w-[280px] shrink-0 lg:w-[320px]") : ""}`}>
+    <li
+      key={`${p.id}${hidden ? "-dup" : ""}`}
+      aria-hidden={hidden || undefined}
+      data-dup={hidden || undefined}
+      className={`flex flex-col ${loop ? `marquee-item ${compact ? "w-[180px] shrink-0" : "w-[280px] shrink-0 lg:w-[320px]"}` : ""}`}
+    >
       <span className={`lift flex items-center justify-center rounded-[2px] bg-paper ${compact ? "h-16 px-4" : "h-28 px-6 lg:h-32"} ${tone === "light" ? "shadow-[var(--shadow-card)]" : ""}`}>
         {p.logo && p.width && p.height ? (
           <Image
@@ -48,11 +57,11 @@ export function PartnerLogos({
   if (loop) {
     return (
       <div className={`marquee overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)] ${className}`}>
-        <ul className={`marquee-track flex w-max ${compact ? "gap-2" : "gap-4"}`} aria-label="In association with">
+        <ul className={`marquee-track flex w-max ${compact ? "gap-2" : "gap-4"}`} style={{ "--lap": `${Math.round((COPIES / 2) * partners.length * (compact ? 4.7 : 8.4))}s` } as CSSProperties} aria-label="In association with">
           {partners.map((p) => item(p))}
-          {partners.map((p) => item(p, true))}
-          {partners.map((p) => item(p, true))}
-          {partners.map((p) => item(p, true))}
+          {Array.from({ length: COPIES - 1 }, (_, c) => (
+            <Fragment key={c}>{partners.map((p) => item(p, true))}</Fragment>
+          ))}
         </ul>
       </div>
     );

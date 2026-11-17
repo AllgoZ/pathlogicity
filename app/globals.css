@@ -47,10 +47,11 @@
   --color-orange-400: #ff8a3d;
 
   /* Accents — strict roles */
-  --color-yellow-400: #ffca00; /* THE accent — the Bengaluru highlight yellow on the client location map (#ffca00): CTAs, rules, route comet, numerals on dark */
-  --color-yellow-300: #ffd633;
-  --color-yellow-200: #ffe066;
-  --color-yellow-50: #fff8dc;
+  --color-yellow-400: #ffd60a; /* THE accent — brightened in client round 8 (was #ffca00): CTAs, rules, route comet, markers, numerals on dark */
+  --color-yellow-300: #ffe040;
+  --color-yellow-200: #ffea7a;
+  --color-yellow-50: #fff9d6;
+
   --color-green-500: #449e35; /* sustainability + completed — client green */
   --color-green-300: #78c45a;
   --color-green-700: #2f7a24;
@@ -305,7 +306,7 @@ em.accent {
 }
 @utility glow-brand {
   background-image:
-    radial-gradient(60% 50% at 12% 0%, rgb(255 202 0 / 0.14), transparent 70%),
+    radial-gradient(60% 50% at 12% 0%, rgb(255 214 10 / 0.14), transparent 70%),
     radial-gradient(55% 60% at 100% 100%, rgb(32 31 133 / 0.55), transparent 70%);
 }
 /* The client pinwheel as a 2px signature stripe */
@@ -348,18 +349,46 @@ em.accent {
   }
 }
 
-/* Hero banner motion (client round 5). Fill "both" keeps the final state; reduced motion switches the drift off below. */
+/* ---- Hero, round 9 redo (docs/PLAN-HERO-REDESIGN-R9.md) ------------------------------------------------------
+   Everything is CSS keyframes, so nothing flashes before hydration and layout shift stays 0. Order: the pencil drawing is
+   there; the photograph DEVELOPS across it behind a gold edge (0.25 s) · the foot gradient is revealed with it · the kicker and
+   the headline words rise (1.25 s +) · a gold route line draws across the base of the headline (2.1 s) and pings on arrival ·
+   copy and actions rise (2.3 s +). Then only the slow drift remains. Reduced motion: the finished state, no motion. */
 @keyframes hero-drift {
   from {
     transform: scale(1.04) translate3d(0, 0, 0);
   }
   to {
-    transform: scale(1.13) translate3d(-1.8%, -1.2%, 0);
+    transform: scale(1.1) translate3d(-1.2%, -0.8%, 0);
   }
 }
-@keyframes hero-rise {
+@keyframes hero-develop {
   from {
-    transform: translateY(105%);
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes hero-scan {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+}
+@keyframes hero-word {
+  from {
+    transform: translateY(112%);
   }
   to {
     transform: translateY(0);
@@ -368,35 +397,46 @@ em.accent {
 @keyframes hero-fade {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
-@keyframes hero-ping {
-  0% {
-    transform: translate(-50%, -50%) scale(0.7);
-    opacity: 0.9;
+@keyframes hero-route {
+  from {
+    clip-path: inset(0 100% 0 0);
   }
-  100% {
-    transform: translate(-50%, -50%) scale(2.1);
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes hero-node {
+  0% {
+    left: 0;
     opacity: 0;
   }
+  8% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 1;
+  }
 }
-.hero-drift {
-  animation: hero-drift 26s ease-in-out infinite alternate;
-  will-change: transform;
-}
-.hero-rise {
-  animation: hero-rise 1s var(--ease-out-expo) both;
-}
-.hero-fade {
-  animation: hero-fade 0.9s var(--ease-out-expo) both;
-}
-.hero-ping {
-  animation: hero-ping 3s var(--ease-route) 1.2s infinite;
+@keyframes hero-ping {
+  0% {
+    opacity: 0;
+  }
+  1% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3.6);
+  }
 }
 /* chevrons on the phone hero's "drag to look around" hint; --dir flips the direction */
 @keyframes hero-nudge {
@@ -408,70 +448,114 @@ em.accent {
     transform: translateX(calc(var(--dir, 1) * 4px));
   }
 }
+.hero-drift {
+  animation: hero-drift 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.hero-develop {
+  animation: hero-develop 1.7s cubic-bezier(0.65, 0, 0.25, 1) 0.25s backwards;
+}
+.hero-scan {
+  animation: hero-scan 1.7s cubic-bezier(0.65, 0, 0.25, 1) 0.25s both;
+}
+.hero-word {
+  display: inline-block;
+  animation: hero-word 0.95s var(--ease-out-expo) backwards;
+}
+.hero-fade {
+  animation: hero-fade 0.9s var(--ease-out-expo) backwards;
+}
 .hero-nudge {
   animation: hero-nudge 1.4s ease-in-out infinite;
 }
+/* the foot gradient: eased stops, so it melts into the photograph with no visible edge */
+.hero-scrim {
+  background: linear-gradient(
+    to top,
+    rgb(17 18 51 / 0.9) 0%,
+    rgb(17 18 51 / 0.8) 22%,
+    rgb(17 18 51 / 0.58) 46%,
+    rgb(17 18 51 / 0.28) 70%,
+    rgb(17 18 51 / 0.08) 88%,
+    transparent 100%
+  );
+  /* revealed with the photograph (same clip, same timing), so the gradient is already there when the words arrive */
+  animation: hero-develop 1.7s cubic-bezier(0.65, 0, 0.25, 1) 0.25s backwards;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.25rem, 9.4vw, 3rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  @media (width >= 40rem) {
+    font-size: clamp(2.75rem, min(5.4vw, 9vh), 5rem);
+    line-height: 1.02;
+  }
+}
+/* the route line draws left to right; the node leads it and pings once on arrival */
+.hero-route-line {
+  background: linear-gradient(90deg, var(--color-yellow-400) 0%, rgb(255 214 10 / 0.7) 30%, rgb(255 255 255 / 0.3) 100%);
+  animation: hero-route 1.1s cubic-bezier(0.65, 0, 0.35, 1) 2.1s backwards;
+}
+.hero-route-node {
+  left: 100%;
+  animation: hero-node 1.1s cubic-bezier(0.65, 0, 0.35, 1) 2.1s backwards;
+}
+.hero-route-node::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: var(--color-yellow-400);
+  animation: hero-ping 1.4s ease-out 3.2s both;
+}
 @media (prefers-reduced-motion: reduce) {
   .hero-drift,
-  .hero-ping {
+  .hero-develop,
+  .hero-word,
+  .hero-fade,
+  .hero-scrim,
+  .hero-route-line,
+  .hero-route-node,
+  .hero-route-node::after {
     animation: none;
+  }
+  .hero-scan,
+  .hero-route-node::after {
+    display: none;
   }
 }
 
-/* ---- Hero redesign (client round 6) ------------------------------------------------------------------
-   The letters are CSS (so nothing flashes before hydration); switched off under reduced motion. */
-@keyframes hero-char {
-  from {
-    transform: translateY(112%) rotate(5deg);
-    filter: blur(5px);
-  }
-  to {
-    transform: translateY(0) rotate(0);
-    filter: blur(0);
-  }
-}
-/* letters rise one by one; "backwards" (not "both") so the hover lift below is free once they have landed */
-.hero-char {
-  display: inline-block;
-  animation: hero-char 0.95s var(--ease-out-expo) backwards;
-  transition:
-    transform 0.4s var(--ease-out-expo),
-    color 0.3s;
-}
-@media (hover: hover) and (pointer: fine) {
-  .hero-char:hover {
-    transform: translateY(-0.07em) rotate(-3deg);
-    color: var(--color-blue-500);
-  }
-}
-/* the wash over the photograph lifts in a soft circle around --mx / --my (set from the pointer) */
-.hero-wash {
-  --lens: 0;
-  -webkit-mask-image: radial-gradient(circle calc(var(--lens) * 1px) at calc(var(--mx, 50) * 1px) calc(var(--my, 50) * 1px), rgb(0 0 0 / 0.04) 0%, rgb(0 0 0 / 0.3) 50%, #000 100%);
-  mask-image: radial-gradient(circle calc(var(--lens) * 1px) at calc(var(--mx, 50) * 1px) calc(var(--my, 50) * 1px), rgb(0 0 0 / 0.04) 0%, rgb(0 0 0 / 0.3) 50%, #000 100%);
-}
-.hero-wash[data-lens="off"] {
-  -webkit-mask-image: none;
-  mask-image: none;
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-char {
-    animation: none;
-  }
-}
-
-/* M9 — partner logo marquee: 4 copies, slides one half-width (2 copies) per loop */
+/* M9 — partner logo marquee (client round 8: always on, slow, LEFT → RIGHT). The track holds 8 copies of the set and
+   slides half of them back to rest, so the loop is seamless at any width. --lap is set per row (≈ 40px/s). */
 @keyframes marquee {
-  to {
+  from {
     transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
   }
 }
 .marquee-track {
-  animation: marquee 48s linear infinite;
+  animation: marquee var(--lap, 90s) linear infinite;
+  will-change: transform;
 }
 .marquee:hover .marquee-track,
 .marquee:focus-within .marquee-track {
   animation-play-state: paused;
+}
+/* reduced motion: one still set, no copies */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+    width: auto;
+    flex-wrap: wrap;
+    transform: none;
+  }
+  .marquee-track > [data-dup] {
+    display: none;
+  }
 }
 
 /* Placeholder annotations + content slots are hidden for visitors; add
@@ -627,7 +711,7 @@ html:not([data-annotations="on"]) .slot-annotation {
   border-width: 2px;
 }
 .route-node-end[data-on="1"] {
-  box-shadow: 0 0 0 6px rgb(255 202 0 / 0.22);
+  box-shadow: 0 0 0 6px rgb(255 214 10 / 0.22);
 }
 
 /* Hover lift for tiles and cards that are not links themselves */

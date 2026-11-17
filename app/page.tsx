@@ -1,5 +1,4 @@
-import { getPartners, getSettings } from "@/lib/content";
-import { getHomepageWithAssets } from "@/lib/content/server";
+import { getHomepage, getPartners, getSettings } from "@/lib/content";
 import { Hero } from "@/components/hero/Hero";
 import { ScaleIndex } from "@/components/stats/ScaleIndex";
 import { MasterPlan } from "@/components/master-plan/MasterPlan";
@@ -22,7 +21,7 @@ import { NewsPreview } from "@/components/news/NewsPreview";
  * The final CTA (§11) and footer (§12) are shared by every page via the root layout.
  */
 export default function HomePage() {
-  const home = getHomepageWithAssets();
+  const home = getHomepage();
   const settings = getSettings();
   return (
     <>

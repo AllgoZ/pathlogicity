@@ -108,9 +108,14 @@ export function ScaleIndex({ data }: { data: Homepage["scale"] }) {
         pin: true,
         anticipatePin: 1,
         invalidateOnRefresh: true,
+        refreshPriority: 1, // measured before the pins further down the page (Renders), which sit on top of this one's scroll space
         onUpdate: (self) => sync(self.progress),
         onRefresh: (self) => sync(self.progress),
       });
+      // this pin adds scroll space ABOVE every later section; the ones measured before it existed (the Renders pin) would
+      // start 1.4 screens too early and leave a blank stretch after they release, so re-measure everything once
+      const raf = requestAnimationFrame(() => ScrollTrigger.refresh());
+      return () => cancelAnimationFrame(raf);
     });
     mm.add(MQ.mobile, () => {
       const q = gsap.utils.selector(section);
